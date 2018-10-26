@@ -1,0 +1,3 @@
+int TestNorad( );
+
+void NoradPredict();
