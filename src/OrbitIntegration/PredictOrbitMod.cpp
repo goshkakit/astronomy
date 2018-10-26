@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#ifdef WINDOWSCOMPILE
+#ifdef WIN32
 //==============================================================================//
 // Creator
 //==============================================================================//
@@ -132,7 +132,7 @@ int PredictOrbitMod::IntegrationListNorad()
 	// задание положения для проверки всех воздействий
 	POSat.SetListSatellite_T1( t, t_e, ListSat );
 	POSat.CalcNewPositionArray( t_e, IForce, ListSat, ListSatResCpu );
-	POSat.CalcNewPositionArrayGPU( t, t_e, IForce, ListSat, ListSatResGpu ); // 1.071956e-007
+	//POSat.CalcNewPositionArrayGPU( t, t_e, IForce, ListSat, ListSatResGpu ); // 1.071956e-007
 	//printf("CPU\n");
 	//POSat.CheckListSatellite_T1( ListSatResCpu );
 	//printf("GPU\n");
@@ -256,7 +256,7 @@ int PredictOrbitMod::IntegrationList()
 	//POSat.CalcSatCloseApproach_CPU_list( t, t_e, IForce, ListSat, ListSatVerify );
 
 	//POSat.CalcSatCloseApproach_GPU( t, t_e, IForce, ListSat, ListSatResGpu );
-	POSat.CalcSatCloseApproach_GPU_list( t, t_e, IForce, ListSat, ListSatVerify );
+	//POSat.CalcSatCloseApproach_GPU_list( t, t_e, IForce, ListSat, ListSatVerify );
 	//POSat.CheckListSatelliteCPU_GPU( ListSatResCpu, ListSatResGpu );
 
 	// 1 list predict

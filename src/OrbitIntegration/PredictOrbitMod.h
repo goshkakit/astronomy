@@ -3,7 +3,7 @@
 
 //==============================================================================//
 // windows
-#ifdef WINDOWSCOMPILE
+#ifdef WIN32
 
 class PredictOrbitMod  : public IPredictOrbitMod
 {

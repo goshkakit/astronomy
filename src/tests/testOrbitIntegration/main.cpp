@@ -9,10 +9,10 @@ int main()
 {
 	IPredictOrbitMod *TestP = CreatePredictOrbitMod();
 	TestP->Init();
-	//TestP->RunTest();
+	TestP->RunTest();
 	//TestP->TestAllForce();
 
-	TestP->IntegrationList();
+	//TestP->IntegrationList();
 
 	/*
 	//--------------------------------------//
