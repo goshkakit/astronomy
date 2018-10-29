@@ -57,7 +57,7 @@ void TLELoader::LoadData( const char *fname, int numbLine )
 
 	input.close();
 
-	printf( "NORAD Size = %d\n", NORADList.size() );
+	printf( "NORAD Size = %zu\n", NORADList.size() );
 
 	// Print TLE data
 	printf("%s\t",  NORADList[0]->SatName().c_str() );
