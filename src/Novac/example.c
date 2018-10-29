@@ -109,19 +109,20 @@ int main (void)
    Remove this block for use with solsys version 2.
 */
 
-   if ((error = ephem_open ("JPLEPH", &jd_beg,&jd_end,&de_num)) != 0)
+   //if ((error = ephem_open("JPLEPH", &jd_beg, &jd_end, &de_num)) != 0) 
+   if ((error = ephem_open("../data/eph/lnx1900.405", &jd_beg, &jd_end, &de_num)) != 0)
    {
-      if (error == 1)
-         printf ("JPL ephemeris file not found.\n");
-       else
-         printf ("Error reading JPL ephemeris file header.\n");
-      return (error);
+	   if (error == 1)
+		   printf("JPL ephemeris file not found.\n");
+	   else
+		   printf("Error reading JPL ephemeris file header.\n");
+	   return (error);
    }
-    else
+   else
    {
-      printf ("JPL ephemeris DE%d open. Start JD = %10.2f  End JD = %10.2f\n",
-         de_num, jd_beg, jd_end);
-      printf ("\n");
+	   printf("JPL ephemeris DE%d open. Start JD = %10.2f  End JD = %10.2f\n",
+		   de_num, jd_beg, jd_end);
+	   printf("\n");
    }
 
 /*
