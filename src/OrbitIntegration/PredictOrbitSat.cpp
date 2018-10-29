@@ -212,7 +212,7 @@ namespace Orbit
 
 			// проценты выполнения
 			double per = 100.0*it/((double)CU_BlockXYZ);
-			printf( "persent %f %\r", per );
+			printf( "persent %f %%\r", per );
 		}
 		int t2 = clock();
 		printf("TIME for all array CPU %f  ms\n", (double)(t2-t1)/CLOCKS_PER_SEC*1000.0 );
