@@ -8,7 +8,7 @@
 //==============================================================================//
 #include "PredictOrbitModType.h"
 
-#ifdef WINDOWSCOMPILE
+#ifdef WIN32
 
 #ifndef _IPREDICTSAT_H_
 #define _IPREDICTSAT_H_
@@ -28,7 +28,7 @@
 #ifdef GPU_STATIC
 #define GPU_API
 #else
-#define GPU_API __declspec(dllimport)
+#define GPU_API //__declspec(dllimport)
 #endif
 #endif
 

@@ -1,5 +1,5 @@
 
-#define GPUCOMPILE
+//#define GPUCOMPILE
 #define CPUCOMPILE
 
 #define CU_BlockXYZ 128*125

@@ -101,7 +101,7 @@ namespace Force
 		}
 		rfs.close();
 
-		printf("Size TAU-UTC.DAT = %d\n", list.size() );
+		printf("Size TAU-UTC.DAT = %zu\n", list.size() );
 
 		TAUUTC_size = list.size()*4; // 39*4
 		TAUUTC_kmax = list.size()-1; // 38

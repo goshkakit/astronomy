@@ -4,3 +4,11 @@
 bin/
 
 lib/
+
+\.vs/
+
+*.db
+
+*.user
+
+*.opendb

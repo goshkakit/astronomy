@@ -171,7 +171,7 @@ namespace Force
 		}
 		rfs.close();
 
-		printf( "load size = %d\n", list.size() );
+		printf( "load size = %zu\n", list.size() );
 		//FILE *flist = fopen( "data/tmp_fall.txt", "w" );
 		//for( unsigned int it = 0; it < list.size(); it++ )
 		//{
