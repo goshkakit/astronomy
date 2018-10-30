@@ -292,3 +292,146 @@
   struct rd00 {
     char comment[81];
   };
+
+
+  /* Ranging data header/footer records */
+  /* H1 - format header */
+  int read_h1(char * str, struct rh1 *header);
+
+  /* H2 - station header */
+  int read_h2(char * str, struct rh2 *header);
+
+  /* H3 - spacecraft header */
+  int read_h3(char * str, struct rh3 *header);
+
+  /* H4 - Session header */
+  int read_h4(char * str, struct rh4 *header);
+
+  /* Need indicators that these have been read? */
+  /* H8 - End of Session footer */
+  void read_h8(char * str);
+
+  /* H9 - End of File footer */
+  void read_h9(char * str);
+
+  /* Ranging data configuration records (1 of n) */
+  /* C0 - System Configuration Record */
+  int read_c0(char * str, struct rc0 *config);
+
+  /* C1 - Laser Configuration Record */
+  int read_c1(char * str, struct rc1 *config);
+
+  /* C2 - Detector Configuration Record */
+  int read_c2(char * str, struct rc2 *config);
+
+  /* C3 - Timing Configuration Record */
+  int read_c3(char * str, struct rc3 *config);
+
+  /* C4 - Transponder Configuration Record */
+  int read_c4(char * str, struct rc4 *config);
+
+  /* Ranging data records */
+  /* Secofday: need int sec and int psec? */
+  /* 10 - Range Record */
+  int read_10(char * str, struct rd10 *data_recd);
+
+  /* 11 - Normal Point Record */
+  int read_11(char * str, struct rd11 *data_recd);
+
+  /* 12 - Range Supplement Record */
+  int read_12(char * str, struct rd12 *data_recd);
+
+  /* 20 - Meteorological Record */
+  int read_20(char * str, struct rd20 *data_recd);
+
+  /* 21 - Meteorological Supplement Record */
+  int read_21(char * str, struct rd21 *data_recd);
+
+  /* 30 - Pointing Angles Record */
+  int read_30(char * str, struct rd30 *data_recd);
+
+  /* 40 - Calibration Record */
+  int read_40(char * str, struct rd40 *data_recd);
+
+  /* 50 - Session Statistics Record */
+  int read_50(char * str, struct rd50 *data_recd);
+
+  /* 60 - Compatibility Record */
+  int read_60(char * str, struct rd60 *data_recd);
+
+  /* 9X - User Defined Records 90-99 */
+  int read_9x(char * str, struct rd9x *data_recd);
+
+  /* 00 - Comment Record */
+  int read_00(char * str, struct rd00 *data_recd);
+
+//##################################################
+  /* Ranging data header/footer records */
+  /* H1 - format header */
+  void write_h1(FILE * str_out, struct rh1 header);
+
+  /* H2 - station header */
+  void write_h2(FILE * str_out, struct rh2 header);
+
+  /* H3 - spacecraft header */
+  void write_h3(FILE * str_out, struct rh3 header);
+
+  /* H4 - Session header */
+  void write_h4(FILE * str_out, struct rh4 header);
+
+  /* Need indicators that these have been read? */
+  /* H8 - End of Session footer */
+  void write_h8(FILE * str_out);
+
+  /* H9 - End of File footer */
+  void write_h9(FILE * str_out);
+
+  /* Ranging data configuration records (1 of n) */
+  /* C0 - System Configuration Record */
+  void write_c0(FILE * str_out, struct rc0 config);
+
+  /* C1 - Laser Configuration Record */
+  void write_c1(FILE * str_out, struct rc1 config);
+
+  /* C2 - Detector Configuration Record */
+  void write_c2(FILE * str_out, struct rc2 config);
+
+  /* C3 - Timing Configuration Record */
+  void write_c3(FILE * str_out, struct rc3 config);
+
+  /* C4 - Transponder Configuration Record */
+  void write_c4(FILE * str_out, struct rc4 config);
+
+  /* Ranging data records */
+  /* 10 - Range Record */
+  void write_10(FILE * str_out, struct rd10 data_recd);
+
+  /* 11 - Normal Point Record */
+  void write_11(FILE * str_out, struct rd11 data_recd);
+
+  /* 12 - Range Supplement Record */
+  void write_12(FILE * str_out, struct rd12 data_recd);
+
+  /* 20 - Meteorological Record */
+  void write_20(FILE * str_out, struct rd20 data_recd);
+
+  /* 21 - Meteorological Supplement Record */
+  void write_21(FILE * str_out, struct rd21 data_recd);
+
+  /* 30 - Pointing Angles Record */
+  void write_30(FILE * str_out, struct rd30 data_recd);
+
+  /* 40 - Calibration Record */
+  void write_40(FILE * str_out, struct rd40 data_recd);
+
+  /* 50 - Session Statistics Record */
+  void write_50(FILE * str_out, struct rd50 data_recd);
+
+  /* 60 - Compatibility Record */
+  void write_60(FILE * str_out, struct rd60 data_recd);
+
+  /* 9X - User Defined Record */
+  void write_9x(FILE * str_out, struct rd9x data_recd);
+
+  /* 00 - Comment Record */
+  void write_00(FILE * str_out, struct rd00 data_recd);

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "merit.h"
+#include "../include/merit.h"
 
 /*-------------------------------------------------------------------------
  * Subroutine:  write old ILRS (CSTG) fullrate data format records
@@ -16,8 +16,7 @@
 **			 known as the Merit II format)
 **
 **-----------------------------------------------------------------------*/
-void
-write_merit_fr (FILE *str_out, struct merit_fr fr)
+void write_merit_fr_full (FILE *str_out, struct merit_fr fr)
 {
   int syear;
   double dtemp;
@@ -40,4 +39,9 @@ write_merit_fr (FILE *str_out, struct merit_fr fr)
     fr.cal_type_ind, fr.sys_change_ind, fr.sys_config_ind, 
     fr.format_version, fr.data_release);
   fputs(str,str_out);
+}
+
+void write_merit_fr(FILE *str_out, struct merit_fr fr)
+{
+	fprintf(str_out, "%7d %02d %3d %.12Lf\t %d\t %.8f\t %.8f\t %.12Lf\t %f\t %f\n", fr.ilrs_id, fr.year % 100, fr.doy, fr.sec_of_day / 1.e7, fr.cdp_pad_id, fr.azimuth / 1.e4, fr.elevation / 1.e4, fr.time_of_flight / 1.e12, fr.refraction_corr, fr.target_CofM_corr);
 }

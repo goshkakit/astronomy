@@ -19,17 +19,15 @@ C  Revisions:
 C	09/21/89 - Convert from FORTRAN to C. rlr.
 C
 */
-grtojd(year,month,day,hour,minute,second,jdint,jdf)
-
-int	year,
-	month,
-	day,
-	hour,
-	minute;
-double	*jdint,
-	*jdf,
-	second;
-
+void grtojd(int year, int month, int day, int hour, int minute, double second, double* jdint, double* jdf)
+//int	year,
+//	month,
+//	day,
+//	hour,
+//	minute;
+//double	*jdint,
+//	*jdf,
+//	second;
 { 
 /* calculate # days since noon feburary 29, 1900 (julian date=2415078.0) */
  

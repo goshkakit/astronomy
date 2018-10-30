@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <string.h>
 #include <math.h>
-#include "crd.h"
+#include "../include/crd.h"
+#include "../include/func.h"
+
+#include <cstring>
+#include <conio.h>
 
 struct rh1 h1;
 struct rh2 h2;
@@ -24,26 +29,30 @@ struct rd50 d50;
 struct rd60 d60;
 struct rd00 d00;
 
-char *strcasestr ();
-int getifield ();
-int read_c0 ();
-int read_c1 ();
-int read_c2 ();
-int read_c3 ();
-int read_c4 ();
-int read_c0 ();
-int read_10 ();
-int read_11 ();
-int read_12 ();
-int read_20 ();
-int read_21 ();
-int read_30 ();
-int read_40 ();
-int read_50 ();
-int read_60 ();
+//char *strcasestr (); in #include <string.h>
+
+#define strncasecmp(x,y,z) _strnicmp(x,y,z)
+
+//int getifield ();
+//int read_c0 ();
+//int read_c1 ();
+//int read_c2 ();
+//int read_c3 ();
+//int read_c4 ();
+//int read_c0 ();
+//int read_10 ();
+//int read_11 ();
+//int read_12 ();
+//int read_20 ();
+//int read_21 ();
+//int read_30 ();
+//int read_40 ();
+//int read_50 ();
+//int read_60 ();
 
 FILE *str_in;
-int get_sat_ids ();
+//int get_sat_ids ();
+int get_sat_ids(int mode, int *cospar_id, int *norad_id, int *sic, char *target, int *target_type);
 
 /*-------------------------------------------------------------------------
  * Program: crd_chk
@@ -77,9 +86,7 @@ int get_sat_ids ();
  *   		    fewer h8 records than h1 or h2 records. rlr.
  *
 **-----------------------------------------------------------------------*/
-main (argc, argv)
-     int argc;
-     char *argv[];
+void main (int argc, char *argv[])
 {
   int i;
   int fail = 0;
@@ -257,13 +264,11 @@ main (argc, argv)
 	    target_type = h3.target_type;
 
 	  /* Assume the ilrs id is correct and check everything else */
-	    nh3iderr =
-	      get_sat_ids (0, &h3.ilrs_id, &tnorad, &tsic, &ttarget_name,
-			   &ttarget_type);
+	    nh3iderr = get_sat_ids (0, &h3.ilrs_id, &tnorad, &tsic, ttarget_name,  &ttarget_type); //TODO  &ttarget_name, to ttarget_name,
 	  if (!nh3iderr)
 	    {
-	      if (strncasecmp (h3.target_name, ttarget_name, 10) != 0 &&
-		  strcasestr (h3.target_name, "na") == 0)
+	      // TODO if (strncasecmp (h3.target_name, ttarget_name, 10) != 0 && strcasestr (h3.target_name, "na") == 0)
+		  if (strncasecmp(h3.target_name, ttarget_name, 10) != 0 && std::strstr(h3.target_name, "na") == 0)
 		nh3nameerr = 1;
 	      if (tsic != h3.sic)
 		nh3sicerr = 1;
@@ -1357,19 +1362,21 @@ Range type: %s    Date quality alert: %s\n\n",
 
   printf ("\n\n");
 
+  _getch();
+
   if (fail == 0) exit (0);
   else exit (1);
 }
 
-int
-get_sat_ids (int mode, int *cospar_id, int *norad_id, int *sic, char *target,
-	     int *target_type)
+int get_sat_ids (int mode, int *cospar_id, int *norad_id, int *sic, char *target,  int *target_type)
 {
   FILE *sat_id_in;
   //char *sat_id_file = "/data/lib/targets.dat";
   char *sat_id_file = "targets.dat";
   char str[256], ttarget[11];
-  int status, tcospar_id, tsic, tnorad_id = 0, ttt, trti;
+  int tcospar_id, tsic, tnorad_id = 0, ttt, trti;
+  char* status; //TODO
+
   int i, l;
 
   if (mode != 3)
@@ -1440,6 +1447,7 @@ get_sat_ids (int mode, int *cospar_id, int *norad_id, int *sic, char *target,
       (mode == 2 && tnorad_id != *norad_id) ||
       (mode == 3 && strcmp (ttarget, target) != 0))
     {
+	  
       return (1);
     }
   else

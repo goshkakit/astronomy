@@ -1,9 +1,9 @@
-doytogr(year,doy,month,day,mon_name)
-    int	year,
-	doy,
-	*month,
-	*day;
-    char	mon_name[4];
+void doytogr(int year, int doy, int*month,int*day, char*mon_name)
+ //   int	year,
+	//doy,
+	//*month,
+	//*day;
+ //   char	mon_name[4];
 {
     static char	*month_names[12] = {"Jan","Feb","Mar","Apr","May","Jun",
 				    "Jul","Aug","Sep","Oct","Nov","Dec"};

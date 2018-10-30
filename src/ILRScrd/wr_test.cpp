@@ -3,6 +3,8 @@
 #include <string.h>
 #include "../include/crd.h"
 
+#include "conio.h"
+
 struct rh1 h1;
 struct rh2 h2;
 struct rh3 h3;
@@ -24,9 +26,7 @@ struct rd60 d60;
 struct rd00 d00;
 
 /*  Test the consistency of the CRD c read/write routines. */
-main (argc, argv)
-     int argc;
-     char *argv[];
+void main(int argc, char *argv[])
 {
   char str[512];
   FILE *str_in, *str_out;
@@ -165,4 +165,6 @@ main (argc, argv)
       /*fputs (str, str_out);*/
 
     }
+
+	_getch();
 }

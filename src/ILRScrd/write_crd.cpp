@@ -24,12 +24,11 @@
  *
 **-----------------------------------------------------------------------*/
 
-char stro[256];
-
 /* Ranging data header/footer records */
   /* H1 - format header */
-write_h1 (FILE * str_out, struct rh1 header)
+void write_h1 (FILE * str_out, struct rh1 header)
 {
+	char stro[256];
   sprintf (stro,
 	   "h1     %2d %4d %2d %2d %2d\n",
 	   header.format_version, header.prod_year, header.prod_mon,
@@ -40,8 +39,9 @@ write_h1 (FILE * str_out, struct rh1 header)
 }
 
   /* H2 - station header */
-write_h2 (FILE * str_out, struct rh2 header)
+void write_h2(FILE * str_out, struct rh2 header)
 {
+	char stro[256];
   sprintf (stro,
            "h2            %4d %2d %2d %2d",
            header.cdp_pad_id, header.cdp_sys_num, header.cdp_occ_num, 
@@ -51,8 +51,9 @@ write_h2 (FILE * str_out, struct rh2 header)
 }
 
   /* H3 - spacecraft header */
-write_h3 (FILE * str_out, struct rh3 header)
+void write_h3(FILE * str_out, struct rh3 header)
 {
+	char stro[256];
   sprintf (stro,
            "h3             %07d %4d %8d %1d %1d", header.ilrs_id, header.sic, 
 	   header.norad, header.SC_timescale, header.target_type);
@@ -61,7 +62,7 @@ write_h3 (FILE * str_out, struct rh3 header)
 }
 
   /* H4 - Session header */
-write_h4 (FILE * str_out, struct rh4 header)
+void write_h4(FILE * str_out, struct rh4 header)
 {
   fprintf (str_out,
            "h4 %2d %4d %2d %2d %2d %2d %2d %4d %2d %2d %2d %2d %2d %2d %1d %1d %1d %1d %1d %1d %1d\n",
@@ -79,20 +80,20 @@ write_h4 (FILE * str_out, struct rh4 header)
 
   /* Need indicators that these have been read? */
   /* H8 - End of Session footer */
-write_h8 (FILE * str_out)
+void write_h8(FILE * str_out)
 {
   fprintf (str_out, "h8\n");
 }
 
   /* H9 - End of File footer */
-write_h9 (FILE * str_out)
+void write_h9(FILE * str_out)
 {
   fprintf (str_out, "h9\n");
 }
 
 /* Ranging data configuration records (1 of n) */
     /* C0 - System Configuration Record */
-write_c0 (FILE * str_out, struct rc0 config)
+void write_c0(FILE * str_out, struct rc0 config)
 {
   int i;
 
@@ -108,7 +109,7 @@ write_c0 (FILE * str_out, struct rc0 config)
 }
 
     /* C1 - Laser Configuration Record */
-write_c1 (FILE * str_out, struct rc1 config)
+void write_c1(FILE * str_out, struct rc1 config)
 {
   fprintf (str_out, 
            "c1 %d %-s %-s %.2f %.2f %.2f %.1f %.2f %d\n", 
@@ -118,7 +119,7 @@ write_c1 (FILE * str_out, struct rc1 config)
 }
 
     /* C2 - Detector Configuration Record */
-write_c2 (FILE * str_out, struct rc2 config)
+void write_c2(FILE * str_out, struct rc2 config)
 {
   fprintf (str_out, 
            "c2 %d %-s %-s %.3f %.2f %.1f %.1f %-s %.1f %.2f %.1f %.1f %-s\n", 
@@ -130,7 +131,7 @@ write_c2 (FILE * str_out, struct rc2 config)
 }
 
     /* C3 - Timing Configuration Record */
-write_c3 (FILE * str_out, struct rc3 config)
+void write_c3(FILE * str_out, struct rc3 config)
 {
   fprintf (str_out, 
            "c3 %d %-s %-s %-s %-s %-s %.1f\n",
@@ -140,7 +141,7 @@ write_c3 (FILE * str_out, struct rc3 config)
 }
 
     /* C4 - Transponder Configuration Record */
-write_c4 (FILE * str_out, struct rc4 config)
+void write_c4(FILE * str_out, struct rc4 config)
 {
   fprintf (str_out, 
            "c4 %d %-s %.3Lf %.2f %.3Lf %.2f %.12Lf %d %d %d\n",
@@ -155,7 +156,7 @@ write_c4 (FILE * str_out, struct rc4 config)
 
 /* Ranging data records */
     /* 10 - Range Record */
-write_10 (FILE * str_out, struct rd10 data_recd)
+void write_10(FILE * str_out, struct rd10 data_recd)
 {
   fprintf (str_out,
            "10 %.12Lf %.12Lf %-s %d %d %d %d %d\n",
@@ -166,10 +167,10 @@ write_10 (FILE * str_out, struct rd10 data_recd)
 }
 
     /* 11 - Normal Point Record */
-write_11 (FILE * str_out, struct rd11 data_recd)
+void write_11(FILE * str_out, struct rd11 data_recd)
 {
   fprintf (str_out,
-           "11 %.12Lf %.12Lf %-s %d %.1f %d %.1f %.3f %.3f %.1f %.1f %d\n",
+           "11 %.12Lf %.12Lf %-s %d %.1f %d %.1f %.3f %.3f %.1f %.2f %d\n",
            data_recd.sec_of_day, data_recd.time_of_flight, 
 	   data_recd.sysconfig_id, data_recd.epoch_event, 
 	   data_recd.np_window_length, data_recd.num_ranges, 
@@ -179,7 +180,7 @@ write_11 (FILE * str_out, struct rd11 data_recd)
 }
 
     /* 12 - Range Supplement Record */
-write_12 (FILE * str_out, struct rd12 data_recd)
+void write_12(FILE * str_out, struct rd12 data_recd)
 {
   fprintf (str_out,
            "12 %.7Lf %-s %.1f %.4f %.2f %.4f\n",
@@ -189,7 +190,7 @@ write_12 (FILE * str_out, struct rd12 data_recd)
 }
 
     /* 20 - Meteorological Record */
-write_20 (FILE * str_out, struct rd20 data_recd)
+void write_20(FILE * str_out, struct rd20 data_recd)
 {
   fprintf (str_out,
            "20 %.3Lf %.2f %.2f %.0f %d\n",
@@ -198,7 +199,7 @@ write_20 (FILE * str_out, struct rd20 data_recd)
 }
 
     /* 21 - Meteorological Supplement Record */
-write_21 (FILE * str_out, struct rd21 data_recd)
+void write_21(FILE * str_out, struct rd21 data_recd)
 {
   fprintf (str_out,
            "21 %.3Lf %.1f %.1f %-s %d %.2f %d %d\n",
@@ -208,7 +209,7 @@ write_21 (FILE * str_out, struct rd21 data_recd)
 }
 
     /* 30 - Pointing Angles Record */
-write_30 (FILE * str_out, struct rd30 data_recd)
+void write_30(FILE * str_out, struct rd30 data_recd)
 {
   fprintf (str_out,
            "30 %.3Lf %.4f %.4f %d %d %d\n",
@@ -218,7 +219,7 @@ write_30 (FILE * str_out, struct rd30 data_recd)
 }
 
     /* 40 - Calibration Record */
-write_40 (FILE * str_out, struct rd40 data_recd)
+void write_40(FILE * str_out, struct rd40 data_recd)
 {
 /**
   fprintf (str_out,
@@ -246,7 +247,7 @@ write_40 (FILE * str_out, struct rd40 data_recd)
 }
 
     /* 50 - Session Statistics Record */
-write_50 (FILE * str_out, struct rd50 data_recd)
+void write_50(FILE * str_out, struct rd50 data_recd)
 {
   fprintf (str_out,
            "50 %-s %.1f %.3f %.3f %.1f %d\n",
@@ -256,7 +257,7 @@ write_50 (FILE * str_out, struct rd50 data_recd)
 }
 
     /* 60 - Compatibility Record */
-write_60 (FILE * str_out, struct rd60 data_recd)
+void write_60(FILE * str_out, struct rd60 data_recd)
 {
   fprintf (str_out, 
 	 "60 %-s %d %d\n", 
@@ -265,12 +266,12 @@ write_60 (FILE * str_out, struct rd60 data_recd)
 }
 
     /* 9X - User Defined Record */
-write_9x (FILE * str_out, struct rd9x data_recd)
+void write_9x(FILE * str_out, struct rd9x data_recd)
 {
 }
 
     /* 00 - Comment Record */
-write_00 (FILE * str_out, struct rd00 data_recd)
+void write_00(FILE * str_out, struct rd00 data_recd)
 {
   fprintf (str_out,
 	   "00 %-s\n", 

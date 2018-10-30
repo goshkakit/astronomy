@@ -13,11 +13,10 @@
  *
 **-----------------------------------------------------------------------*/
 
-char stro[256];
 
 /* Ranging data header/footer records */
   /* H1 - format header */
-read_h1 (char * str, struct rh1 *header)
+int read_h1(char * str, struct rh1 *header)
 {
   char temp_crd_literal[4];
   int nstat;
@@ -33,9 +32,10 @@ read_h1 (char * str, struct rh1 *header)
 }
 
   /* H2 - station header */
-read_h2 (char * str, struct rh2 *header)
+int read_h2(char * str, struct rh2 *header)
 {
   int nstat;
+  //char stro[256];
 
   nstat= sscanf (&str[14],
            "%d %d %d %d",
@@ -48,7 +48,7 @@ read_h2 (char * str, struct rh2 *header)
 }
 
   /* H3 - spacecraft header */
-read_h3 (char * str, struct rh3 *header)
+int read_h3(char * str, struct rh3 *header)
 {
   int nstat;
 
@@ -62,7 +62,7 @@ read_h3 (char * str, struct rh3 *header)
 }
 
   /* H4 - Session header */
-read_h4 (char * str, struct rh4 *header)
+int read_h4(char * str, struct rh4 *header)
 {
   int nstat;
 
@@ -83,20 +83,20 @@ read_h4 (char * str, struct rh4 *header)
 
   /* Need indicators that these have been read? */
   /* H8 - End of Session footer */
-read_h8 (char * str)
+void read_h8(char * str)
 {
   sscanf (str, "H8");
 }
 
   /* H9 - End of File footer */
-read_h9 (char * str)
+void read_h9(char * str)
 {
   sscanf (str, "H9");
 }
 
 /* Ranging data configuration records (1 of n) */
     /* C0 - System Configuration Record */
-read_c0 (char * str, struct rc0 *config)
+int read_c0(char * str, struct rc0 *config)
 {
   char temp_config_ids[10][256];
   int i;
@@ -124,7 +124,7 @@ read_c0 (char * str, struct rc0 *config)
 }
 
     /* C1 - Laser Configuration Record */
-read_c1 (char * str, struct rc1 *config)
+int read_c1(char * str, struct rc1 *config)
 {
   char temp_laser_config_id[256];
   int nstat;
@@ -140,7 +140,7 @@ read_c1 (char * str, struct rc1 *config)
 }
 
     /* C2 - Detector Configuration Record */
-read_c2 (char * str, struct rc2 *config)
+int read_c2(char * str, struct rc2 *config)
 {
   char temp_detector_config_id[256];
   char temp_detector_type[256];
@@ -168,7 +168,7 @@ read_c2 (char * str, struct rc2 *config)
 }
 
     /* C3 - Timing Configuration Record */
-read_c3 (char * str, struct rc3 *config)
+int read_c3(char * str, struct rc3 *config)
 {
   char temp_str[5][256];
   char temp_timing_config_id[256];
@@ -197,7 +197,7 @@ read_c3 (char * str, struct rc3 *config)
 }
 
     /* C4 - Transponder Configuration Record */
-read_c4 (char * str, struct rc4 *config)
+int read_c4(char * str, struct rc4 *config)
 {
   char temp_xponder_config_id[256];
   int nstat;
@@ -219,7 +219,7 @@ read_c4 (char * str, struct rc4 *config)
 /* Ranging data records */
 /* Secofday: need int sec and int psec? */
     /* 10 - Range Record */
-read_10 (char * str, struct rd10 *data_recd)
+int read_10(char * str, struct rd10 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -236,7 +236,7 @@ read_10 (char * str, struct rd10 *data_recd)
 }
 
     /* 11 - Normal Point Record */
-read_11 (char * str, struct rd11 *data_recd)
+int read_11(char * str, struct rd11 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -255,7 +255,7 @@ read_11 (char * str, struct rd11 *data_recd)
 }
 
     /* 12 - Range Supplement Record */
-read_12 (char * str, struct rd12 *data_recd)
+int read_12(char * str, struct rd12 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -271,7 +271,7 @@ read_12 (char * str, struct rd12 *data_recd)
 }
 
     /* 20 - Meteorological Record */
-read_20 (char * str, struct rd20 *data_recd)
+int read_20(char * str, struct rd20 *data_recd)
 {
   int nstat;
 
@@ -283,7 +283,7 @@ read_20 (char * str, struct rd20 *data_recd)
 }
 
     /* 21 - Meteorological Supplement Record */
-read_21 (char * str, struct rd21 *data_recd)
+int read_21(char * str, struct rd21 *data_recd)
 {
   char temp_precip_type[256];
   int nstat;
@@ -300,7 +300,7 @@ read_21 (char * str, struct rd21 *data_recd)
 }
 
     /* 30 - Pointing Angles Record */
-read_30 (char * str, struct rd30 *data_recd)
+int read_30(char * str, struct rd30 *data_recd)
 {
   int nstat;
 
@@ -313,7 +313,7 @@ read_30 (char * str, struct rd30 *data_recd)
 }
 
     /* 40 - Calibration Record */
-read_40 (char * str, struct rd40 *data_recd)
+int read_40(char * str, struct rd40 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -333,7 +333,7 @@ read_40 (char * str, struct rd40 *data_recd)
 }
 
     /* 50 - Session Statistics Record */
-read_50 (char * str, struct rd50 *data_recd)
+int read_50(char * str, struct rd50 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -349,7 +349,7 @@ read_50 (char * str, struct rd50 *data_recd)
 }
 
     /* 60 - Compatibility Record */
-read_60 (char * str, struct rd60 *data_recd)
+int read_60(char * str, struct rd60 *data_recd)
 {
   char temp_sysconfig_id[256];
   int nstat;
@@ -364,14 +364,14 @@ read_60 (char * str, struct rd60 *data_recd)
 }
 
     /* 9X - User Defined Records 90-99 */
-read_9x (char * str, struct rd9x *data_recd)
+int read_9x(char * str, struct rd9x *data_recd)
 {
   int nstat= 0;
   return (nstat);
 }
 
     /* 00 - Comment Record */
-read_00 (char * str, struct rd00 *data_recd)
+int read_00(char * str, struct rd00 *data_recd)
 {
   int nstat= 1;
   strncpy(str,data_recd->comment,80);

@@ -4,11 +4,14 @@
 #include <math.h>
 #include <time.h>
 
+#include <ctype.h>
+
 #define FNLEN   256
 #define FMT_VERSION 0
 
-#include "crd.h"
-#include "merit.h"
+#include "../include/crd.h"
+#include "../include/merit.h"
+#include "../include/func.h"
 
 FILE *str_in, *str_out;
 fpos_t startpos;
@@ -33,8 +36,8 @@ struct rd50 d50;
 struct rd60 d60;
 struct rd00 d00;
 
-void get_win_ind ();
-void setup_files ();
+void get_win_ind(int np_window_length, int ilrs_id, int *nwi, int *lnwi);
+void setup_files(int argc, char *argv[]);
 double interp (double, double *, double *, int);
 
 /*-------------------------------------------------------------------------
@@ -67,417 +70,415 @@ double interp (double, double *, double *, int);
  *
 **-----------------------------------------------------------------------*/
 
-int
-main (argc, argv)
-     int argc;
-     char *argv[];
+int main(int argc, char *argv[])
 {
-  int data_type = 0;
-  int data_release = 0;
-  int done = 0;
-  int dummy;
-  int final_doy;
-  int first_record = 0;
-  int fr_ready = 0;
-  int fnewday= 0;
-  int n20 = 0;
-  int n30 = 0;
-  int n_fr = 0, n_sed = 0;
-  int save_angle_origin_ind = -1;
-  int status;
-  int first_10= 1, first_11= 1;		// First #10 or #11 record of pass
-  long lclock;
-  char str[256];
-  double sec_of_day;
-  double ssec_of_day;
-  double esec_of_day;
-  double save_ang_sod[500];
-  double save_azimuth[500];
-  double save_elevation[500];
-  double save_met_sod[500];
-  double save_humidity[500];
-  double save_pressure[500];
-  double save_temperature[500];
-  double header_sod= 0;
-  long double d1xsec_of_day;
-  long double old_d10sec_of_day=-1;
-  long double old_d11sec_of_day=-1;
-  struct tm gmt;
+	int data_type = 0;
+	int data_release = 0;
+	int done = 0;
+	int dummy;
+	int final_doy;
+	int first_record = 0;
+	int fr_ready = 0;
+	int fnewday = 0;
+	int n20 = 0;
+	int n30 = 0;
+	int n_fr = 0, n_sed = 0;
+	int save_angle_origin_ind = -1;
+	int status;
+	int first_10 = 1, first_11 = 1;		// First #10 or #11 record of pass
+	long lclock;
+	char str[256];
+	double sec_of_day;
+	double ssec_of_day;
+	double esec_of_day;
+	double save_ang_sod[500];
+	double save_azimuth[500];
+	double save_elevation[500];
+	double save_met_sod[500];
+	double save_humidity[500];
+	double save_pressure[500];
+	double save_temperature[500];
+	double header_sod = 0;
+	long double d1xsec_of_day;
+	long double old_d10sec_of_day = -1;
+	long double old_d11sec_of_day = -1;
+	struct tm gmt;
 
-/*  Greetings */
-  printf("Convert CRD Fullrate to Merit II Format: version 1.01b 05/20/2015\n");
+	/*  Greetings */
+	printf("Convert CRD Fullrate to Merit II Format: version 1.01b 05/20/2015\n");
 
-/*  get file names and open files  */
-  setup_files (argc, argv);
+	/*  get file names and open files  */
+	setup_files(argc, argv);
 
-  fr.np_window_ind = 0;
-  fr.num_ranges = 0;
-  fr.sess_rms = 0.0;
+	fr.np_window_ind = 0;
+	fr.num_ranges = 0;
+	fr.sess_rms = 0.0;
 
-  while (done == 0)
-    {
-/* Initialize variables for each pass */
-      n20 = 0;
-      n30 = 0;
-      fnewday= 0;
-      save_angle_origin_ind = -1;
-      old_d10sec_of_day=-1;
-      old_d11sec_of_day=-1;
-
-/* read and process records critical to header... */
-      fgetpos (str_in, &startpos);
-      while ((status = (int)fgets (str, 256, str_in)) != (int)NULL)
+	while (done == 0)
 	{
-          if (status == (int)NULL) break;
-	  if (isalpha (str[0]))
-	    str[0] = tolower (str[0]);
-	  if (strncmp (str, "h1", 2) == 0 || 
-	      strncmp (str, "H1", 2) == 0)
-	    {
-	      read_h1 (str, &h1);
-	      fr.format_version = 3;	/* latest format revision */
-	    }
-	  else if (strncmp (str, "h2", 2) == 0 ||
-	           strncmp (str, "H2", 2) == 0)
-	    {
-	      read_h2 (str, &h2);
-	      fr.cdp_pad_id = h2.cdp_pad_id;
-	      fr.cdp_sys_num = h2.cdp_sys_num;
-	      fr.cdp_occ_num = h2.cdp_occ_num;
-	      fr.stn_timescale = h2.stn_timescale;
-	    }
-	  else if (strncmp (str, "h3", 2) == 0 ||
-	           strncmp (str, "H3", 2) == 0)
-	    {
-	      read_h3 (str, &h3);
-	      fr.ilrs_id = h3.ilrs_id;
-	    }
-	  else if (strncmp (str, "h4", 2) == 0 ||
-	           strncmp (str, "H4", 2) == 0)
-	    {
-	      read_h4 (str, &h4);
-	      fr.data_release = h4.data_release;
-	      fr.year = h4.start_year % 100;
-	      grtodoy (h4.start_year, h4.start_mon, h4.start_day, &fr.doy);
-	      grtodoy (h4.start_year, 12, 31, &final_doy);
-              header_sod= h4.start_hour*3600 + h4.start_min*60+ h4.start_sec;
-              first_10= 1; 
-              first_11= 1;		// First #10 or #11 record of pass
+		/* Initialize variables for each pass */
+		n20 = 0;
+		n30 = 0;
+		fnewday = 0;
+		save_angle_origin_ind = -1;
+		old_d10sec_of_day = -1;
+		old_d11sec_of_day = -1;
 
-	      if (h4.refraction_app_ind == 0)
-		fr.refraction_app_ind = 1;
-	      else
-		fr.refraction_app_ind = 0;
-
-	      if (h4.CofM_app_ind == 0)
-		fr.CofM_app_ind = 1;
-	      else
-		fr.CofM_app_ind = 0;
-
-	      if (h4.xcv_amp_app_ind == 0)
-		fr.xcv_amp_app_ind = 1;
-	      else
-		fr.xcv_amp_app_ind = 0;
-	    }
-	  else if (strncmp (str, "h8", 2) == 0 ||
-	           strncmp (str, "H8", 2) == 0)
-	    {
-	      if (fr_ready)
+		/* read and process records critical to header... */
+		fgetpos(str_in, &startpos);
+		while ((status = (int)fgets(str, 256, str_in)) != (int)NULL)
 		{
-		  write_merit_fr (str_out, fr);
-		  fr_ready = 0;
-		}
-	      read_h8 (str);
-	      break;
-	    }
-	  else if (strncmp (str, "c0", 2) == 0 ||
-	           strncmp (str, "C0", 2) == 0)
-	    {
-	      read_c0 (str, &c0);
-	      fr.xmit_wavelength = c0.xmit_wavelength;
-	      if (fr.xmit_wavelength < 1000)
-		(fr.xmit_wavelength) *= 10;
-	    }
-	  else if (strncmp (str, "10", 2) == 0)
-	    {
-	      read_10 (str, &d10);
-	      fr.epoch_event = d10.epoch_event;
-	    }
-	  else if (strncmp (str, "11", 2) == 0)
-	    {
-	      read_11 (str, &d11);
-	      fr.epoch_event = d11.epoch_event;
-	      /* For the moon, this should really take the max of all fr lengths */
-	      get_win_ind ((int)d11.np_window_length, h3.ilrs_id,
-			   &fr.np_window_ind, &dummy);
-	    }
-	  else if (strncmp (str, "12", 2) == 0)
-	    {
-	      read_12 (str, &d12);
-	      fr.refraction_corr = d12.refraction_corr;
-	      fr.target_CofM_corr = d12.target_CofM_corr;
-	    }
-	  else if (strncmp (str, "20", 2) == 0)
-	    {
+			if (status == (int)NULL) break;
+			if (isalpha(str[0]))
+				str[0] = tolower(str[0]);
+			if (strncmp(str, "h1", 2) == 0 ||
+				strncmp(str, "H1", 2) == 0)
+			{
+				read_h1(str, &h1);
+				fr.format_version = 3;	/* latest format revision */
+			}
+			else if (strncmp(str, "h2", 2) == 0 ||
+				strncmp(str, "H2", 2) == 0)
+			{
+				read_h2(str, &h2);
+				fr.cdp_pad_id = h2.cdp_pad_id;
+				fr.cdp_sys_num = h2.cdp_sys_num;
+				fr.cdp_occ_num = h2.cdp_occ_num;
+				fr.stn_timescale = h2.stn_timescale;
+			}
+			else if (strncmp(str, "h3", 2) == 0 ||
+				strncmp(str, "H3", 2) == 0)
+			{
+				read_h3(str, &h3);
+				fr.ilrs_id = h3.ilrs_id;
+			}
+			else if (strncmp(str, "h4", 2) == 0 ||
+				strncmp(str, "H4", 2) == 0)
+			{
+				read_h4(str, &h4);
+				fr.data_release = h4.data_release;
+				fr.year = h4.start_year % 100;
+				grtodoy(h4.start_year, h4.start_mon, h4.start_day, &fr.doy);
+				grtodoy(h4.start_year, 12, 31, &final_doy);
+				header_sod = h4.start_hour * 3600 + h4.start_min * 60 + h4.start_sec;
+				first_10 = 1;
+				first_11 = 1;		// First #10 or #11 record of pass
 
-	      read_20 (str, &d20);
-              /* New day ...  since last '20' or header; don't rely on 
-               * stop time as it is '0' for some stations */
-              save_met_sod[n20] = d20.sec_of_day;
-              if ((n20 > 0 && save_met_sod[n20] < save_met_sod[0]) ||
-                  (n20 == 0 && header_sod > save_met_sod[0]))
-                save_met_sod[n20]+= 86400.e0;
-	      save_humidity[n20] = d20.humidity;
-	      save_pressure[n20] = d20.pressure * 10;
-	      save_temperature[n20] = d20.temperature * 10;
-	      if (n20 < 499) n20++;	/* Should scream, but >500 unlikely */
-	    }
-	  else if (strncmp (str, "30", 2) == 0)
-	    {
-	      read_30 (str, &d30);
-              /* IF angle origin has changed within pass, use only first one */
-              if (n30 == 0 || 
-                 (n30 > 0 && save_angle_origin_ind == d30.angle_origin_ind))
-                {
-                  save_ang_sod[n30] = d30.sec_of_day;
-                  if (n30 > 0 && save_ang_sod[n30] < save_ang_sod[0])
-                    save_ang_sod[n30]+= 86400.e0;
-	          save_azimuth[n30] = d30.azimuth * 1.e4;
-	          save_elevation[n30] = d30.elevation * 1.e4;
-	          fr.angle_origin_ind = d30.angle_origin_ind;
-	          save_angle_origin_ind = d30.angle_origin_ind;
-	          if (n30 < 499) n30++;	/* Should scream, but >500 unlikely */
-                }
-	    }
-	  else if (strncmp (str, "40", 2) == 0)
-	    {
-	      read_40 (str, &d40);
-	      fr.cal_sys_delay = d40.cal_sys_delay;
-	      fr.cal_delay_shift = d40.cal_delay_shift;
-	      fr.cal_rms = d40.cal_rms;
-	      fr.cal_type_ind = d40.cal_type_ind - 2;
-	      if (d40.cal_shift_type_ind == 3)
-		fr.cal_type_ind += 5;
-	    }
-	  else if (strncmp (str, "50", 2) == 0)
-	    {
-	      read_50 (str, &d50);
-	      fr.sess_rms = d50.sess_rms;
-	    }
-	  else if (strncmp (str, "60", 2) == 0)
-	    {
-	      read_60 (str, &d60);
-	      fr.sys_change_ind = d60.sys_change_ind;
-	      fr.sys_config_ind = d60.sys_config_ind;
-	    }
+				if (h4.refraction_app_ind == 0)
+					fr.refraction_app_ind = 1;
+				else
+					fr.refraction_app_ind = 0;
+
+				if (h4.CofM_app_ind == 0)
+					fr.CofM_app_ind = 1;
+				else
+					fr.CofM_app_ind = 0;
+
+				if (h4.xcv_amp_app_ind == 0)
+					fr.xcv_amp_app_ind = 1;
+				else
+					fr.xcv_amp_app_ind = 0;
+			}
+			else if (strncmp(str, "h8", 2) == 0 ||
+				strncmp(str, "H8", 2) == 0)
+			{
+				if (fr_ready)
+				{
+					write_merit_fr(str_out, fr);
+					fr_ready = 0;
+				}
+				read_h8(str);
+				break;
+			}
+			else if (strncmp(str, "c0", 2) == 0 ||
+				strncmp(str, "C0", 2) == 0)
+			{
+				read_c0(str, &c0);
+				fr.xmit_wavelength = c0.xmit_wavelength;
+				if (fr.xmit_wavelength < 1000)
+					(fr.xmit_wavelength) *= 10;
+			}
+			else if (strncmp(str, "10", 2) == 0)
+			{
+				read_10(str, &d10);
+				fr.epoch_event = d10.epoch_event;
+			}
+			else if (strncmp(str, "11", 2) == 0)
+			{
+				read_11(str, &d11);
+				fr.epoch_event = d11.epoch_event;
+				/* For the moon, this should really take the max of all fr lengths */
+				get_win_ind((int)d11.np_window_length, h3.ilrs_id,
+					&fr.np_window_ind, &dummy);
+			}
+			else if (strncmp(str, "12", 2) == 0)
+			{
+				read_12(str, &d12);
+				fr.refraction_corr = d12.refraction_corr;
+				fr.target_CofM_corr = d12.target_CofM_corr;
+			}
+			else if (strncmp(str, "20", 2) == 0)
+			{
+
+				read_20(str, &d20);
+				/* New day ...  since last '20' or header; don't rely on
+				 * stop time as it is '0' for some stations */
+				save_met_sod[n20] = d20.sec_of_day;
+				if ((n20 > 0 && save_met_sod[n20] < save_met_sod[0]) ||
+					(n20 == 0 && header_sod > save_met_sod[0]))
+					save_met_sod[n20] += 86400.e0;
+				save_humidity[n20] = d20.humidity;
+				save_pressure[n20] = d20.pressure * 10;
+				save_temperature[n20] = d20.temperature * 10;
+				if (n20 < 499) n20++;	/* Should scream, but >500 unlikely */
+			}
+			else if (strncmp(str, "30", 2) == 0)
+			{
+				read_30(str, &d30);
+				/* IF angle origin has changed within pass, use only first one */
+				if (n30 == 0 ||
+					(n30 > 0 && save_angle_origin_ind == d30.angle_origin_ind))
+				{
+					save_ang_sod[n30] = d30.sec_of_day;
+					if (n30 > 0 && save_ang_sod[n30] < save_ang_sod[0])
+						save_ang_sod[n30] += 86400.e0;
+					save_azimuth[n30] = d30.azimuth * 1.e4;
+					save_elevation[n30] = d30.elevation * 1.e4;
+					fr.angle_origin_ind = d30.angle_origin_ind;
+					save_angle_origin_ind = d30.angle_origin_ind;
+					if (n30 < 499) n30++;	/* Should scream, but >500 unlikely */
+					else printf("n30 more 500, error!\n");
+				}
+			}
+			else if (strncmp(str, "40", 2) == 0)
+			{
+				read_40(str, &d40);
+				fr.cal_sys_delay = d40.cal_sys_delay;
+				fr.cal_delay_shift = d40.cal_delay_shift;
+				fr.cal_rms = d40.cal_rms;
+				fr.cal_type_ind = d40.cal_type_ind - 2;
+				if (d40.cal_shift_type_ind == 3)
+					fr.cal_type_ind += 5;
+			}
+			else if (strncmp(str, "50", 2) == 0)
+			{
+				read_50(str, &d50);
+				fr.sess_rms = d50.sess_rms;
+			}
+			else if (strncmp(str, "60", 2) == 0)
+			{
+				read_60(str, &d60);
+				fr.sys_change_ind = d60.sys_change_ind;
+				fr.sys_config_ind = d60.sys_config_ind;
+			}
+		}
+
+		/* read and process the file... */
+		fsetpos(str_in, &startpos);
+		while ((status = (int)fgets(str, 256, str_in)) != (int)NULL)
+		{
+			if (status == (int)NULL) break;
+			if (isalpha(str[0]))
+				str[0] = tolower(str[0]);
+			if (strncmp(str, "h8", 2) == 0 ||
+				strncmp(str, "H8", 2) == 0)
+			{
+				read_h8(str);
+				if (fr_ready)
+				{
+					write_merit_fr(str_out, fr);
+					fr_ready = 0;
+				}
+				break;
+			}
+			else if (strncmp(str, "h9", 2) == 0 ||
+				strncmp(str, "H9", 2) == 0)
+			{
+				read_h9(str);
+				if (fr_ready)
+				{
+					write_merit_fr(str_out, fr);
+					fr_ready = 0;
+				}
+				fclose(str_in);
+				fclose(str_out);
+				done = 1;
+				break;
+			}
+			else if (strncmp(str, "c1", 2) == 0 ||
+				strncmp(str, "C1", 2) == 0)
+			{
+				read_c1(str, &c1);
+			}
+			else if (strncmp(str, "c2", 2) == 0 ||
+				strncmp(str, "C2", 2) == 0)
+			{
+				read_c2(str, &c2);
+			}
+			else if (strncmp(str, "c3", 2) == 0 ||
+				strncmp(str, "C3", 2) == 0)
+			{
+				read_c3(str, &c3);
+			}
+			else if (strncmp(str, "c4", 2) == 0 ||
+				strncmp(str, "C4", 2) == 0)
+			{
+				read_c4(str, &c4);
+			}
+			else if (strncmp(str, "00", 2) == 0)
+			{
+				read_00(str, &d00);
+			}
+			else if (strncmp(str, "10", 2) == 0)
+			{
+				if (fr_ready)
+				{
+					write_merit_fr(str_out, fr);
+					fr_ready = 0;
+				}
+				read_10(str, &d10);
+
+				/* Copy in data record info */
+				fr.sec_of_day = d10.sec_of_day * 1.e7;
+				d1xsec_of_day = d10.sec_of_day;
+				fr.time_of_flight = d10.time_of_flight;
+
+				/* New day ...  since last '10' or header; don't rely on
+				 * stop time as it is '0' for some stations */
+				if (d10.sec_of_day < old_d10sec_of_day ||
+					(first_10 && header_sod > d10.sec_of_day))
+				{
+					fr.doy++;
+					fnewday = 1;
+					if (fr.doy > final_doy)
+					{
+						fr.doy = 1;
+						fr.year++;
+					}
+					first_10 = 0;
+				}
+				old_d10sec_of_day = d10.sec_of_day;
+
+				/* Assuming this isn't high-rep-rate! */
+				/* Interpolate mets */
+				fr.time_of_flight *= 1.e12;
+				fr.humidity = interp((double)d10.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_humidity, n20) + 0.51;
+				fr.pressure = interp((double)d10.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_pressure, n20) + 0.51;
+				fr.temperature = interp((double)d10.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_temperature, n20) + 0.51;
+				/*printf("pth: %d %lf %f %f %f\n",fnewday,(double)d10.sec_of_day+
+				  fnewday*86400.e0,fr.humidity,fr.pressure,fr.temperature);*/
+				fr.num_ranges = 0;
+
+				/* Interpolate angles */
+				fr.azimuth = interp((double)d10.sec_of_day + fnewday*86400.e0,
+					save_ang_sod, save_azimuth, n30) + 0.51;
+				fr.elevation = interp((double)d10.sec_of_day + fnewday*86400.e0,
+					save_ang_sod, save_elevation, n30) + 0.51;
+
+				/* Assuming this isn't lunar! */
+				while (fr.num_ranges > 9999)
+				{
+					fr.num_ranges /= 10;
+				}
+				/* Write record */
+				fr_ready = 1;
+				/*write_merit_fr (str_out, fr); */
+			}
+			/* npts not likely, but just in case... */
+			else if (strncmp(str, "11", 2) == 0)
+			{
+				if (fr_ready)
+				{
+					write_merit_fr(str_out, fr);
+					fr_ready = 0;
+				}
+				read_11(str, &d11);
+
+				/* Copy in data record info */
+				fr.sec_of_day = d11.sec_of_day * 1.e7;
+				d1xsec_of_day = d11.sec_of_day;
+
+				/* New day ...  since last '10' or header; don't rely on
+				 * stop time as it is '0' for some stations */
+				if (d11.sec_of_day < old_d11sec_of_day ||
+					(first_11 && header_sod > d11.sec_of_day))
+					//if (d11.sec_of_day < old_d11sec_of_day) 	/* New day */
+				{
+					fr.doy++;
+					fnewday = 1;
+					if (fr.doy > final_doy)
+					{
+						fr.doy = 1;
+						fr.year++;
+					}
+					first_11 = 0;
+				}
+				old_d11sec_of_day = d11.sec_of_day;
+				fr.time_of_flight = d11.time_of_flight;
+				fr.humidity = interp((double)d11.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_humidity, n20) + 0.51;
+				fr.pressure = interp((double)d11.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_pressure, n20) + 0.51;
+				fr.temperature = interp((double)d11.sec_of_day + fnewday*86400.e0,
+					save_met_sod, save_temperature, n20) + 0.51;
+				/*printf("pth: %d %lf %f %f %f\n",fnewday,(double)d11.sec_of_day+
+				  fnewday*86400.e0,fr.humidity,fr.pressure,fr.temperature);*/
+
+				/* Assuming this isn't high-rep-rate! */
+				fr.time_of_flight *= 1.e12;
+				fr.num_ranges = d11.num_ranges;
+
+				/* Assuming this isn't lunar! */
+				while (fr.num_ranges > 9999)
+				{
+					fr.num_ranges /= 10;
+				}
+				/* Write record */
+				fr_ready = 1;
+			}
+			else if (strncmp(str, "12", 2) == 0)
+			{
+				read_12(str, &d12);
+				fr.refraction_corr = d12.refraction_corr;
+				fr.target_CofM_corr = d12.target_CofM_corr;
+			}
+			else if (strncmp(str, "21", 2) == 0)
+			{
+				read_21(str, &d21);
+			}
+			else if (strncmp(str, "40", 2) == 0)
+			{
+				read_40(str, &d40);
+			}
+			else if (strncmp(str, "50", 2) == 0)
+			{
+				read_50(str, &d50);
+			}
+			else if (strncmp(str, "60", 2) == 0)
+			{
+				read_60(str, &d60);
+			}
+			else if (strncmp(str, "9X", 1) == 0)
+			{
+				/* User-defined! */
+				/*read_00 (str, &d00); */
+			}
+		}
+		if (status == (int)NULL)
+		{
+			if (fr_ready)
+			{
+				write_merit_fr(str_out, fr);
+				fr_ready = 0;
+			}
+			fclose(str_in);
+			fclose(str_out);
+			done = 1;
+		}
 	}
-
-/* read and process the file... */
-      fsetpos (str_in, &startpos);
-      while ((status = (int)fgets (str, 256, str_in)) != (int)NULL)
-	{
-          if (status == (int)NULL) break;
-	  if (isalpha (str[0]))
-	    str[0] = tolower (str[0]);
-	  if (strncmp (str, "h8", 2) == 0 ||
-	      strncmp (str, "H8", 2) == 0)
-	    {
-	      read_h8 (str);
-	      if (fr_ready)
-		{
-		  write_merit_fr (str_out, fr);
-		  fr_ready = 0;
-		}
-	      break;
-	    }
-	  else if (strncmp (str, "h9", 2) == 0 ||
-	           strncmp (str, "H9", 2) == 0)
-	    {
-	      read_h9 (str);
-	      if (fr_ready)
-		{
-		  write_merit_fr (str_out, fr);
-		  fr_ready = 0;
-		}
-	      fclose (str_in);
-	      fclose (str_out);
-	      done = 1;
-	      break;
-	    }
-	  else if (strncmp (str, "c1", 2) == 0 ||
-	           strncmp (str, "C1", 2) == 0)
-	    {
-	      read_c1 (str, &c1);
-	    }
-	  else if (strncmp (str, "c2", 2) == 0 ||
-	           strncmp (str, "C2", 2) == 0)
-	    {
-	      read_c2 (str, &c2);
-	    }
-	  else if (strncmp (str, "c3", 2) == 0 ||
-	           strncmp (str, "C3", 2) == 0)
-	    {
-	      read_c3 (str, &c3);
-	    }
-	  else if (strncmp (str, "c4", 2) == 0 ||
-	           strncmp (str, "C4", 2) == 0)
-	    {
-	      read_c4 (str, &c4);
-	    }
-	  else if (strncmp (str, "00", 2) == 0)
-	    {
-	      read_00 (str, &d00);
-	    }
-	  else if (strncmp (str, "10", 2) == 0)
-	    {
-	      if (fr_ready)
-		{
-		  write_merit_fr (str_out, fr);
-		  fr_ready = 0;
-		}
-	      read_10 (str, &d10);
-
-	      /* Copy in data record info */
-	      fr.sec_of_day = d10.sec_of_day * 1.e7;
-	      d1xsec_of_day = d10.sec_of_day;
-	      fr.time_of_flight = d10.time_of_flight;
-
-              /* New day ...  since last '10' or header; don't rely on 
-               * stop time as it is '0' for some stations */
-	      if (d10.sec_of_day < old_d10sec_of_day ||
-                  (first_10 && header_sod > d10.sec_of_day))
-                {
-		  fr.doy++;
-                  fnewday= 1;
-                  if (fr.doy > final_doy)
-                    {
-                      fr.doy= 1;
-                      fr.year++;
-                    }
-                  first_10= 0;
-                }
-	      old_d10sec_of_day= d10.sec_of_day;
-
-	      /* Assuming this isn't high-rep-rate! */
-              /* Interpolate mets */
-	      fr.time_of_flight *= 1.e12;
-	      fr.humidity = interp((double)d10.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_humidity,n20) + 0.51;
-	      fr.pressure = interp((double)d10.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_pressure,n20)+ 0.51;
-	      fr.temperature = interp((double)d10.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_temperature,n20)+ 0.51;
-              /*printf("pth: %d %lf %f %f %f\n",fnewday,(double)d10.sec_of_day+
-                fnewday*86400.e0,fr.humidity,fr.pressure,fr.temperature);*/
-	      fr.num_ranges = 0;
-
-              /* Interpolate angles */
-	      fr.azimuth = interp((double)d10.sec_of_day+fnewday*86400.e0,
-                 save_ang_sod,save_azimuth,n30)+ 0.51;
-	      fr.elevation = interp((double)d10.sec_of_day+fnewday*86400.e0,
-                 save_ang_sod,save_elevation,n30)+ 0.51;
-
-	      /* Assuming this isn't lunar! */
-	      while (fr.num_ranges > 9999)
-		{
-		  fr.num_ranges /= 10;
-		}
-	      /* Write record */
-	      fr_ready = 1;
-	      /*write_merit_fr (str_out, fr); */
-	    }
-	  /* npts not likely, but just in case... */
-	  else if (strncmp (str, "11", 2) == 0)
-	    {
-	      if (fr_ready)
-		{
-		  write_merit_fr (str_out, fr);
-		  fr_ready = 0;
-		}
-	      read_11 (str, &d11);
-
-	      /* Copy in data record info */
-	      fr.sec_of_day = d11.sec_of_day * 1.e7;
-	      d1xsec_of_day = d11.sec_of_day;
-
-              /* New day ...  since last '10' or header; don't rely on 
-               * stop time as it is '0' for some stations */
-	      if (d11.sec_of_day < old_d11sec_of_day ||
-                  (first_11 && header_sod > d11.sec_of_day))
-	      //if (d11.sec_of_day < old_d11sec_of_day) 	/* New day */
-                {
-		  fr.doy++;
-                  fnewday= 1;
-                  if (fr.doy > final_doy)
-                    {
-                      fr.doy= 1;
-                      fr.year++;
-                    }
-                  first_11= 0;
-                }
-	      old_d11sec_of_day= d11.sec_of_day;
-	      fr.time_of_flight = d11.time_of_flight;
-	      fr.humidity = interp((double)d11.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_humidity,n20) + 0.51;
-	      fr.pressure = interp((double)d11.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_pressure,n20)+ 0.51;
-	      fr.temperature = interp((double)d11.sec_of_day+fnewday*86400.e0,
-                 save_met_sod,save_temperature,n20)+ 0.51;
-              /*printf("pth: %d %lf %f %f %f\n",fnewday,(double)d11.sec_of_day+
-                fnewday*86400.e0,fr.humidity,fr.pressure,fr.temperature);*/
-
-	      /* Assuming this isn't high-rep-rate! */
-	      fr.time_of_flight *= 1.e12;
-	      fr.num_ranges = d11.num_ranges;
-
-	      /* Assuming this isn't lunar! */
-	      while (fr.num_ranges > 9999)
-		{
-		  fr.num_ranges /= 10;
-		}
-	      /* Write record */
-	      fr_ready = 1;
-	    }
-	  else if (strncmp (str, "12", 2) == 0)
-	    {
-	      read_12 (str, &d12);
-	      fr.refraction_corr= d12.refraction_corr;
-	      fr.target_CofM_corr = d12.target_CofM_corr;
-	    }
-	  else if (strncmp (str, "21", 2) == 0)
-	    {
-	      read_21 (str, &d21);
-	    }
-	  else if (strncmp (str, "40", 2) == 0)
-	    {
-	      read_40 (str, &d40);
-	    }
-	  else if (strncmp (str, "50", 2) == 0)
-	    {
-	      read_50 (str, &d50);
-	    }
-	  else if (strncmp (str, "60", 2) == 0)
-	    {
-	      read_60 (str, &d60);
-	    }
-	  else if (strncmp (str, "9X", 1) == 0)
-	    {
-	      /* User-defined! */
-	      /*read_00 (str, &d00); */
-	    }
-	}
-      if (status == (int)NULL)
-        {
-	  if (fr_ready)
-	    {
-	      write_merit_fr (str_out, fr);
-	      fr_ready = 0;
-	    }
-	  fclose (str_in);
-	  fclose (str_out);
-          done = 1;
-        }
-    }
 }
 
 /*-------------------------------------------------------------------------
@@ -486,8 +487,7 @@ main (argc, argv)
 **                                window length and ilrs id
 **
 **-----------------------------------------------------------------------*/
-void
-get_win_ind (int np_window_length, int ilrs_id, int *nwi, int *lnwi)
+void get_win_ind (int np_window_length, int ilrs_id, int *nwi, int *lnwi)
 {
 
 /* Lunar data: This test will not hold if other lunar reflectors are
@@ -539,8 +539,7 @@ get_win_ind (int np_window_length, int ilrs_id, int *nwi, int *lnwi)
 **	setup_files		- Open input and output file names
 **
 **-----------------------------------------------------------------------*/
-void
-setup_files (int argc, char *argv[])
+void setup_files (int argc, char *argv[])
 {
   char crd_in[FNLEN] = { "" };
   char cstg_out[FNLEN] = { "" };

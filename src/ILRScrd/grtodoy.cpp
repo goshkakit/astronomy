@@ -1,8 +1,8 @@
-grtodoy(year,month,day,doy)
-int	year,
-	month,
-	day,
-	*doy;
+void grtodoy(int year, int month, int  day, int* doy)
+//int	year,
+//	month,
+//	day,
+//	*doy;
 {
     long	jd_in,
 		jd_jan0;

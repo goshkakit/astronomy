@@ -35,3 +35,5 @@ struct merit_fr
   int format_version;
   int data_release;
 };
+
+void write_merit_fr(FILE *str_out, struct merit_fr fr);

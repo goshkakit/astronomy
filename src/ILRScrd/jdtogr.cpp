@@ -7,16 +7,15 @@ C	06/09/93 - Eliminate round off that caused min=60 or sec=60. rlr.
 C
 C$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 */
-jdtogr(jdint,jdf,year,month,day,hour,minute,second)
-
-double	jdint,
-	jdf,
-	*second;
-int	*year,
-	*month,
-	*day,
-	*hour,
-	*minute;
+void jdtogr(double jdint, double jdf, int* year, int* month, int* day, int* hour, int* minute, double* second)
+//double	jdint,
+//	jdf,
+//	*second;
+//int	*year,
+//	*month,
+//	*day,
+//	*hour,
+//	*minute;
 {
     double	jda1900,
 		jdfc;
