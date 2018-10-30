@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stddef.h> 
 
-#include "astronomy/tleloader.h"
+#include "common/tleloader.h"
 
 TwType TW_TYPE_OGLDEV_VECTOR3F;
 TwType TW_TYPE_OGLDEV_VECTOR2I;
@@ -517,14 +517,14 @@ bool COpenGLRenderer::Init()
 {
 	bool Error = false;
 
-	Error |= !EarthMap.LoadTexture2D("earthmap.jpg");
-	Error |= !CloudsMap.LoadTexture2D("cloudsmap.jpg");
+	Error |= !EarthMap.LoadTexture2D("data/render/earthmap.jpg");
+	Error |= !CloudsMap.LoadTexture2D("data/render/cloudsmap.jpg");
 	//Error |= !LightsMap.LoadTexture2D("lightsmap.jpg");
 
-	Error |= !gfs.Load("groundfromspace.vs", "groundfromspace.fs");
-	Error |= !gfa.Load("groundfromatmosphere.vs", "groundfromatmosphere.fs");
-	Error |= !sfs.Load("skyfromspace.vs", "skyfromspace.fs");
-	Error |= !sfa.Load("skyfromatmosphere.vs", "skyfromatmosphere.fs");
+	Error |= !gfs.Load("data/render/groundfromspace.vs", "data/render/groundfromspace.fs");
+	Error |= !gfa.Load("data/render/groundfromatmosphere.vs", "data/render/groundfromatmosphere.fs");
+	Error |= !sfs.Load("data/render/skyfromspace.vs", "data/render/skyfromspace.fs");
+	Error |= !sfa.Load("data/render/skyfromatmosphere.vs", "data/render/skyfromatmosphere.fs");
 
 	if (Error)
 	{
@@ -1013,7 +1013,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 
 	// load tle
-	tleload.LoadData("TLE20180724.txt", 2);
+	tleload.LoadData("data/TLE20180724.txt", 2);
 	//std::string content = requestHttps.getResponse();
 	//bool success = parseJsonResponse.ParseTelescopeStatus(status, content);
 	//if (success){
