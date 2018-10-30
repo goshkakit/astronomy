@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "../include/func.h"
+#include "func.h"
 /*------------------------- test driver --------------------------------- 
 main()
 {
