@@ -69,28 +69,28 @@
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\common\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\common\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\common\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\common\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
