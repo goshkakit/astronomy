@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="main">
-      <UniqueIdentifier>{818c2d16-2e50-4c47-a525-8334839ae3f5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crd.h">
@@ -51,15 +48,6 @@
     </ClCompile>
     <ClCompile Include="write_merit.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="crd_chk.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="crd_to_merit.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="wr_test.cpp">
-      <Filter>main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
