@@ -3,8 +3,8 @@
 
 #include <string.h>
 #include <math.h>
-#include "../include/crd.h"
-#include "../include/func.h"
+#include "crd.h"
+#include "func.h"
 
 #include <cstring>
 #include <conio.h>

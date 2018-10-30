@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/crd.h"
+#include "crd.h"
 
 #include "conio.h"
 

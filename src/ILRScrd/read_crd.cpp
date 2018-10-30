@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../include/crd.h"
+#include "crd.h"
 
 /*-------------------------------------------------------------------------
  * Subroutines: read CRD data records from an input string.

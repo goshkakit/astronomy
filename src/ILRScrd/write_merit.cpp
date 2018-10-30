@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../include/merit.h"
+#include "merit.h"
 
 /*-------------------------------------------------------------------------
  * Subroutine:  write old ILRS (CSTG) fullrate data format records

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../include/crd.h"
+#include "crd.h"
 
 /*-------------------------------------------------------------------------
  * Subroutines: write CRD data records to an output file.

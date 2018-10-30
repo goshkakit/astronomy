@@ -9,9 +9,9 @@
 #define FNLEN   256
 #define FMT_VERSION 0
 
-#include "../include/crd.h"
-#include "../include/merit.h"
-#include "../include/func.h"
+#include "crd.h"
+#include "merit.h"
+#include "func.h"
 
 FILE *str_in, *str_out;
 fpos_t startpos;
