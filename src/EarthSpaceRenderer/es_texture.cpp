@@ -1,4 +1,5 @@
 #include "es_texture.h"
+#include "es_globals.h"
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -355,4 +356,3 @@ void CShaderProgram::SetDefaults()
 	UniformLocations = NULL;
 	AttribLocations = NULL;
 }
-

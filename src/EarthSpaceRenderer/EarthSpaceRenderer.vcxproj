@@ -149,15 +149,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="common.cpp" />
+    <ClCompile Include="es_buffer.cpp" />
+    <ClCompile Include="es_camera.cpp" />
+    <ClCompile Include="es_globals.cpp" />
+    <ClCompile Include="es_renderer.cpp" />
+    <ClCompile Include="es_texture.cpp" />
+    <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="string.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="es_buffer.h" />
+    <ClInclude Include="es_camera.h" />
+    <ClInclude Include="es_defines.h" />
+    <ClInclude Include="es_globals.h" />
+    <ClInclude Include="es_renderer.h" />
+    <ClInclude Include="es_texture.h" />
+    <ClInclude Include="es_view.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="string.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\render\groundfromatmosphere.fs" />
+    <None Include="..\..\data\render\groundfromatmosphere.vs" />
+    <None Include="..\..\data\render\groundfromspace.fs" />
+    <None Include="..\..\data\render\groundfromspace.vs" />
+    <None Include="..\..\data\render\skyfromatmosphere.fs" />
+    <None Include="..\..\data\render\skyfromatmosphere.vs" />
+    <None Include="..\..\data\render\skyfromspace.fs" />
+    <None Include="..\..\data\render\skyfromspace.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,7 +6,7 @@
 
 uniform sampler2D s2Tex1;
 uniform sampler2D s2Tex2;
-//uniform sampler2D s2Tex3;
+uniform sampler2D s2Tex3;
 
 void main (void)
 {

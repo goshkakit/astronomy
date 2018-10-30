@@ -9,11 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{5f822ed9-6a05-4861-938a-9866efd6acf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="common.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="glmath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -21,6 +21,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,5 +52,52 @@
     <ClInclude Include="string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="es_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\render\skyfromspace.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\groundfromatmosphere.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\groundfromatmosphere.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\groundfromspace.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\groundfromspace.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\skyfromatmosphere.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\skyfromatmosphere.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\render\skyfromspace.fs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
