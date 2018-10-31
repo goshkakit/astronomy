@@ -10,7 +10,7 @@ CCamera Camera;
 
 COpenGLRenderer OpenGLRenderer;
 
-CString ModuleDirectory, ErrorLog;
+CString ModuleDirectory = "./", DataDirectory = "../data/render/", ErrorLog;
 
 COpenGLView OpenGLView;
 

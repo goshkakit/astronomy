@@ -149,8 +149,6 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	this->Samples = Samples;
 
-	GetModuleDirectory();
-
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &gl_max_texture_size);
 
 	if (GLEW_EXT_texture_filter_anisotropic)

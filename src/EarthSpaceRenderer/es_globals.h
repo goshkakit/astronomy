@@ -17,7 +17,7 @@ extern CCamera Camera;
 
 extern COpenGLRenderer OpenGLRenderer;
 
-extern CString ModuleDirectory, ErrorLog;
+extern CString ModuleDirectory, DataDirectory, ErrorLog;
 
 extern COpenGLView OpenGLView;
 

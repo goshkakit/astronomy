@@ -15,14 +15,14 @@ bool COpenGLRenderer::Init()
 {
 	bool Error = false;
 
-	Error |= !EarthMap.LoadTexture2D("data/render/earthmap.jpg");
-	Error |= !CloudsMap.LoadTexture2D("data/render/cloudsmap.jpg");
-	Error |= !LightsMap.LoadTexture2D("data/render/lightsmap.jpg");
+	Error |= !EarthMap.LoadTexture2D("earthmap.jpg");
+	Error |= !CloudsMap.LoadTexture2D("cloudsmap.jpg");
+	Error |= !LightsMap.LoadTexture2D("lightsmap.jpg");
 
-	Error |= !gfs.Load("data/render/groundfromspace.vs", "data/render/groundfromspace.fs");
-	Error |= !gfa.Load("data/render/groundfromatmosphere.vs", "data/render/groundfromatmosphere.fs");
-	Error |= !sfs.Load("data/render/skyfromspace.vs", "data/render/skyfromspace.fs");
-	Error |= !sfa.Load("data/render/skyfromatmosphere.vs", "data/render/skyfromatmosphere.fs");
+	Error |= !gfs.Load("groundfromspace.vs", "groundfromspace.fs");
+	Error |= !gfa.Load("groundfromatmosphere.vs", "groundfromatmosphere.fs");
+	Error |= !sfs.Load("skyfromspace.vs", "skyfromspace.fs");
+	Error |= !sfa.Load("skyfromatmosphere.vs", "skyfromatmosphere.fs");
 
 	if (Error)
 	{

@@ -19,7 +19,7 @@ CTexture::operator GLuint ()
 
 bool CTexture::LoadTexture2D(char *FileName)
 {
-	CString DirectoryFileName = ModuleDirectory + FileName;
+	CString DirectoryFileName = DataDirectory + FileName;
 
 	int Width, Height, BPP;
 
@@ -79,7 +79,7 @@ bool CTexture::LoadTextureCubeMap(char **FileNames)
 
 	for (int i = 0; i < 6; i++)
 	{
-		CString DirectoryFileName = ModuleDirectory + FileNames[i];
+		CString DirectoryFileName = DataDirectory + FileNames[i];
 
 		dib[i] = GetBitmap(DirectoryFileName, Width, Height, BPP);
 
@@ -295,7 +295,7 @@ void CShaderProgram::Destroy()
 
 GLuint CShaderProgram::LoadShader(char *FileName, GLenum Type)
 {
-	CString DirectoryFileName = ModuleDirectory + FileName;
+	CString DirectoryFileName = DataDirectory + FileName;
 
 	FILE *File;
 
