@@ -32,7 +32,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (RegisterClassEx(&WndClassEx) == 0)
 	{
-		ErrorLog.Set("RegisterClassEx failed!");
+		ErrorLog.Append("RegisterClassEx failed!\r\n");
 		return false;
 	}
 
@@ -42,7 +42,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (hWnd == NULL)
 	{
-		ErrorLog.Set("CreateWindowEx failed!");
+		ErrorLog.Append("CreateWindowEx failed!\r\n");
 		return false;
 	}
 
@@ -50,7 +50,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (hDC == NULL)
 	{
-		ErrorLog.Set("GetDC failed!");
+		ErrorLog.Append("GetDC failed!\r\n");
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (PixelFormat == 0)
 	{
-		ErrorLog.Set("ChoosePixelFormat failed!");
+		ErrorLog.Append("ChoosePixelFormat failed!\r\n");
 		return false;
 	}
 
@@ -78,7 +78,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (SetPixelFormat(hDC, MSAAPixelFormat == 0 ? PixelFormat : MSAAPixelFormat, &pfd) == FALSE)
 	{
-		ErrorLog.Set("SetPixelFormat failed!");
+		ErrorLog.Append("SetPixelFormat failed!\r\n");
 		return false;
 	}
 
@@ -86,25 +86,25 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 	if (hGLRC == NULL)
 	{
-		ErrorLog.Set("wglCreateContext failed!");
+		ErrorLog.Append("wglCreateContext failed!\r\n");
 		return false;
 	}
 
 	if (wglMakeCurrent(hDC, hGLRC) == FALSE)
 	{
-		ErrorLog.Set("wglMakeCurrent failed!");
+		ErrorLog.Append("wglMakeCurrent failed!\r\n");
 		return false;
 	}
 
 	if (glewInit() != GLEW_OK)
 	{
-		ErrorLog.Set("glewInit failed!");
+		ErrorLog.Append("glewInit failed!\r\n");
 		return false;
 	}
 
 	if (!GLEW_VERSION_2_1)
 	{
-		ErrorLog.Set("OpenGL 2.1 not supported!");
+		ErrorLog.Append("OpenGL 2.1 not supported!\r\n");
 		return false;
 	}
 
@@ -393,7 +393,7 @@ void COpenGLView::OnPaint()
 
 
 		vec3 pos2;
-		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// прогноз положения в километрах
 		pos.x = eci1.Position().m_x;
 		pos.y = eci1.Position().m_y;
 		pos.z = eci1.Position().m_z;
