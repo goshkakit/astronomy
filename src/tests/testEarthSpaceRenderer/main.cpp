@@ -1,5 +1,6 @@
 
 #include "EarthSpaceRenderer/es_globals.h"
+#include "EarthSpaceRenderer/es_scene_norad.h"
 
 #include <Windows.h>
 
@@ -9,8 +10,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
+		Scene::CScene scene;
+		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
+			new Scene::CNoradLayer("data/test/TLE20180724.txt")
+			)
+		);
+		OpenGLView.setScene(&scene);
+
 		OpenGLView.Show();
 		OpenGLView.MessageLoop();
+
+		scene.FreeInstances();
 	}
 	else
 	{

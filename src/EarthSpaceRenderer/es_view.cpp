@@ -213,9 +213,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 	TwAddVarRW(bar, "Position", TW_TYPE_OGLDEV_VECTOR3F, (void*)&tw_pos, NULL);
 	TwAddVarRO(bar, "Direction", TW_TYPE_DIR3F, &tw_dir, " axisz=-z ");
 
-
-	// load tle
-	tleload.LoadData("data/test/TLE20180724.txt", 2);
+	pScene = (Scene::CScene *)0;
 
 	return OpenGLRenderer.Init();
 }
@@ -381,39 +379,15 @@ void COpenGLView::OnPaint()
 	glVertex3f(0.0f, 0.0f, 2.0f*Camera.PlanetRadius);
 	glEnd();
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(3.0f);
-
-	int bandValue = 0;
-	vec3 pos;
-
-	for (int i = 0; i < tleload.NORADList.size(); i++)
+	if (pScene)
 	{
-		cEciTime eci1 = tleload.NORADList[i]->GetPosition(globalTime*3.0f);
-
-
-		vec3 pos2;
-		// прогноз положения в километрах
-		pos.x = eci1.Position().m_x;
-		pos.y = eci1.Position().m_y;
-		pos.z = eci1.Position().m_z;
-
-		pos2.x = 4.0*pos.x / 6356000.0f * Camera.PlanetRadius;
-		pos2.y = 4.0*pos.y / 6356000.0f * Camera.PlanetRadius;
-		pos2.z = 4.0*pos.z / 6356000.0f * Camera.PlanetRadius;
-
-		if (length(pos) < 6371.0f + 100.0f)
-			bandValue++;
-
-		glBegin(GL_POINTS);
-		//glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(pos2.x, pos2.y, pos2.z);
-		glEnd();
+		pScene->Update(globalTime);
+		pScene->Render();
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------
 
-	tw_Zoom = bandValue;
+	tw_Zoom = 0;
 
 	globalTime += FrameTime;
 
@@ -422,7 +396,7 @@ void COpenGLView::OnPaint()
 	tw_R = Camera.PlanetRadius;
 	tw_Dist = length(Camera.Position);
 
-	tw_pos = pos;// Camera.Position;
+	tw_pos = Camera.Position;
 	tw_dir = Camera.Z;
 
 	TwDraw();
@@ -449,6 +423,12 @@ void COpenGLView::OnSize(int Width, int Height)
 
 	// Send the new window size to AntTweakBar
 	TwWindowSize(Width, Height);
+}
+
+
+void COpenGLView::setScene(Scene::CScene * scene)
+{
+	pScene = scene;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------

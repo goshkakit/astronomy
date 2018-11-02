@@ -14,8 +14,6 @@ CString ModuleDirectory = "./", DataDirectory = "../data/render/", ErrorLog;
 
 COpenGLView OpenGLView;
 
-TLELoader tleload;
-
 #ifdef _DEBUG
 #include <stdio.h>
 #include <time.h>

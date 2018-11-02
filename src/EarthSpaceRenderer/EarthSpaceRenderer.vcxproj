@@ -136,6 +136,8 @@
     <ClCompile Include="es_camera.cpp" />
     <ClCompile Include="es_globals.cpp" />
     <ClCompile Include="es_renderer.cpp" />
+    <ClCompile Include="es_scene.cpp" />
+    <ClCompile Include="es_scene_norad.cpp" />
     <ClCompile Include="es_texture.cpp" />
     <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
@@ -147,6 +149,8 @@
     <ClInclude Include="es_defines.h" />
     <ClInclude Include="es_globals.h" />
     <ClInclude Include="es_renderer.h" />
+    <ClInclude Include="es_scene.h" />
+    <ClInclude Include="es_scene_norad.h" />
     <ClInclude Include="es_texture.h" />
     <ClInclude Include="es_view.h" />
     <ClInclude Include="glmath.h" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "es_defines.h"
+#include "es_scene.h"
 
 class COpenGLView
 {
@@ -17,6 +18,8 @@ protected:
 	float tw_R;
 	vec3 tw_pos, tw_dir;
 	float globalTime;
+
+	Scene::CScene *pScene;
 
 protected:
 	int LastX, LastY;
@@ -37,4 +40,6 @@ public:
 	void OnPaint();
 	void OnRButtonDown(int X, int Y);
 	void OnSize(int Width, int Height);
+
+	void setScene(Scene::CScene * scene);
 };
