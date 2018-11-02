@@ -215,7 +215,7 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 
 
 	// load tle
-	tleload.LoadData("data/TLE20180724.txt", 2);
+	tleload.LoadData("data/test/TLE20180724.txt", 2);
 
 	return OpenGLRenderer.Init();
 }
