@@ -19,7 +19,7 @@ protected:
 	vec3 tw_pos, tw_dir;
 	float globalTime;
 
-	Scene::CScene *pScene;
+	Scene::CScene *pScene, debugScene;
 
 protected:
 	int LastX, LastY;

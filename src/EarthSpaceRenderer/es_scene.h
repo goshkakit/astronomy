@@ -14,24 +14,30 @@ namespace Scene
 		virtual void Update(float time);
 		virtual void Render();
 		virtual void Clear();
+
+	private:
+		CLayer(const CLayer &) = delete;
+		CLayer & operator=(const CLayer &) = delete;
 	};
 
-	class CScene
+	class CLayerGroup : public CLayer
 	{
 	public:
 		std::vector<CLayer *> layers;
 
-		CScene();
-		virtual ~CScene();
+		CLayerGroup();
+		virtual ~CLayerGroup();
 		virtual void Update(float time);
 		virtual void Render();
 		virtual void Clear();
-		
-		void FreeInstances();
+	};
 
-	private:
-		CScene(const CScene &) = delete;
-		CScene & operator=(const CScene &) = delete;
+	class CScene : public CLayerGroup
+	{
+	public:
+		CScene();
+		virtual ~CScene();
+		void FreeInstances();
 	};
 
 	class CPointArrayLayer : public CLayer
@@ -43,7 +49,31 @@ namespace Scene
 
 		CPointArrayLayer();
 		virtual ~CPointArrayLayer();
-		//virtual void Update(float time);
+		virtual void Render();
+		virtual void Clear();
+	};
+
+	class CLineLayer : public CLayer
+	{
+	public:
+		vec3 vertices[2];
+		vec3 lineColor;
+		GLfloat lineSize;
+
+		CLineLayer();
+		virtual ~CLineLayer();
+		virtual void Render();
+	};
+
+	class CPolylineLayer : public CLayer
+	{
+	public:
+		std::vector<vec3> vertices;
+		vec3 lineColor;
+		GLfloat lineSize;
+
+		CPolylineLayer();
+		virtual ~CPolylineLayer();
 		virtual void Render();
 		virtual void Clear();
 	};

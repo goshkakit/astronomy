@@ -213,6 +213,65 @@ bool COpenGLView::Init(HINSTANCE hInstance, char *Title, int Width, int Height, 
 	TwAddVarRW(bar, "Position", TW_TYPE_OGLDEV_VECTOR3F, (void*)&tw_pos, NULL);
 	TwAddVarRO(bar, "Direction", TW_TYPE_DIR3F, &tw_dir, " axisz=-z ");
 
+#ifdef _DEBUG
+	{
+		Scene::CPolylineLayer *circ[] = {
+			new Scene::CPolylineLayer(),
+			new Scene::CPolylineLayer(),
+			new Scene::CPolylineLayer(),
+		};
+
+		circ[0]->lineColor = vec3(1.f, 0.f, 1.f);
+		circ[1]->lineColor = vec3(0.f, 1.f, 1.f);
+		circ[2]->lineColor = vec3(1.f, 1.f, 0.f);
+		circ[0]->lineSize = 2.f;
+		circ[1]->lineSize = 2.f;
+		circ[2]->lineSize = 2.f;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			debugScene.layers.push_back(
+				dynamic_cast<Scene::CLayer*>(circ[i])
+			);
+		}
+
+		const int Nsteps = 256;
+		const float delta = (float)(M_PI * 2 / Nsteps);
+
+		const float R = 1.25f;
+
+		for (int i = 0; i <= Nsteps; ++i)
+		{
+			float fi = delta*i;
+			float c = cosf(fi)*R;
+			float s = sinf(fi)*R;
+			circ[0]->vertices.push_back(vec3(s, 0.f, c));
+			circ[1]->vertices.push_back(vec3(0.f, c, s));
+			circ[2]->vertices.push_back(vec3(c, s, 0.f));
+		}
+
+		Scene::CLineLayer *axes[3] = {
+			new Scene::CLineLayer(),
+			new Scene::CLineLayer(),
+			new Scene::CLineLayer(),
+		};
+
+		axes[0]->lineColor = vec3(1.0f, 0.0f, 0.0f);
+		axes[1]->lineColor = vec3(0.0f, 1.0f, 0.0f);
+		axes[2]->lineColor = vec3(0.0f, 0.0f, 1.0f);
+		axes[0]->vertices[1] = vec3(200.0f, 0.0f, 0.0f);
+		axes[1]->vertices[1] = vec3(0.0f, 200.0f, 0.0f);
+		axes[2]->vertices[1] = vec3(0.0f, 0.0f, 200.0f);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			debugScene.layers.push_back(
+				dynamic_cast<Scene::CLayer*>(axes[i])
+			);
+		}
+	}
+#endif
+
 	pScene = (Scene::CScene *)0;
 
 	return OpenGLRenderer.Init();
@@ -251,6 +310,8 @@ void COpenGLView::MessageLoop()
 
 void COpenGLView::Destroy()
 {
+	debugScene.FreeInstances();
+
 	if (GLEW_VERSION_2_1)
 	{
 		OpenGLRenderer.Destroy();
@@ -361,23 +422,13 @@ void COpenGLView::OnPaint()
 	OpenGLRenderer.Render(FrameTime);
 
 	//----------------------------------------------------------------------------------------------------------------------
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(2.0f*Camera.PlanetRadius, 0.0f, 0.0f);
-	glEnd();
 
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 2.0f*Camera.PlanetRadius, 0.0f);
-	glEnd();
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 2.0f*Camera.PlanetRadius);
-	glEnd();
+#ifdef _DEBUG
+	{
+		debugScene.Update(globalTime);
+		debugScene.Render();
+	}
+#endif
 
 	if (pScene)
 	{
@@ -424,7 +475,6 @@ void COpenGLView::OnSize(int Width, int Height)
 	// Send the new window size to AntTweakBar
 	TwWindowSize(Width, Height);
 }
-
 
 void COpenGLView::setScene(Scene::CScene * scene)
 {
