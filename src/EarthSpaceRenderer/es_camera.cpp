@@ -35,7 +35,12 @@ void CCamera::Look(vec3 Position, vec3 Reference, float PlanetRadius)
 	this->PlanetRadius = PlanetRadius;
 
 	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
+
+	vec3 T = cross(vec3(0.0f, 1.0f, 0.0f), Z);
+	if (length2(T) < 1.e-6f)
+		 T = cross(vec3(0.0f, 0.0f, ((Z.y < 0.f) ? (1.f) : (-1.f))), Z);
+
+	X = normalize(T);
 	Y = cross(Z, X);
 
 	CalculateViewMatrix();
