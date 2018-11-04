@@ -35,7 +35,7 @@ void Scene::CNoradLayer::Update(float time)
 
 	for (Zeptomoby::OrbitTools::cOrbit * elem : tleloader.NORADList)
 	{
-		Zeptomoby::OrbitTools::cEciTime eci1 = elem->GetPosition(time*3.0f);
+		Zeptomoby::OrbitTools::cEciTime eci1 = elem->GetPosition(time);
 
 		const Zeptomoby::OrbitTools::cVector & pos = eci1.Position();
 
