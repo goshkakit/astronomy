@@ -40,9 +40,9 @@ void Scene::CNoradLayer::Update(float time)
 		const Zeptomoby::OrbitTools::cVector & pos = eci1.Position();
 
 		points.push_back(
-			vec3( (float)(pos.m_x * C)
-				, (float)(pos.m_y * C)
+			vec3( (float)(pos.m_y * C)
 				, (float)(pos.m_z * C)
+				, (float)(pos.m_x * C)
 			)
 		);
 	}
