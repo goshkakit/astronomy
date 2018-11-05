@@ -34,6 +34,11 @@ CErrorLogSaver::CErrorLogSaver()
 
 CErrorLogSaver::~CErrorLogSaver()
 {
+	char * s = (char*)ErrorLog;
+
+	if (!s) return;
+	if (!*s) return;
+
 	FILE *f = fopen((char*)(ModuleDirectory + "EarthSpaceRenderer.log"), "ab");
 
 	if (f)
@@ -48,7 +53,6 @@ CErrorLogSaver::~CErrorLogSaver()
 		fprintf(f, "%s", asctime(timeinfo));
 		fprintf(f, "--------------------------------------------------------------------------------\n");
 
-		char * s = (char*)ErrorLog;
 		fwrite(s, strlen(s), 1, f);
 
 		fclose(f);
