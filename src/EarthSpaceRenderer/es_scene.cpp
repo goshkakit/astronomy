@@ -122,11 +122,11 @@ void Scene::CPointArrayLayer::Clear()
 
 Scene::CLineLayer::CLineLayer()
 	: CLayer()
-	, vertices{ vec3(), vec3() }
 	, lineColor(1.f, 0.f, 0.f)
 	, lineSize(1.f)
 {
-
+    vertices[0] = vec3();
+    vertices[1] = vec3();
 }
 
 Scene::CLineLayer::~CLineLayer()
