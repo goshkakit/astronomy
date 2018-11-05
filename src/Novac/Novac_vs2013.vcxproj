@@ -34,7 +34,7 @@
     <ClCompile Include="solsys1.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <RootNamespace>Novac</RootNamespace>
+    <ProjectName>Novac</ProjectName>
     <ProjectGuid>{029980F6-C550-4539-BBD1-E158FE2FD14D}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
