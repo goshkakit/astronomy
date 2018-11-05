@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InfluenceForce", "src\InfluenceForce\InfluenceForce.vcxproj", "{EE3E3846-4028-4038-B46D-56FB5942725A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InfluenceForce", "src\InfluenceForce\InfluenceForce_vs2015.vcxproj", "{EE3E3846-4028-4038-B46D-56FB5942725A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitIntegration", "src\OrbitIntegration\OrbitIntegration.vcxproj", "{112C2006-B8E8-4C89-90E3-C84ACF7076C1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitIntegration", "src\OrbitIntegration\OrbitIntegration_vs2015.vcxproj", "{112C2006-B8E8-4C89-90E3-C84ACF7076C1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "src\common\common.vcxproj", "{A9C29E2A-AA23-4102-8C71-DDC80DE023D1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "src\common\common_vs2015.vcxproj", "{A9C29E2A-AA23-4102-8C71-DDC80DE023D1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testOrbitIntegration", "src\tests\testOrbitIntegration\testOrbitIntegration.vcxproj", "{6E5D9B12-F6C1-4C90-85C2-C536DDF0239D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testOrbitIntegration", "src\tests\testOrbitIntegration\testOrbitIntegration_vs2015.vcxproj", "{6E5D9B12-F6C1-4C90-85C2-C536DDF0239D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{9DC00215-9F6A-47E4-B586-7DEC94D3C60F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{28B8D2DA-97C8-4C06-9CDC-248AE94FE21B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "norad", "src\norad\norad.vcxproj", "{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "norad", "src\Norad\norad_vs2015.vcxproj", "{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
