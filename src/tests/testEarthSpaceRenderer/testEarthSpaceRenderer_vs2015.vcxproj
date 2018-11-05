@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <RootNamespace>EarthSpaceRenderer</RootNamespace>
-    <ProjectGuid>{807FB673-4785-4118-AE36-3B05258DABB4}</ProjectGuid>
+    <ProjectName>testEarthSpaceRenderer</ProjectName>
+    <ProjectGuid>{846F53C6-3AB6-4338-86D2-177F009B24BF}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -64,24 +64,32 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\AntTweakBar\include\;$(SolutionDir)3rdparty\FreeImage\;$(SolutionDir)3rdparty\glew-1.11.0\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)3rdparty\AntTweakBar\lib-build\;$(SolutionDir)3rdparty\FreeImage\$(Platform)\;$(SolutionDir)3rdparty\glew-1.11.0\lib\Release\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,8 +97,11 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>common.lib;norad.lib;opengl32.lib;glew32.lib;FreeImage.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -98,8 +109,11 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>common.lib;norad.lib;opengl32.lib;glew32.lib;FreeImage.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -109,11 +123,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>common.lib;norad.lib;opengl32.lib;glew32.lib;FreeImage.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,47 +139,21 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>common.lib;norad.lib;opengl32.lib;glew32.lib;FreeImage.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="es_buffer.cpp" />
-    <ClCompile Include="es_camera.cpp" />
-    <ClCompile Include="es_globals.cpp" />
-    <ClCompile Include="es_renderer.cpp" />
-    <ClCompile Include="es_scene.cpp" />
-    <ClCompile Include="es_scene_norad.cpp" />
-    <ClCompile Include="es_texture.cpp" />
-    <ClCompile Include="es_view.cpp" />
-    <ClCompile Include="glmath.cpp" />
-    <ClCompile Include="string.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="es_buffer.h" />
-    <ClInclude Include="es_camera.h" />
-    <ClInclude Include="es_defines.h" />
-    <ClInclude Include="es_globals.h" />
-    <ClInclude Include="es_renderer.h" />
-    <ClInclude Include="es_scene.h" />
-    <ClInclude Include="es_scene_norad.h" />
-    <ClInclude Include="es_texture.h" />
-    <ClInclude Include="es_view.h" />
-    <ClInclude Include="glmath.h" />
-    <ClInclude Include="string.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\data\render\groundfromatmosphere.fs" />
-    <None Include="..\..\data\render\groundfromatmosphere.vs" />
-    <None Include="..\..\data\render\groundfromspace.fs" />
-    <None Include="..\..\data\render\groundfromspace.vs" />
-    <None Include="..\..\data\render\skyfromatmosphere.fs" />
-    <None Include="..\..\data\render\skyfromatmosphere.vs" />
-    <None Include="..\..\data\render\skyfromspace.fs" />
-    <None Include="..\..\data\render\skyfromspace.vs" />
+    <ProjectReference Include="..\..\EarthSpaceRenderer\EarthSpaceRenderer_vs2015.vcxproj">
+      <Project>{807fb673-4785-4118-ae36-3b05258dabb4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
