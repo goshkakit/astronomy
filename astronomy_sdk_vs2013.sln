@@ -17,17 +17,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9A24A304
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testOrbitIntegration", "src\tests\testOrbitIntegration\testOrbitIntegration_vs2013.vcxproj", "{4E7A6BE9-3E75-40D1-8958-C79F2274E4A0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novac_vs2013", "src\Novac\Novac_vs2013.vcxproj", "{029980F6-C550-4539-BBD1-E158FE2FD14D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novac", "src\Novac\Novac_vs2013.vcxproj", "{029980F6-C550-4539-BBD1-E158FE2FD14D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testNovac_vs2013", "src\tests\testNovac\testNovac_vs2013.vcxproj", "{BCEF139A-F38A-4973-80B7-D7FCFA17838D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sofa_vs2013", "src\Sofa\Sofa_vs2013.vcxproj", "{B36CFDBF-469C-420A-8EC3-54B1A362DD24}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sofa", "src\Sofa\Sofa_vs2013.vcxproj", "{B36CFDBF-469C-420A-8EC3-54B1A362DD24}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testSofa_vs2013", "src\tests\testSofa\testSofa_vs2013.vcxproj", "{DC1DA19B-AFF5-4DFC-978B-8C88F23F2C8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "develop", "develop", "{6E5236B4-9232-49A2-9C97-23C84B538D31}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScrd_vs2013", "src\ILRScrd\ILRScrd_vs2013.vcxproj", "{D4B1F77D-8E4C-494A-A66F-C0AD8DB71147}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScrd", "src\ILRScrd\ILRScrd_vs2013.vcxproj", "{D4B1F77D-8E4C-494A-A66F-C0AD8DB71147}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testILRScrd_vs2013", "src\tests\testILRScrd\testILRScrd_vs2013.vcxproj", "{2EDF952B-EEA4-4D2C-9D9F-95925786FBC0}"
 EndProject
