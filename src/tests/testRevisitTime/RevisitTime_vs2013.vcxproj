@@ -21,8 +21,20 @@
   <ItemGroup>
     <ClCompile Include="revisitTime.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\common_vs2013.vcxproj">
+      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\InfluenceForce\InfluenceForce_vs2013.vcxproj">
+      <Project>{2b2652b1-3736-4788-b5c3-f80635bee541}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Norad\norad_vs2013.vcxproj">
+      <Project>{4b179094-e1b9-4ea3-818f-e9daeb8a660e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D7C93B1-C933-4C90-BD47-617939F2A556}</ProjectGuid>
+    <ProjectName>RevisitTime</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
