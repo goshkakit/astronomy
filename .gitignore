@@ -1,9 +1,9 @@
 
 \.tmp/
 
-bin/
+/bin/
 
-lib/
+/lib/
 
 \.vs/
 
@@ -12,6 +12,9 @@ lib/
 *.user
 
 *.opendb
-/*.sdf
-/*.suo
-/*.opensdf
+
+*.sdf
+
+*.suo
+
+*.opensdf

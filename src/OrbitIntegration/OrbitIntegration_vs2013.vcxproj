@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <RootNamespace>OrbitIntegration</RootNamespace>
+    <ProjectName>OrbitIntegration</ProjectName>
     <ProjectGuid>{BFB3419F-8886-4450-B1C6-866CC4DDE7FD}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

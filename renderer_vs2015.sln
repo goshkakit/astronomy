@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EarthSpaceRenderer", "src\EarthSpaceRenderer\EarthSpaceRenderer_vs2015.vcxproj", "{807FB673-4785-4118-AE36-3B05258DABB4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testEarthSpaceRenderer", "src\tests\testEarthSpaceRenderer\testEarthSpaceRenderer_vs2015.vcxproj", "{846F53C6-3AB6-4338-86D2-177F009B24BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{4B5DEA67-4B52-49D6-8D1E-485DDC5FE860}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7858B4B1-4BE0-4C3D-94A8-B1FEA8B38B79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Debug|x64.ActiveCfg = Debug|x64
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Debug|x64.Build.0 = Debug|x64
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Debug|x86.ActiveCfg = Debug|Win32
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Debug|x86.Build.0 = Debug|Win32
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Release|x64.ActiveCfg = Release|x64
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Release|x64.Build.0 = Release|x64
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Release|x86.ActiveCfg = Release|Win32
+		{807FB673-4785-4118-AE36-3B05258DABB4}.Release|x86.Build.0 = Release|Win32
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Debug|x64.ActiveCfg = Debug|x64
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Debug|x64.Build.0 = Debug|x64
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Debug|x86.ActiveCfg = Debug|Win32
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Debug|x86.Build.0 = Debug|Win32
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Release|x64.ActiveCfg = Release|x64
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Release|x64.Build.0 = Release|x64
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Release|x86.ActiveCfg = Release|Win32
+		{846F53C6-3AB6-4338-86D2-177F009B24BF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{807FB673-4785-4118-AE36-3B05258DABB4} = {4B5DEA67-4B52-49D6-8D1E-485DDC5FE860}
+		{846F53C6-3AB6-4338-86D2-177F009B24BF} = {7858B4B1-4BE0-4C3D-94A8-B1FEA8B38B79}
+	EndGlobalSection
+EndGlobal
