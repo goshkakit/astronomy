@@ -8,17 +8,17 @@ Scene::CNoradLayer::CNoradLayer()
 
 }
 
-Scene::CNoradLayer::CNoradLayer(const char *tlepath)
+Scene::CNoradLayer::CNoradLayer(const char *tlepath, int numbLine)
 	: CPointArrayLayer()
 	, tleloader()
 {
-	tleloader.LoadData(tlepath, 2);
+	tleloader.LoadData(tlepath, numbLine);
 }
 
-void Scene::CNoradLayer::Load(const char *tlepath)
+void Scene::CNoradLayer::Load(const char *tlepath, int numbLine)
 {
 	tleloader.clear();
-	tleloader.LoadData(tlepath, 2);
+	tleloader.LoadData(tlepath, numbLine);
 }
 
 Scene::CNoradLayer::~CNoradLayer()

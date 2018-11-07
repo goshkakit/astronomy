@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	{
 		Scene::CScene scene;
 		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
-			new Scene::CNoradLayer("data/test/TLE20180724.txt")
+			new Scene::CNoradLayer("data/test/TLE20180724.txt", 2)
 			)
 		);
 		OpenGLView.setScene(&scene);
