@@ -28,7 +28,7 @@ Scene::CNoradLayer::~CNoradLayer()
 
 void Scene::CNoradLayer::Update(float time)
 {
-	const double C = 4.0 * ((double)Camera.PlanetRadius) / 6356000.0;
+	const double C = 4.0e-6 * ((double)Camera.PlanetRadius) / EARTH_RADIUS;
 
 	points.clear();
 	points.reserve(tleloader.NORADList.size());

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,6 +138,7 @@
     <ClCompile Include="es_renderer.cpp" />
     <ClCompile Include="es_scene.cpp" />
     <ClCompile Include="es_scene_norad.cpp" />
+    <ClCompile Include="es_scene_orbit.cpp" />
     <ClCompile Include="es_texture.cpp" />
     <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
@@ -151,9 +152,11 @@
     <ClInclude Include="es_renderer.h" />
     <ClInclude Include="es_scene.h" />
     <ClInclude Include="es_scene_norad.h" />
+    <ClInclude Include="es_scene_orbit.h" />
     <ClInclude Include="es_texture.h" />
     <ClInclude Include="es_view.h" />
     <ClInclude Include="glmath.h" />
+    <ClInclude Include="iorbit.h" />
     <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>
