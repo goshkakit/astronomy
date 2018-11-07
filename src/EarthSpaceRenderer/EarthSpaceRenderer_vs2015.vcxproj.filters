@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -47,6 +47,12 @@
     <ClCompile Include="es_scene_orbit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="corbit_norad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="corbit_predict.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glmath.h">
@@ -86,6 +92,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="iorbit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="corbit_norad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="corbit_predict.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
