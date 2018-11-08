@@ -12,9 +12,30 @@
 #include <math.h>
 #include <Windows.h>
 
+volatile BOOL bConsole = false;
+volatile HWND hConsole = (HWND)NULL;
+
+void FreeConsole_atexit()
+{
+	if (bConsole > 0) FreeConsole();
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine, int iShow)
 {
 	char *AppName = "Planet Earth from space";
+
+	atexit(FreeConsole_atexit);
+
+	if (bConsole = AllocConsole())
+	{
+		SetConsoleTitle(AppName);
+
+		if (hConsole = GetConsoleWindow())
+		{
+			freopen("CONOUT$", "w", stdout);
+			freopen("CONOUT$", "w", stderr);
+		}
+	}
 
 	IPredictOrbitMod *Predict = CreatePredictOrbitMod();
 	Predict->Init();
