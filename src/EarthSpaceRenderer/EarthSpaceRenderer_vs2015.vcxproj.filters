@@ -53,6 +53,9 @@
     <ClCompile Include="corbit_predict.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="space_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glmath.h">
@@ -98,6 +101,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="corbit_predict.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="space_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
