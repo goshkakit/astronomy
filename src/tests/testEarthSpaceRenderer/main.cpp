@@ -23,6 +23,38 @@ void FreeConsole_atexit()
 	if (bConsole > 0) FreeConsole();
 }
 
+class CStaticPointOnEarth : public Scene::IOrbit
+{
+public:
+	Space::CEarth *const Earth;
+	const double jd_start, lat, lng, alt;
+
+	Space::vec3d v0, v1;
+	Space::m3x3d m0t, m1, m;
+
+	CStaticPointOnEarth(Space::CEarth * pEarth, double jd, double _lat, double _lng, double _alt) : Earth(pEarth), jd_start(jd), lat(_lat), lng(_lng), alt(_alt)
+	{
+		Earth->setTime(jd);
+		m0t = Earth->orientation();
+
+		v0 = (Space::mrotZ(lng * M_PI / 180.) * (Space::mrotY(-lat * M_PI / 180.) * Space::vec3d(1., 0., 0.))) * ((EARTH_RADIUS_M + alt) * 1e-6);
+	}
+
+	virtual struct Scene::vec3d_t GetNewPosition(double time)
+	{
+		const double MIN = 1.0 / 1440.0;
+		double jd = time * MIN + jd_start;
+
+		Earth->setTime(jd);
+		m1 = Earth->rotator();
+		m = m1*m0t;
+
+		v1 = m*v0;
+
+		return Scene::vec3d_t(v1.v);
+	}
+};
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine, int iShow)
 {
 	char *AppName = "Planet Earth from space";
@@ -114,6 +146,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 	COrbit_Predict Orbit_Predict(Predict, jd_start, statevec, sun, atm);
 
+	Space::CEarth Earth;
+
+	CStaticPointOnEarth kislovodsk25(&Earth, jd_start, 43.740331, 42.653458, 2085.0013);
+
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
 		Scene::CScene scene;
@@ -127,6 +163,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 		);
 		{
 			dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin())->lineColor = vec3(1.0f, 0.75f, 0.25f);
+		}
+		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
+			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&kislovodsk25))
+			)
+		);
+		{
+			Scene::COrbitLayer *point = dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin());
+			point->lineSize = 0.125f;
+			point->pointSize = 15.f;
 		}
 		OpenGLView.setScene(&scene);
 
