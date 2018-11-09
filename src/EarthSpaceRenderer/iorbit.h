@@ -7,6 +7,7 @@ namespace Scene
 		double x, y, z;
 
 		vec3d_t(double _x = 0.0, double _y = 0.0, double _z = 0.0) : x(_x), y(_y), z(_z) {}
+		vec3d_t(const double _v[]) : x(_v[0]), y(_v[1]), z(_v[2]) {}
 	};
 
 	class IOrbit

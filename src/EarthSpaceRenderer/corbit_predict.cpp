@@ -33,9 +33,7 @@ struct Scene::vec3d_t COrbit_Predict::GetNewPosition(double time)
 	Predict->GetNewPosition(params[0].param);
 
 	Scene::vec3d_t result(
-		  params[0].param.outX[0]
-		, params[0].param.outX[1]
-		, params[0].param.outX[2]
+		  params[0].param.outX
 	);
 
 	if (need_recache(jd))
