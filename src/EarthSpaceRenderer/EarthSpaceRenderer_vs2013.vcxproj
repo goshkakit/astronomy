@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cearth.cpp" />
     <ClCompile Include="corbit_norad.cpp" />
     <ClCompile Include="corbit_predict.cpp" />
     <ClCompile Include="es_buffer.cpp" />
@@ -144,10 +145,12 @@
     <ClCompile Include="es_texture.cpp" />
     <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="space_force.cpp" />
     <ClCompile Include="space_math.cpp" />
     <ClCompile Include="string.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cearth.h" />
     <ClInclude Include="corbit_norad.h" />
     <ClInclude Include="corbit_predict.h" />
     <ClInclude Include="es_buffer.h" />
@@ -163,6 +166,7 @@
     <ClInclude Include="glmath.h" />
     <ClInclude Include="iorbit.h" />
     <ClInclude Include="space_defines.h" />
+    <ClInclude Include="space_force.h" />
     <ClInclude Include="space_math.h" />
     <ClInclude Include="string.h" />
   </ItemGroup>
