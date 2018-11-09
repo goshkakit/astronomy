@@ -1,6 +1,5 @@
 #pragma once
 
-#include "es_defines.h"
 #include "es_scene.h"
 #include "iorbit.h"
 

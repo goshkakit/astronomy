@@ -1,16 +1,9 @@
 #include "corbit_predict.h"
+#include "space_defines.h"
 
 #include "common/DataConverter.h"
 
 #include <math.h>
-
-#ifndef EARTH_GRAVITATIONAL_PARAMETER
-#define EARTH_GRAVITATIONAL_PARAMETER 398600.44188 // km3/s2
-#endif
-
-#ifndef EARTH_RADIUS_KM
-#define EARTH_RADIUS_KM 6356. // km
-#endif
 
 COrbit_Predict::COrbit_Predict(IPredictOrbitMod * _Predict, double jd, double statevec[], double sun /*= 0.0 */, double atm /*= 0.0 */)
 	: Predict(_Predict)

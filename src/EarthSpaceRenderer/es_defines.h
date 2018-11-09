@@ -14,7 +14,3 @@
 #ifndef BUFFER_SIZE_INCREMENT
 #define BUFFER_SIZE_INCREMENT 1048576
 #endif
-
-#ifndef EARTH_RADIUS
-#define EARTH_RADIUS 6.356 // * 10^3 km
-#endif

@@ -106,6 +106,9 @@
     <ClInclude Include="space_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="space_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\data\render\skyfromspace.vs">

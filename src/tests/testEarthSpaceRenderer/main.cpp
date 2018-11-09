@@ -4,11 +4,13 @@
 #include "EarthSpaceRenderer/es_scene_orbit.h"
 #include "EarthSpaceRenderer/corbit_norad.h"
 #include "EarthSpaceRenderer/corbit_predict.h"
+#include "EarthSpaceRenderer/space_defines.h"
 
 #include "common/tleloader.h"
 #include "common/DataConverter.h"
 #include "OrbitIntegration/IPredictOrbitMod.h"
 
+#include <stdio.h>
 #include <math.h>
 #include <Windows.h>
 
@@ -45,8 +47,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	double sun = 0.5E-05;
 	double statevec[6];
 	{
-		const double Rz = EARTH_RADIUS*1e3; // km
-		const double mu = 398600.44188; // km3/s2
+		const double Rz = EARTH_RADIUS_KM; // km
+		const double mu = EARTH_GRAVITATIONAL_PARAMETER; // km3/s2
 		const double T = 3600.0 * 2; // s
 		const double Ro = cbrt((mu*T*T) / (4.0*M_PI*M_PI)); // km
 		const double Vo = sqrt(mu / Ro); // km/s

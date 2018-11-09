@@ -1,4 +1,5 @@
 #include "es_scene_orbit.h"
+#include "space_defines.h"
 
 Scene::COrbitLayer::COrbitLayer(IOrbit * _pOrbit)
 	: CPolylineLayer()

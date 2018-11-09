@@ -1,5 +1,6 @@
 #include "es_scene_norad.h"
 #include "es_globals.h"
+#include "space_defines.h"
 
 Scene::CNoradLayer::CNoradLayer()
 	: CPointArrayLayer()
@@ -28,7 +29,7 @@ Scene::CNoradLayer::~CNoradLayer()
 
 void Scene::CNoradLayer::Update(float time)
 {
-	const double C = 4.0e-6 * ((double)Camera.PlanetRadius) / EARTH_RADIUS;
+	const double C = 4. * ((double)Camera.PlanetRadius) / EARTH_RADIUS_M;
 
 	points.clear();
 	points.reserve(tleloader.NORADList.size());
