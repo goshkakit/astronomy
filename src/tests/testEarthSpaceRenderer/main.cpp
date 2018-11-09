@@ -5,6 +5,7 @@
 #include "EarthSpaceRenderer/corbit_norad.h"
 #include "EarthSpaceRenderer/corbit_predict.h"
 #include "EarthSpaceRenderer/space_defines.h"
+#include "EarthSpaceRenderer/cearth.h"
 
 #include "common/tleloader.h"
 #include "common/DataConverter.h"
@@ -34,9 +35,59 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 		if (hConsole = GetConsoleWindow())
 		{
+			freopen("CONIN$", "r", stdin);
 			freopen("CONOUT$", "w", stdout);
 			freopen("CONOUT$", "w", stderr);
 		}
+	}
+
+	{
+		Space::CEarth Earth(2456339.04783564825);
+		Space::m3x3d m = Earth.rotator();
+
+		printf("\nCalculated:\n");
+		printf("% .12f % .12f % .12f\n", m.m[0][0], m.m[0][1], m.m[0][2]);
+		printf("% .12f % .12f % .12f\n", m.m[1][0], m.m[1][1], m.m[1][2]);
+		printf("% .12f % .12f % .12f\n", m.m[2][0], m.m[2][1], m.m[2][2]);
+		printf("norma = %g\n", m.norme() / sqrt(3.));
+
+		Space::m3x3d r(
+			0.955044161124, 0.296460705420, 0.001304011320,
+			-0.296460923647, 0.955044983243, -0.000027077480,
+			-0.001253416878, -0.000360728211, 0.999999149410
+		);
+
+		printf("\nRight:\n");
+		printf("% .12f % .12f % .12f\n", r.m[0][0], r.m[0][1], r.m[0][2]);
+		printf("% .12f % .12f % .12f\n", r.m[1][0], r.m[1][1], r.m[1][2]);
+		printf("% .12f % .12f % .12f\n", r.m[2][0], r.m[2][1], r.m[2][2]);
+		printf("norma = %g\n", r.norme() / sqrt(3.));
+
+		Space::m3x3d d = m*r.transposed() - Space::munit();
+		printf("\nDelta:\n");
+		printf("% .12f % .12f % .12f\n", d.m[0][0], d.m[0][1], d.m[0][2]);
+		printf("% .12f % .12f % .12f\n", d.m[1][0], d.m[1][1], d.m[1][2]);
+		printf("% .12f % .12f % .12f\n", d.m[2][0], d.m[2][1], d.m[2][2]);
+		printf("norma = %g\n", d.norme() / sqrt(3.));
+
+		Space::vec3d v0 = Space::vec3d(1., 1., 0.).normalized() * EARTH_RADIUS_M;
+		Space::vec3d vc = m*v0;
+		Space::vec3d vr = r*v0;
+		Space::vec3d dr = vc - vr;
+
+		printf("\nError on equator = %g m\n", dr.abs());
+
+		v0 = Space::vec3d(0., 0., 1.) * EARTH_RADIUS_M;
+		vc = m*v0;
+		vr = r*v0;
+		dr = vc - vr;
+
+		printf("\nError on north pole = %g m\n", dr.abs());
+
+		#ifdef _DEBUG
+		printf("\nPress ENTER to continue...\n");
+		getc(stdin);
+		#endif
 	}
 
 	IPredictOrbitMod *Predict = CreatePredictOrbitMod();
