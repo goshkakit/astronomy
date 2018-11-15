@@ -1,11 +1,14 @@
 #include "cearth.h"
 #include "space_force.h"
 
-#include "common/DataConverter.h"
-
 Space::CEarth::CEarth(double jd)
 {
 	setTime(jd);
+}
+
+Space::CEarth::CEarth(const Time::long_jd &ljd)
+{
+	setTime(ljd);
 }
 
 Space::CEarth::~CEarth()
@@ -15,17 +18,14 @@ Space::CEarth::~CEarth()
 
 void Space::CEarth::setTime(double jd)
 {
-	DataConverter dc;
+	setTime(Time::long_jd::fromJD(jd));
+}
 
-	fjd = jd;
-	fdate_utc = dc.JDtoYYYYMMDD(fjd);
-	ftime_utc = dc.SECtoHHMMSS(fdate_utc, fjd);
+void Space::CEarth::setTime(const Time::long_jd &ljd)
+{
+	fljd = ljd;
 
-	double fjd_msk = jd + 0.125;
-	fdate_msk = dc.JDtoYYYYMMDD(fjd_msk);
-	ftime_msk = dc.SECtoHHMMSS(fdate_msk, fjd_msk);
-
-	Force->set_time(fdate_msk, ftime_msk, &fajd, &fjdelt, &fjt);
+	Force->set_time(date_msk(), time_msk(), &fajd, &fjdelt, &fjt);
 
 	Force->iers_update_matrix(fjt, fori.v, fajd, fjdelt);
 }

@@ -74,7 +74,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	}
 
 	{
-		Space::CEarth Earth(2456339.04783564825);
+		Space::CEarth Earth(Time::long_jd::fromDTP(2013,2,15,13,8,53));
 		Space::m3x3d m = Earth.rotator();
 
 		printf("\nCalculated:\n");

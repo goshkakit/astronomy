@@ -2,6 +2,7 @@
 
 #include "space_defines.h"
 #include "space_math.h"
+#include "common/long_jd.h"
 
 namespace Space
 {
@@ -9,24 +10,29 @@ namespace Space
 	{
 	public:
 		CEarth(double jd = 2400000.);
+		CEarth(const Time::long_jd &ljd);
 		virtual ~CEarth();
 
 		void setTime(double jd);
+		void setTime(const Time::long_jd &ljd);
 
+		const Time::long_jd & ljd() const {
+			return fljd;
+		}
 		double jd() const {
-			return fjd;
+			return fljd.JD();
 		}
 		double date_utc() const {
-			return fdate_utc;
+			return fljd.date();
 		}
 		double time_utc() const {
-			return ftime_utc;
+			return fljd.time();
 		}
 		double date_msk() const {
-			return fdate_msk;
+			return fljd.date(10800.);
 		}
 		double time_msk() const {
-			return ftime_msk;
+			return fljd.time(10800.);
 		}
 		double ajd() const {
 			return fajd;
@@ -46,8 +52,7 @@ namespace Space
 		}
 
 	private:
-		double fjd, fdate_utc, ftime_utc;
-		double fdate_msk, ftime_msk;
+		Time::long_jd fljd;
 		double fajd, fjdelt, fjt;
 		m3x3d fori;
 	};
