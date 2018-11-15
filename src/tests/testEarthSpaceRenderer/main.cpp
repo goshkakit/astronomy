@@ -149,6 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	Space::CEarth Earth;
 
 	CStaticPointOnEarth kislovodsk25(&Earth, jd_start, 43.740331, 42.653458, 2085.0013);
+	CStaticPointOnEarth arktik(&Earth, jd_start, 77.425814, 104.251240, 100.);
 
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
@@ -157,6 +158,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 			new Scene::CNoradLayer("data/test/TLE20180724.txt", 2)
 			)
 		);
+		{
+			Scene::CNoradLayer *norad = dynamic_cast<Scene::CNoradLayer *>(*scene.layers.rbegin());
+
+			std::vector<Zeptomoby::OrbitTools::cOrbit *> orbits;
+			orbits.reserve(norad->tleloader.NORADList.size());
+
+			for (Zeptomoby::OrbitTools::cOrbit * orbit : norad->tleloader.NORADList)
+			{
+				if (fabs((orbit->Inclination() * (180. / M_PI)) - (90.)) < 3.)
+				//if (
+				//	(fabs((orbit->Inclination() * (180. / M_PI)) - (0.)) < 3.) &&
+				//	(orbit->Period() < 86100.)
+				//	)
+				{
+					orbits.push_back(orbit);
+				}
+				else
+				{
+					delete orbit;
+				}
+			}
+
+			norad->tleloader.NORADList = orbits;
+		}
+		/*
 		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
 			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&Orbit_Predict))
 			)
@@ -164,6 +190,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 		{
 			dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin())->lineColor = vec3(1.0f, 0.75f, 0.25f);
 		}
+		*/
 		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
 			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&kislovodsk25))
 			)
@@ -172,6 +199,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 			Scene::COrbitLayer *point = dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin());
 			point->lineSize = 0.125f;
 			point->pointSize = 15.f;
+		}
+		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
+			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&arktik))
+			)
+		);
+		{
+			Scene::COrbitLayer *point = dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin());
+			point->lineSize = 0.125f;
+			point->pointSize = 15.f;
+			point->lineColor = vec3(0.f, 0.f, 1.f);
 		}
 		OpenGLView.setScene(&scene);
 
