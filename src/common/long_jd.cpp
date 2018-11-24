@@ -219,7 +219,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	}
 
 	printf("Test: long_jd::JD()\n");
-	if ((d = fabs(val.JD() - ref.JD)) > thr)
+	if ((d = (fabs(val.JD() - ref.JD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -227,7 +227,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::RJD()\n");
-	if ((d = fabs(val.RJD() - ref.RJD)) > thr)
+	if ((d = (fabs(val.RJD() - ref.RJD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -235,7 +235,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::MJD()\n");
-	if ((d = fabs(val.MJD() - ref.MJD)) > thr)
+	if ((d = (fabs(val.MJD() - ref.MJD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -243,7 +243,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::jtime()\n");
-	if ((d = fabs(val.jtime() - ref.jtime)) > thr)
+	if ((d = (fabs(val.jtime() - ref.jtime))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -251,7 +251,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(UTC)\n");
-	if ((d = fabs(val.date() - ref.date_utc)) > thr)
+	if ((d = (fabs(val.date() - ref.date_utc))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -267,7 +267,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(GMT+3)\n");
-	if ((d = fabs(val.date(3. * 3600.) - ref.date_msk)) > thr)
+	if ((d = (fabs(val.date(3. * 3600.) - ref.date_msk))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -283,7 +283,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(GMT-8)\n");
-	if ((d = fabs(val.date(-8. * 3600.) - ref.date_sfr)) > thr)
+	if ((d = (fabs(val.date(-8. * 3600.) - ref.date_sfr))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -298,7 +298,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	}
 	md = fmax(md, d);
 
-	printf("Max delta: %e\n", md);
+	printf("Max delta: %.2e s\n", md);
 	return true;
 }
 
