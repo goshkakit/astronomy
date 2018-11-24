@@ -154,6 +154,23 @@ Time::long_t Time::long_jd::nanos() const
     return (days_ns_l + time_ns_l);
 }
 
+Time::long_t Time::long_jd::micros() const
+{
+    long_t l_days = lt >> BITS_TIME;
+    long_t l_time = lt & MASK_TIME;
+
+    double days_us = 86400.e6 * l_days;
+    double time_us = SCALE_MICROS * l_time;
+
+    double days_us_d = floor(days_us);
+    long_t days_us_l = (long_t)days_us_d;
+    double days_us_f = days_us - days_us_d;
+
+    long_t time_us_l = (long_t)round(time_us + days_us_f);
+
+    return (days_us_l + time_us_l);
+}
+
 Time::long_jd & Time::long_jd::addNanos(long_t _nanos)
 {
     double l_date = (double)(_nanos / 86400000000000LL) + BASE_DATE;

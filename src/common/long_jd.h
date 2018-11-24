@@ -11,7 +11,7 @@ namespace Time
 	{
 	public:
 		long_t nanos() const;
-		double micros() const;
+		long_t micros() const;
 		double millis() const;
 		double seconds() const;
 		double days() const;
@@ -141,9 +141,7 @@ namespace Time
 			return (SCALE_DAYS * (lt & MASK_TIME));
 		}
 		long_t nanos() const;
-		double micros() const {
-			return (SCALE_MICROS * lt);
-		}
+		long_t micros() const;
 		double millis() const {
 			return (SCALE_MILLIS * lt);
 		}
