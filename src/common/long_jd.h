@@ -10,7 +10,7 @@ namespace Time
 	class long_jd
 	{
 	public:
-		double nanos() const;
+		long_t nanos() const;
 		double micros() const;
 		double millis() const;
 		double seconds() const;
@@ -140,9 +140,7 @@ namespace Time
 		double jtime() const {
 			return (SCALE_DAYS * (lt & MASK_TIME));
 		}
-		double nanos() const {
-			return (SCALE_NANOS * lt);
-		}
+		long_t nanos() const;
 		double micros() const {
 			return (SCALE_MICROS * lt);
 		}
