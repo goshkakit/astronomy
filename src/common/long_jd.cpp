@@ -137,6 +137,15 @@ Time::long_t Time::long_jd::unix_time() const
 	return ((long_t)round(SCALE_SECONDS * lt) - UNIX_SHIFT);
 }
 
+Time::long_jd & Time::long_jd::addNanos(long_t _nanos)
+{
+    double l_date = (double)(_nanos / 86400000000000LL) + BASE_DATE;
+    double l_time = (double)(_nanos % 86400000000000LL) / 86400.e9;
+
+    lt += longTfromJDT(l_date, l_time);
+    return *this;
+}
+
 Time::long_jd Time::long_jd::operator*(double m) const
 {
 	return long_jd((long_t)round(lt * m));

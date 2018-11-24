@@ -16,6 +16,14 @@ namespace Time
 		double seconds() const;
 		double days() const;
 
+        long_jd & addNanos(long_t _nanos);
+        long_jd & addNanos(double _nanos);
+        long_jd & addMicros(double _micros);
+        long_jd & addMillis(double _millis);
+        long_jd & addSeconds(double _seconds);
+        long_jd & addDays(double _days);
+        long_jd & addDays(int _days);
+
 		bool operator==(const long_jd &ljd) const;
 		bool operator!=(const long_jd &ljd) const;
 		bool operator>=(const long_jd &ljd) const;
@@ -152,6 +160,26 @@ namespace Time
 		double date(double local_offset_s = 0.) const;
 		double time(double local_offset_s = 0.) const;
 		long_t unix_time() const;
+
+        long_jd & addNanos(long_t _nanos);
+        long_jd & addNanos(double _nanos) {
+            lt += longTfromRJD(_nanos / 86400.e9); return *this;
+        }
+        long_jd & addMicros(double _micros) {
+            lt += longTfromRJD(_micros / 86400.e6); return *this;
+        }
+        long_jd & addMillis(double _millis) {
+            lt += longTfromRJD(_millis / 86400.e3); return *this;
+        }
+        long_jd & addSeconds(double _seconds) {
+            lt += longTfromRJD(_seconds / 86400.); return *this;
+        }
+        long_jd & addDays(double _days) {
+            lt += longTfromRJD(_days); return *this;
+        }
+        long_jd & addDays(int _days) {
+            lt += ((long_t)_days) << BITS_TIME; return *this;
+        }
 
 		bool operator==(const long_jd &ljd) const {
 			return (lt == ljd.lt);
