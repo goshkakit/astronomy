@@ -200,6 +200,18 @@ const Tests::Time::tReferenceValues Tests::Time::ref2 = {
 	20160806., 165813.,
 };
 
+const Tests::Time::tReferenceValues Tests::Time::ref3 = {
+	7817806798LL,
+	2531071,
+	2531071.3749768518518518518519,
+	131071.37497685185185185185185,
+	131070.87497685185185185185185,
+	.37497685185185185185185185185,
+	22170926., 205958.,
+	22170926., 235958.,
+	22170926., 125958.,
+};
+
 #include <stdio.h>
 
 template<class T> static T _abs_t(T v)
@@ -322,11 +334,11 @@ bool Tests::Time::testLongJD(const struct tReferenceValues &ref)
 		return false;
 
 	printf("\nTest: long_jd::fromRJD()\n");
-	if (!compareToRef(::Time::long_jd::fromRJD(ref.RJD), ref, 1e-7))
+	if (!compareToRef(::Time::long_jd::fromRJD(ref.RJD), ref, 2e-6))
 		return false;
 
 	printf("\nTest: long_jd::fromMJD()\n");
-	if (!compareToRef(::Time::long_jd::fromMJD(ref.MJD), ref, 1e-7))
+	if (!compareToRef(::Time::long_jd::fromMJD(ref.MJD), ref, 2e-6))
 		return false;
 
 	printf("\nTest: long_jd::fromJDT()\n");
@@ -356,6 +368,10 @@ bool Tests::Time::testLongJD()
 
 	printf("\nTest long_jd conversions with reference value 2.\n");
 	if (!testLongJD(ref2))
+		return false;
+
+	printf("\nTest long_jd conversions with reference value 3.\n");
+	if (!testLongJD(ref3))
 		return false;
 
 	printf("\nOK\n");

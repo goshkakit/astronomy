@@ -81,7 +81,7 @@ namespace Time
 		static const long_t UNIX_SHIFT = ((4881175LL - (BASE_DATE_LL * 2)) * 43200LL); // (2440587.5 - 2400000) * 86400
 		static const double UNIX_SCALE; // (2^46/86400. ~ 8.145e+8)
 
-		// initial accuracy < 0.1 us
+		// initial accuracy ~ 1 us
 		static long_t longTfromRJD(double _RJD);
 		// initial accuracy ~ 0.5 ns
 		static long_t longTfromJDT(double _JDN, double _jtime);
@@ -100,11 +100,11 @@ namespace Time
 		static long_jd fromJD(double _JD) {
 			return long_jd(longTfromRJD(_JD - BASE_DATE));
 		}
-		// initial accuracy < 0.1 us
+		// initial accuracy ~ 1 us
 		static long_jd fromRJD(double _RJD) {
 			return long_jd(longTfromRJD(_RJD));
 		}
-		// initial accuracy < 0.1 us
+		// initial accuracy ~ 1 us
 		static long_jd fromMJD(double _MJD) {
 			return long_jd(longTfromRJD(_MJD + 0.5));
 		}
@@ -263,7 +263,7 @@ namespace Tests
 			double JD, RJD, MJD, jtime, date_utc, time_utc, date_msk, time_msk, date_sfr, time_sfr;
 		};
 
-		extern const struct tReferenceValues ref1, ref2;
+		extern const struct tReferenceValues ref1, ref2, ref3;
 
 		bool compareToRef(const ::Time::long_jd &val, const struct tReferenceValues &ref, double thr);
 
