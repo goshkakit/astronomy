@@ -3,30 +3,6 @@
 #ifndef _LONG_JD_H
 #define _LONG_JD_H
 
-/*
-Untested features:
-namespace Time
-{
-	class long_jd
-	{
-	public:
-		long_t nanos() const;
-		long_t micros() const;
-		double millis() const;
-		double seconds() const;
-		double days() const;
-
-		long_jd & addNanos(long_t _nanos);
-		long_jd & addNanos(double _nanos);
-		long_jd & addMicros(double _micros);
-		long_jd & addMillis(double _millis);
-		long_jd & addSeconds(double _seconds);
-		long_jd & addDays(double _days);
-		long_jd & addDays(int _days);
-	};
-}
-*/
-
 namespace Time
 {
 	typedef long long long_t;
@@ -240,6 +216,8 @@ namespace Tests
 		bool testLongJD(const struct tReferenceValues &ref);
 
 		bool testLongJDops(const struct tReferenceValues &ref);
+
+		bool testLongJDmods(const struct tReferenceValues &ref);
 
 		bool testLongJD();
 	}
