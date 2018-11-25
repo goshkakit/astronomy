@@ -74,7 +74,7 @@ Time::long_t Time::long_jd_base::longTfromDTF(double _date, double _time, double
 	return longTfromDTP(year, month, day, hour, minute, second, local_offset_s);
 }
 
-Time::long_t Time::long_jd_base::longTfromUXT(long_t _UXT)
+Time::long_t Time::long_jd_base::longTfromUXT(long long _UXT)
 {
 	long_t UXT_l = _UXT + UNIX_SHIFT;
 	double UXT_date = (double)(UXT_l / 86400) + BASE_DATE;
@@ -171,7 +171,7 @@ Time::long_t Time::long_jd::micros() const
     return (days_us_l + time_us_l);
 }
 
-Time::long_jd & Time::long_jd::addNanos(long_t _nanos)
+Time::long_jd & Time::long_jd::addNanos(long long _nanos)
 {
     double l_date = (double)(_nanos / 86400000000000LL) + BASE_DATE;
     double l_time = (double)(_nanos % 86400000000000LL) / 86400.e9;

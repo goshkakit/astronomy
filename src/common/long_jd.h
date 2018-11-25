@@ -64,7 +64,7 @@ namespace Time
 		// initial accuracy ~ 0.5 ns (use longTfromJDT() internally)
 		static long_t longTfromDTF(double _date, double _time, double local_offset_s = 0.);
 		// initial accuracy ~ 0.5 ns (use longTfromJDT() internally)
-		static long_t longTfromUXT(long_t _UXT);
+		static long_t longTfromUXT(long long _UXT);
 	};
 
 	class long_jd : public long_jd_base
@@ -95,7 +95,7 @@ namespace Time
 			return long_jd(longTfromDTF(_date, _time, local_offset_s));
 		}
 		// initial accuracy ~ 0.5 ns
-		static long_jd fromUnixTime(long_t _UXT) {
+		static long_jd fromUnixTime(long long _UXT) {
 			return long_jd(longTfromUXT(_UXT));
 		}
 
@@ -131,7 +131,7 @@ namespace Time
 		double time(double local_offset_s = 0.) const;
 		long_t unix_time() const;
 
-		long_jd & addNanos(long_t _nanos);
+		long_jd & addNanos(long long _nanos);
 		long_jd & addNanos(double _nanos) {
 			lt += longTfromRJD(_nanos / 86400.e9); return *this;
 		}
