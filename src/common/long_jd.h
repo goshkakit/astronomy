@@ -23,34 +23,8 @@ namespace Time
 		long_jd & addSeconds(double _seconds);
 		long_jd & addDays(double _days);
 		long_jd & addDays(int _days);
-
-		bool operator==(const long_jd &ljd) const;
-		bool operator!=(const long_jd &ljd) const;
-		bool operator>=(const long_jd &ljd) const;
-		bool operator<=(const long_jd &ljd) const;
-		bool operator>(const long_jd &ljd) const;
-		bool operator<(const long_jd &ljd) const;
-
-		long_jd operator+(const long_jd &_ljd) const;
-		long_jd operator-(const long_jd &_ljd) const;
-		long_jd operator+() const;
-		long_jd operator-() const;
-		long_jd operator*(long long m) const;
-		long_jd operator/(long long m) const;
-		long_jd operator*(double m) const;
-		long_jd operator/(double m) const;
-
-		long_jd & operator+=(const long_jd &_ljd);
-		long_jd & operator-=(const long_jd &_ljd);
-		long_jd & operator*=(long long m);
-		long_jd & operator/=(long long m);
-		long_jd & operator*=(double m);
-		long_jd & operator/=(double m);
 	};
 }
-
-Time::long_jd operator*(long long m, const Time::long_jd &ljd);
-Time::long_jd operator*(double m, const Time::long_jd &ljd);
 */
 
 namespace Time
@@ -264,6 +238,8 @@ namespace Tests
 		bool compareToRef(const ::Time::long_jd &val, const struct tReferenceValues &ref, double thr);
 
 		bool testLongJD(const struct tReferenceValues &ref);
+
+		bool testLongJDops(const struct tReferenceValues &ref);
 
 		bool testLongJD();
 	}

@@ -394,6 +394,213 @@ bool Tests::Time::testLongJD(const struct tReferenceValues &ref)
 	return true;
 }
 
+bool Tests::Time::testLongJDops(const struct tReferenceValues &ref)
+{
+    const ::Time::long_jd t0 = ::Time::long_jd::fromUnixTime(ref.unix_time);
+
+    ::Time::long_jd t1 = t0;
+
+    printf("Test: long_jd::operator==()\n");
+    if (!(t0 == t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<=()\n");
+    if (!(t0 <= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>=()\n");
+    if (!(t0 >= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = ::Time::long_jd::fromUnixTime(ref.unix_time - 2);
+
+    printf("Test: long_jd::operator!=()\n");
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<=()\n");
+    if (!(t1 <= t0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>=()\n");
+    if (!(t0 >= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<()\n");
+    if (!(t1 < t0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>()\n");
+    if (!(t0 > t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    ::Time::long_jd t2;
+    t1 = +t0;
+    t2 = -t0;
+
+    printf("Test: long_jd::operator+()\n");
+    if (!(t0 == t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-()\n");
+    if (!(t2 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    if (!(t2 == -t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    if (!((+::Time::long_jd(-100LL)) == (-::Time::long_jd(100LL))))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-(const long_jd &)\n");
+    t1 = ::Time::long_jd(2LL) - ::Time::long_jd(3LL);
+    if (!(t1 == ::Time::long_jd(-1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator+=(const long_jd &)\n");
+    t1 += ::Time::long_jd(2LL);
+    if (!(t1 == ::Time::long_jd(1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator+(const long_jd &)\n");
+    t2 = ::Time::long_jd(-2LL) + ::Time::long_jd(3LL);
+    if (!(t2 == ::Time::long_jd(1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-=(const long_jd &)\n");
+    t2 -= ::Time::long_jd(2LL);
+    if (!(t2 == ::Time::long_jd(-1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*(long long)\n");
+    t1 = t1 * 4LL;
+    if (!(t1 == ::Time::long_jd(4LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: operator*(long long, const long_jd &)\n");
+    t1 = 3LL * t1;
+    if (!(t1 == ::Time::long_jd(12LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*(double)\n");
+    t1 = t1 * 0.5;
+    if (!(t1 == ::Time::long_jd(6LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: operator*(double, const long_jd &)\n");
+    t1 = 0.5 * t1;
+    if (!(t1 == ::Time::long_jd(3LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*=(long long)\n");
+    t2 *= 3LL;
+    if (!(t2 == ::Time::long_jd(-3LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/=(double)\n");
+    t2 /= -0.25;
+    if (!(t2 == ::Time::long_jd(12LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/=(long long)\n");
+    t2 /= -2LL;
+    if (!(t2 == ::Time::long_jd(-6LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/(double)\n");
+    t2 = t2 / 3.0;
+    if (!(t2 == ::Time::long_jd(-2LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*=(double)\n");
+    t2 *= 7.0;
+    if (!(t2 == ::Time::long_jd(-14LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/(long long)\n");
+    t2 = t2 / -7LL;
+    if (!(t2 == ::Time::long_jd(2LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    return true;
+}
+
 bool Tests::Time::testLongJD()
 {
 	printf("\nTest long_jd conversions with reference value 1.\n");
@@ -406,6 +613,18 @@ bool Tests::Time::testLongJD()
 
 	printf("\nTest long_jd conversions with reference value 3.\n");
 	if (!testLongJD(ref3))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 1.\n");
+	if (!testLongJDops(ref1))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 2.\n");
+	if (!testLongJDops(ref2))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 3.\n");
+	if (!testLongJDops(ref3))
 		return false;
 
 	printf("\nOK\n");
