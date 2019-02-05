@@ -143,6 +143,7 @@
     <ClCompile Include="es_scene_norad.cpp" />
     <ClCompile Include="es_scene_orbit.cpp" />
     <ClCompile Include="es_texture.cpp" />
+    <ClCompile Include="es_time_model.cpp" />
     <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="space_force.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="es_scene_norad.h" />
     <ClInclude Include="es_scene_orbit.h" />
     <ClInclude Include="es_texture.h" />
+    <ClInclude Include="es_time_model.h" />
     <ClInclude Include="es_view.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="iorbit.h" />

@@ -62,6 +62,9 @@
     <ClCompile Include="cearth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="es_time_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glmath.h">
@@ -119,6 +122,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cearth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_time_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
