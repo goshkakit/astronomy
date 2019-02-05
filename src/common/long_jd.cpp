@@ -74,7 +74,7 @@ Time::long_t Time::long_jd_base::longTfromDTF(double _date, double _time, double
 	return longTfromDTP(year, month, day, hour, minute, second, local_offset_s);
 }
 
-Time::long_t Time::long_jd_base::longTfromUXT(long_t _UXT)
+Time::long_t Time::long_jd_base::longTfromUXT(long long _UXT)
 {
 	long_t UXT_l = _UXT + UNIX_SHIFT;
 	double UXT_date = (double)(UXT_l / 86400) + BASE_DATE;
@@ -137,6 +137,49 @@ Time::long_t Time::long_jd::unix_time() const
 	return ((long_t)round(SCALE_SECONDS * lt) - UNIX_SHIFT);
 }
 
+Time::long_t Time::long_jd::nanos() const
+{
+    long_t l_days = lt >> BITS_TIME;
+    long_t l_time = lt & MASK_TIME;
+
+    double days_ns = 86400.e9 * l_days;
+    double time_ns = SCALE_NANOS * l_time;
+
+    double days_ns_d = floor(days_ns);
+    long_t days_ns_l = (long_t)days_ns_d;
+    double days_ns_f = days_ns - days_ns_d;
+
+    long_t time_ns_l = (long_t)round(time_ns + days_ns_f);
+
+    return (days_ns_l + time_ns_l);
+}
+
+Time::long_t Time::long_jd::micros() const
+{
+    long_t l_days = lt >> BITS_TIME;
+    long_t l_time = lt & MASK_TIME;
+
+    double days_us = 86400.e6 * l_days;
+    double time_us = SCALE_MICROS * l_time;
+
+    double days_us_d = floor(days_us);
+    long_t days_us_l = (long_t)days_us_d;
+    double days_us_f = days_us - days_us_d;
+
+    long_t time_us_l = (long_t)round(time_us + days_us_f);
+
+    return (days_us_l + time_us_l);
+}
+
+Time::long_jd & Time::long_jd::addNanos(long long _nanos)
+{
+    double l_date = (double)(_nanos / 86400000000000LL) + BASE_DATE;
+    double l_time = (double)(_nanos % 86400000000000LL) / 86400.e9;
+
+    lt += longTfromJDT(l_date, l_time);
+    return *this;
+}
+
 Time::long_jd Time::long_jd::operator*(double m) const
 {
 	return long_jd((long_t)round(lt * m));
@@ -191,6 +234,18 @@ const Tests::Time::tReferenceValues Tests::Time::ref2 = {
 	20160806., 165813.,
 };
 
+const Tests::Time::tReferenceValues Tests::Time::ref3 = {
+	7817806798LL,
+	2531071,
+	2531071.3749768518518518518519,
+	131071.37497685185185185185185,
+	131070.87497685185185185185185,
+	.37497685185185185185185185185,
+	22170926., 205958.,
+	22170926., 235958.,
+	22170926., 125958.,
+};
+
 #include <stdio.h>
 
 template<class T> static T _abs_t(T v)
@@ -219,7 +274,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	}
 
 	printf("Test: long_jd::JD()\n");
-	if ((d = fabs(val.JD() - ref.JD)) > thr)
+	if ((d = (fabs(val.JD() - ref.JD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -227,7 +282,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::RJD()\n");
-	if ((d = fabs(val.RJD() - ref.RJD)) > thr)
+	if ((d = (fabs(val.RJD() - ref.RJD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -235,7 +290,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::MJD()\n");
-	if ((d = fabs(val.MJD() - ref.MJD)) > thr)
+	if ((d = (fabs(val.MJD() - ref.MJD))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -243,7 +298,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::jtime()\n");
-	if ((d = fabs(val.jtime() - ref.jtime)) > thr)
+	if ((d = (fabs(val.jtime() - ref.jtime))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -251,7 +306,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(UTC)\n");
-	if ((d = fabs(val.date() - ref.date_utc)) > thr)
+	if ((d = (fabs(val.date() - ref.date_utc))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -267,7 +322,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(GMT+3)\n");
-	if ((d = fabs(val.date(3. * 3600.) - ref.date_msk)) > thr)
+	if ((d = (fabs(val.date(3. * 3600.) - ref.date_msk))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -283,7 +338,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	md = fmax(md, d);
 
 	printf("Test: long_jd::date(GMT-8)\n");
-	if ((d = fabs(val.date(-8. * 3600.) - ref.date_sfr)) > thr)
+	if ((d = (fabs(val.date(-8. * 3600.) - ref.date_sfr))*86400) > thr)
 	{
 		printf("FAILED: %e > %e\n", d, thr);
 		return false;
@@ -298,7 +353,7 @@ bool Tests::Time::compareToRef(const ::Time::long_jd &val, const struct tReferen
 	}
 	md = fmax(md, d);
 
-	printf("Max delta: %e\n", md);
+	printf("Max delta: %.2e s\n", md);
 	return true;
 }
 
@@ -313,11 +368,11 @@ bool Tests::Time::testLongJD(const struct tReferenceValues &ref)
 		return false;
 
 	printf("\nTest: long_jd::fromRJD()\n");
-	if (!compareToRef(::Time::long_jd::fromRJD(ref.RJD), ref, 1e-7))
+	if (!compareToRef(::Time::long_jd::fromRJD(ref.RJD), ref, 2e-6))
 		return false;
 
 	printf("\nTest: long_jd::fromMJD()\n");
-	if (!compareToRef(::Time::long_jd::fromMJD(ref.MJD), ref, 1e-7))
+	if (!compareToRef(::Time::long_jd::fromMJD(ref.MJD), ref, 2e-6))
 		return false;
 
 	printf("\nTest: long_jd::fromJDT()\n");
@@ -339,6 +394,357 @@ bool Tests::Time::testLongJD(const struct tReferenceValues &ref)
 	return true;
 }
 
+bool Tests::Time::testLongJDops(const struct tReferenceValues &ref)
+{
+    const ::Time::long_jd t0 = ::Time::long_jd::fromUnixTime(ref.unix_time);
+
+    ::Time::long_jd t1 = t0;
+
+    printf("Test: long_jd::operator==()\n");
+    if (!(t0 == t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<=()\n");
+    if (!(t0 <= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>=()\n");
+    if (!(t0 >= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = ::Time::long_jd::fromUnixTime(ref.unix_time - 2);
+
+    printf("Test: long_jd::operator!=()\n");
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<=()\n");
+    if (!(t1 <= t0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>=()\n");
+    if (!(t0 >= t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator<()\n");
+    if (!(t1 < t0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator>()\n");
+    if (!(t0 > t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    ::Time::long_jd t2;
+    t1 = +t0;
+    t2 = -t0;
+
+    printf("Test: long_jd::operator+()\n");
+    if (!(t0 == t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-()\n");
+    if (!(t2 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    if (!(t2 == -t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    if (!((+::Time::long_jd(-100LL)) == (-::Time::long_jd(100LL))))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-(const long_jd &)\n");
+    t1 = ::Time::long_jd(2LL) - ::Time::long_jd(3LL);
+    if (!(t1 == ::Time::long_jd(-1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator+=(const long_jd &)\n");
+    t1 += ::Time::long_jd(2LL);
+    if (!(t1 == ::Time::long_jd(1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator+(const long_jd &)\n");
+    t2 = ::Time::long_jd(-2LL) + ::Time::long_jd(3LL);
+    if (!(t2 == ::Time::long_jd(1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator-=(const long_jd &)\n");
+    t2 -= ::Time::long_jd(2LL);
+    if (!(t2 == ::Time::long_jd(-1LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*(long long)\n");
+    t1 = t1 * 4LL;
+    if (!(t1 == ::Time::long_jd(4LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: operator*(long long, const long_jd &)\n");
+    t1 = 3LL * t1;
+    if (!(t1 == ::Time::long_jd(12LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*(double)\n");
+    t1 = t1 * 0.5;
+    if (!(t1 == ::Time::long_jd(6LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: operator*(double, const long_jd &)\n");
+    t1 = 0.5 * t1;
+    if (!(t1 == ::Time::long_jd(3LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*=(long long)\n");
+    t2 *= 3LL;
+    if (!(t2 == ::Time::long_jd(-3LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/=(double)\n");
+    t2 /= -0.25;
+    if (!(t2 == ::Time::long_jd(12LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/=(long long)\n");
+    t2 /= -2LL;
+    if (!(t2 == ::Time::long_jd(-6LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/(double)\n");
+    t2 = t2 / 3.0;
+    if (!(t2 == ::Time::long_jd(-2LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator*=(double)\n");
+    t2 *= 7.0;
+    if (!(t2 == ::Time::long_jd(-14LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::operator/(long long)\n");
+    t2 = t2 / -7LL;
+    if (!(t2 == ::Time::long_jd(2LL)))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool Tests::Time::testLongJDmods(const struct tReferenceValues &ref)
+{
+    const ::Time::long_jd t0 = ::Time::long_jd::fromUnixTime(ref.unix_time);
+
+    ::Time::long_jd t1 = t0;
+
+    printf("Test: long_jd::addNanos(long long)\n");
+    t1.addNanos(2LL);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::nanos()\n");
+    if (_abs_t((t1.nanos()) - (t0.nanos() + 2LL)) > 1LL)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1 -= t0;
+    if (!(t1.nanos() == 2LL))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::addNanos(double)\n");
+    t1.addNanos(-2.0);
+    if (!(t1.nanos() == 0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = t0;
+
+    printf("Test: long_jd::addMicros(double)\n");
+    t1.addMicros(-2.);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::micros()\n");
+    if (_abs_t((t1.micros()) - (t0.micros() - 2LL)) > 1LL)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1 -= t0;
+    if (!(t1.micros() == -2LL))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1.addMicros(2.0);
+    if (!(t1.micros() == 0))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = t0;
+
+    printf("Test: long_jd::addMillis(double)\n");
+    t1.addMillis(5.5);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::millis()\n");
+    if (fabs((t1.millis()) - (t0.millis() + 5.5)) > 2e-3)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1 -= t0;
+    if (fabs(t1.millis() - 5.5) > 2e-3)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = t0;
+
+    printf("Test: long_jd::addSeconds(double)\n");
+    t1.addSeconds(11111.1111);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::seconds()\n");
+    if (fabs((t1.seconds()) - (t0.seconds() + 11111.1111)) > 2e-6)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1 -= t0;
+    if (fabs(t1.seconds() - 11111.1111) > 2e-6)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    t1 = t0;
+
+    printf("Test: long_jd::addDays(int)\n");
+    t1.addDays(-105);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::addDays(double)\n");
+    t1.addDays(104.5);
+    if (!(t0 != t1))
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    printf("Test: long_jd::days()\n");
+    if (fabs((t1.days()) - (t0.days() - 0.5)) * 86400 > 2e-6)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+    t1 -= t0;
+    if (fabs(t1.days() + 0.5) * 86400 > 2e-6)
+    {
+        printf("FAILED\n");
+        return false;
+    }
+
+    return true;
+}
+
 bool Tests::Time::testLongJD()
 {
 	printf("\nTest long_jd conversions with reference value 1.\n");
@@ -347,6 +753,34 @@ bool Tests::Time::testLongJD()
 
 	printf("\nTest long_jd conversions with reference value 2.\n");
 	if (!testLongJD(ref2))
+		return false;
+
+	printf("\nTest long_jd conversions with reference value 3.\n");
+	if (!testLongJD(ref3))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 1.\n");
+	if (!testLongJDops(ref1))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 2.\n");
+	if (!testLongJDops(ref2))
+		return false;
+
+	printf("\nTest long_jd operations with reference value 3.\n");
+	if (!testLongJDops(ref3))
+		return false;
+
+	printf("\nTest long_jd modificators with reference value 1.\n");
+	if (!testLongJDmods(ref1))
+		return false;
+
+	printf("\nTest long_jd modificators with reference value 2.\n");
+	if (!testLongJDmods(ref2))
+		return false;
+
+	printf("\nTest long_jd modificators with reference value 3.\n");
+	if (!testLongJDmods(ref3))
 		return false;
 
 	printf("\nOK\n");
