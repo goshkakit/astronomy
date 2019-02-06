@@ -163,6 +163,7 @@ void COpenGLRenderer::Render(float FrameTime)
 	Space::m3x3d earthModelRotation = EarthModel.Update(TimeModel.now());
 
 	//if (length(Camera.Position) < OuterRadius * 1.1f)
+	if (bCameraRotationEnabled)
 	{
 		//vec3 Y = vec3(0.0f, 1.0f, 0.0f);
 

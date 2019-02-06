@@ -153,6 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
+        bCameraRotationEnabled = 1;
         TimeModel.setTimeMultiplier(36000.*7);
         EarthModel.setEpochStart(jd_start);
 

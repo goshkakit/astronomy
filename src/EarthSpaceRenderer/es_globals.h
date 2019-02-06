@@ -24,3 +24,5 @@ extern COpenGLView OpenGLView;
 extern CTimeModel TimeModel;
 
 extern CEarthModel EarthModel;
+
+extern volatile int bCameraRotationEnabled;

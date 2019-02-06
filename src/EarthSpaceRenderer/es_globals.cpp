@@ -18,6 +18,8 @@ CTimeModel TimeModel;
 
 CEarthModel EarthModel;
 
+volatile int bCameraRotationEnabled = 1;
+
 #ifdef _DEBUG
 #include <stdio.h>
 #include <time.h>
