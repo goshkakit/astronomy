@@ -153,6 +153,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
+        TimeModel.setTimeMultiplier(36000.*7);
+
 		Scene::CScene scene;
 		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
 			new Scene::CNoradLayer("data/test/TLE20180724.txt", 2)

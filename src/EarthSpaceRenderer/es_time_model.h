@@ -28,6 +28,11 @@ public:
     */
     CTimeModel(double mult = 60.) : m(mult / 60.), t(0.) {}
 
+    //! Sets the ratio between the model time and real time
+    void setTimeMultiplier(double mult) {
+        m = mult / 60.;
+    }
+
 private:
     double m, t;
 };
