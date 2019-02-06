@@ -5,32 +5,37 @@ namespace Space
 	class CStaticForceInitializer
 	{
 	public:
-		CStaticForceInitializer();
 		~CStaticForceInitializer();
 		Force::InfluenceForce * operator()() const;
 
 	private:
-		Force::InfluenceForce *f;
+		static Force::InfluenceForce *f;
 	};
 }
 
-Space::CStaticForceInitializer::CStaticForceInitializer()
-{
-	f = new Force::InfluenceForce();
-	f->Init_CPU();
-}
+Force::InfluenceForce * Space::CStaticForceInitializer::f = (Force::InfluenceForce *)0;
 
 Space::CStaticForceInitializer::~CStaticForceInitializer()
 {
-	f->DeInit_CPU();
-	delete f;
+	if (f) {
+		f->DeInit_CPU();
+		delete f;
+		f = (Force::InfluenceForce *)0;
+	}
 }
 
 Force::InfluenceForce * Space::CStaticForceInitializer::operator()() const
 {
+	if (!f) {
+		f = new Force::InfluenceForce();
+		f->Init_CPU();
+	}
 	return f;
 }
 
 Space::CStaticForceInitializer StaticForceInitializer;
 
-Force::InfluenceForce *const Space::Force = StaticForceInitializer();
+Force::InfluenceForce * Space::Force()
+{
+	return StaticForceInitializer();
+}

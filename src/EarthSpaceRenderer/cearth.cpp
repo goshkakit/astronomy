@@ -25,7 +25,7 @@ void Space::CEarth::setTime(const Time::long_jd &ljd)
 {
 	fljd = ljd;
 
-	Force->set_time(date_msk(), time_msk(), &fajd, &fjdelt, &fjt);
+	Force()->set_time(date_msk(), time_msk(), &fajd, &fjdelt, &fjt);
 
-	Force->iers_update_matrix(fjt, fori.v, fajd, fjdelt);
+	Force()->iers_update_matrix(fjt, fori.v, fajd, fjdelt);
 }

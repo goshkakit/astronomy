@@ -4,5 +4,5 @@
 
 namespace Space
 {
-	extern Force::InfluenceForce *const Force;
+    Force::InfluenceForce * Force();
 }
