@@ -365,11 +365,11 @@ void COpenGLView::OnPaint()
 	static double LastFPSTime = Time;
 	static int FPS = 0;
 
-	float ModelTime = TimeModel.now();
-	static float LastFrameTime = ModelTime;
-	float FrameTime = ModelTime - LastFrameTime;
-	LastFrameTime = ModelTime;
-	globalTime = ModelTime;
+	static double LastFrameTime = Time;
+	float FrameTime = (float)(Time - LastFrameTime);
+	LastFrameTime = Time;
+
+	globalTime = TimeModel.now();
 
 	PAINTSTRUCT ps;
 
