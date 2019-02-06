@@ -137,6 +137,7 @@
     <ClCompile Include="corbit_predict.cpp" />
     <ClCompile Include="es_buffer.cpp" />
     <ClCompile Include="es_camera.cpp" />
+    <ClCompile Include="es_earth_model.cpp" />
     <ClCompile Include="es_globals.cpp" />
     <ClCompile Include="es_renderer.cpp" />
     <ClCompile Include="es_scene.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="es_buffer.h" />
     <ClInclude Include="es_camera.h" />
     <ClInclude Include="es_defines.h" />
+    <ClInclude Include="es_earth_model.h" />
     <ClInclude Include="es_globals.h" />
     <ClInclude Include="es_renderer.h" />
     <ClInclude Include="es_scene.h" />
