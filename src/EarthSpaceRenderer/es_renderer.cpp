@@ -182,6 +182,8 @@ void COpenGLRenderer::Render(float FrameTime)
 		Camera.CalculateViewMatrix();
 	}
 
+	mat4x4 sceneRotation = EarthModel.getMat4x4(EarthModel.EarthAtNow().orientation());
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
@@ -192,12 +194,14 @@ void COpenGLRenderer::Render(float FrameTime)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(&ViewMatrix);
 	glScalef(InnerRadius, InnerRadius, InnerRadius);
-	glRotatef(a, 0.0f, 1.0f, 0.0f);
+	//glRotatef(a, 0.0f, 1.0f, 0.0f);
+	glMultMatrixf(&sceneRotation);
 
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glScalef(InnerRadius, InnerRadius, InnerRadius);
-	glRotatef(a, 0.0f, 1.0f, 0.0f);
+	//glRotatef(a, 0.0f, 1.0f, 0.0f);
+	glMultMatrixf(&sceneRotation);
 
 	glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, EarthMap);
 	glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, CloudsMap);
