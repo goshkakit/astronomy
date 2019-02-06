@@ -1,6 +1,5 @@
 #include "es_view.h"
 #include "es_globals.h"
-#include "es_time_model.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam);
 
@@ -362,19 +361,19 @@ void COpenGLView::OnMouseWheel(short zDelta)
 
 void COpenGLView::OnPaint()
 {
-	static double LastFrameTime = 0.;
-	static double LastFPSTime = 0.;
+	double Time = TimeModel.Update();
+	static double LastFPSTime = Time;
 	static int FPS = 0;
+
+	float ModelTime = TimeModel.now();
+	static float LastFrameTime = ModelTime;
+	float FrameTime = ModelTime - LastFrameTime;
+	LastFrameTime = ModelTime;
+	globalTime = ModelTime;
 
 	PAINTSTRUCT ps;
 
 	HDC hDC = BeginPaint(hWnd, &ps);
-
-	double Time = CTimeModel::getTime();
-
-	float FrameTime = (float)(Time - LastFrameTime);
-
-	LastFrameTime = Time;
 
 	if (Time - LastFPSTime > 1.)
 	{
@@ -425,8 +424,6 @@ void COpenGLView::OnPaint()
 	OpenGLRenderer.Render(FrameTime);
 
 	//----------------------------------------------------------------------------------------------------------------------
-
-	globalTime = (float)Time;
 
 #ifdef _DEBUG
 	{
