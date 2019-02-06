@@ -2,6 +2,8 @@
 #include "es_globals.h"
 #include "space_defines.h"
 
+#include "Norad/exceptions.h"
+
 Scene::CNoradLayer::CNoradLayer()
 	: CPointArrayLayer()
 	, tleloader()
@@ -36,6 +38,8 @@ void Scene::CNoradLayer::Update(float time)
 
 	for (Zeptomoby::OrbitTools::cOrbit * elem : tleloader.NORADList)
 	{
+	try
+	{
 		Zeptomoby::OrbitTools::cEciTime eci1 = elem->GetPosition(time);
 
 		const Zeptomoby::OrbitTools::cVector & pos = eci1.Position();
@@ -46,5 +50,16 @@ void Scene::CNoradLayer::Update(float time)
 				, (float)(pos.m_x * C)
 			)
 		);
+	}
+	catch (Zeptomoby::OrbitTools::cDecayException &ex)
+	{
+		// TODO: implement
+		throw ex;
+	}
+	catch (Zeptomoby::OrbitTools::cPropagationException &ex)
+	{
+		// TODO: implement
+		throw ex;
+	}
 	}
 }
