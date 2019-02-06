@@ -16,6 +16,8 @@ COpenGLView OpenGLView;
 
 CTimeModel TimeModel;
 
+CEarthModel EarthModel;
+
 #ifdef _DEBUG
 #include <stdio.h>
 #include <time.h>

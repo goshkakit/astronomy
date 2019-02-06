@@ -154,6 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
         TimeModel.setTimeMultiplier(36000.*7);
+        EarthModel.setEpochStart(jd_start);
 
 		Scene::CScene scene;
 		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
@@ -168,11 +169,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 
 			for (Zeptomoby::OrbitTools::cOrbit * orbit : norad->tleloader.NORADList)
 			{
-				if (fabs((orbit->Inclination() * (180. / M_PI)) - (90.)) < 3.)
+				//if (fabs((orbit->Inclination() * (180. / M_PI)) - (90.)) < 3.)
 				//if (
 				//	(fabs((orbit->Inclination() * (180. / M_PI)) - (0.)) < 3.) &&
 				//	(orbit->Period() < 86100.)
 				//	)
+                if (fabs(orbit->Period() / 86164.0905 - 1.) < 0.02)
 				{
 					orbits.push_back(orbit);
 				}
@@ -193,7 +195,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 			dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin())->lineColor = vec3(1.0f, 0.75f, 0.25f);
 		}
 		*/
-		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
+		/*scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
 			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&kislovodsk25))
 			)
 		);
@@ -201,8 +203,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 			Scene::COrbitLayer *point = dynamic_cast<Scene::COrbitLayer*>(*scene.layers.rbegin());
 			point->lineSize = 0.125f;
 			point->pointSize = 15.f;
-		}
-		scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
+		}*/
+		/*scene.layers.push_back(dynamic_cast<Scene::CLayer *>(
 			new Scene::COrbitLayer(dynamic_cast<Scene::IOrbit *>(&arktik))
 			)
 		);
@@ -211,7 +213,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 			point->lineSize = 0.125f;
 			point->pointSize = 15.f;
 			point->lineColor = vec3(0.f, 0.f, 1.f);
-		}
+		}*/
 		OpenGLView.setScene(&scene);
 
 		OpenGLView.Show();
