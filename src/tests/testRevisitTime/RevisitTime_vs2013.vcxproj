@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -18,31 +18,45 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="revisitTime.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\common_vs2013.vcxproj">
+      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\InfluenceForce\InfluenceForce_vs2013.vcxproj">
+      <Project>{2b2652b1-3736-4788-b5c3-f80635bee541}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Norad\norad_vs2013.vcxproj">
+      <Project>{4b179094-e1b9-4ea3-818f-e9daeb8a660e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>norad</ProjectName>
-    <ProjectGuid>{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}</ProjectGuid>
+    <ProjectGuid>{9D7C93B1-C933-4C90-BD47-617939F2A556}</ProjectGuid>
+    <ProjectName>RevisitTime</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -64,20 +78,32 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,8 +111,10 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -94,8 +122,10 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -105,11 +135,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,50 +150,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="cEci.h" />
-    <ClInclude Include="cJulian.h" />
-    <ClInclude Include="cNoradBase.h" />
-    <ClInclude Include="cNoradSDP4.h" />
-    <ClInclude Include="cNoradSGP4.h" />
-    <ClInclude Include="coord.h" />
-    <ClInclude Include="cOrbit.h" />
-    <ClInclude Include="coreLib.h" />
-    <ClInclude Include="cSite.h" />
-    <ClInclude Include="cTLE.h" />
-    <ClInclude Include="cVector.h" />
-    <ClInclude Include="exceptions.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="Norad_Test.h" />
-    <ClInclude Include="sgp4ext.h" />
-    <ClInclude Include="sgp4io.h" />
-    <ClInclude Include="sgp4unit.h" />
-    <ClInclude Include="std_add.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="cEci.cpp" />
-    <ClCompile Include="cJulian.cpp" />
-    <ClCompile Include="cNoradBase.cpp" />
-    <ClCompile Include="cNoradSDP4.cpp" />
-    <ClCompile Include="cNoradSGP4.cpp" />
-    <ClCompile Include="coord.cpp" />
-    <ClCompile Include="cOrbit.cpp" />
-    <ClCompile Include="cSite.cpp" />
-    <ClCompile Include="cTLE.cpp" />
-    <ClCompile Include="cVector.cpp" />
-    <ClCompile Include="globals.cpp" />
-    <ClCompile Include="Norad_Test.cpp" />
-    <ClCompile Include="sgp4ext.cpp" />
-    <ClCompile Include="sgp4io.cpp" />
-    <ClCompile Include="sgp4unit.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

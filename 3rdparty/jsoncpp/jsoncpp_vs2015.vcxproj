@@ -18,9 +18,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\json\allocator.h" />
+    <ClInclude Include="include\json\assertions.h" />
+    <ClInclude Include="include\json\autolink.h" />
+    <ClInclude Include="include\json\config.h" />
+    <ClInclude Include="include\json\features.h" />
+    <ClInclude Include="include\json\forwards.h" />
+    <ClInclude Include="include\json\json.h" />
+    <ClInclude Include="include\json\reader.h" />
+    <ClInclude Include="include\json\value.h" />
+    <ClInclude Include="include\json\version.h" />
+    <ClInclude Include="include\json\writer.h" />
+    <ClInclude Include="src\lib_json\json_tool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\lib_json\json_reader.cpp" />
+    <ClCompile Include="src\lib_json\json_value.cpp" />
+    <ClCompile Include="src\lib_json\json_writer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\lib_json\json_valueiterator.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>norad</ProjectName>
-    <ProjectGuid>{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}</ProjectGuid>
+    <ProjectGuid>{FF2B5FEC-EAB0-4395-847B-FC42855CA9C9}</ProjectGuid>
+    <ProjectName>jsoncpp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -66,18 +88,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,43 +153,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="cEci.h" />
-    <ClInclude Include="cJulian.h" />
-    <ClInclude Include="cNoradBase.h" />
-    <ClInclude Include="cNoradSDP4.h" />
-    <ClInclude Include="cNoradSGP4.h" />
-    <ClInclude Include="coord.h" />
-    <ClInclude Include="cOrbit.h" />
-    <ClInclude Include="coreLib.h" />
-    <ClInclude Include="cSite.h" />
-    <ClInclude Include="cTLE.h" />
-    <ClInclude Include="cVector.h" />
-    <ClInclude Include="exceptions.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="Norad_Test.h" />
-    <ClInclude Include="sgp4ext.h" />
-    <ClInclude Include="sgp4io.h" />
-    <ClInclude Include="sgp4unit.h" />
-    <ClInclude Include="std_add.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="cEci.cpp" />
-    <ClCompile Include="cJulian.cpp" />
-    <ClCompile Include="cNoradBase.cpp" />
-    <ClCompile Include="cNoradSDP4.cpp" />
-    <ClCompile Include="cNoradSGP4.cpp" />
-    <ClCompile Include="coord.cpp" />
-    <ClCompile Include="cOrbit.cpp" />
-    <ClCompile Include="cSite.cpp" />
-    <ClCompile Include="cTLE.cpp" />
-    <ClCompile Include="cVector.cpp" />
-    <ClCompile Include="globals.cpp" />
-    <ClCompile Include="Norad_Test.cpp" />
-    <ClCompile Include="sgp4ext.cpp" />
-    <ClCompile Include="sgp4io.cpp" />
-    <ClCompile Include="sgp4unit.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
