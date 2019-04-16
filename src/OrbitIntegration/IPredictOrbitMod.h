@@ -44,7 +44,7 @@ interface IPredictOrbitMod
 	virtual int _stdcall TestAllForce() PURE;
 	virtual int _stdcall IntegrationList() PURE;
 	virtual int _stdcall GetNewPosition( SatParamToPredict &sptr ) PURE;
-
+	virtual int _stdcall GetNewPositionForJD(SatParamToPredictJD &sptr) PURE;
 };
 
 //==============================================================================//
