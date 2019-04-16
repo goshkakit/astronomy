@@ -130,12 +130,14 @@
   <ItemGroup>
     <ClCompile Include="DataConverter.cpp" />
     <ClCompile Include="gaussJordan_3d.cpp" />
+    <ClCompile Include="long_jd.cpp" />
     <ClCompile Include="mytypes.cpp" />
     <ClCompile Include="TLELoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataConverter.h" />
     <ClInclude Include="gaussJordan_3d.h" />
+    <ClInclude Include="long_jd.h" />
     <ClInclude Include="mytypes.h" />
     <ClInclude Include="TLELoader.h" />
   </ItemGroup>
