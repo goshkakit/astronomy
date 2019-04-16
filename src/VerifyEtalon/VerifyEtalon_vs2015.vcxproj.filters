@@ -11,27 +11,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="common.cpp">
+    <ClCompile Include="CorrespondenceData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glmath.cpp">
+    <ClCompile Include="CorrespondenceData_novas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="CorrespondenceData_Refract.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string.cpp">
+    <ClCompile Include="CorrespondenceData_RLS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPFLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="glmath.h">
+    <ClInclude Include="CorrespondenceData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="string.h">
+    <ClInclude Include="CPFLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

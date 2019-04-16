@@ -1,6 +1,6 @@
 #include "PredictOrbitSat.h"
 #include "IPredictOrbitMod.h"
-
+#include "DataConverter.h"
 //==============================================================================//
 // windows
 #ifdef WIN32
@@ -13,6 +13,7 @@ private:
 
 	Force::InfluenceForce *IForce;
 	Orbit::PredictOrbitSat POSat;
+	DataConverter DC;
 
 	int IntegrationListNorad();
 
@@ -27,6 +28,7 @@ public:
 	virtual int _stdcall TestAllForce();
 	virtual int _stdcall IntegrationList();
 	virtual int _stdcall GetNewPosition( SatParamToPredict &sptr );
+	virtual int _stdcall GetNewPositionForJD(SatParamToPredictJD &sptr);
 };
 
 //==============================================================================//

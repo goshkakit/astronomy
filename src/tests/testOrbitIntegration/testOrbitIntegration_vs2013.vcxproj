@@ -67,25 +67,25 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(SolutionDir)src\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(SolutionDir)src\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(SolutionDir)src\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\OrbitIntegration\;$(SolutionDir)src\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -143,6 +143,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\common\common_vs2013.vcxproj">
+      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\InfluenceForce\InfluenceForce_vs2013.vcxproj">
       <Project>{2b2652b1-3736-4788-b5c3-f80635bee541}</Project>
     </ProjectReference>

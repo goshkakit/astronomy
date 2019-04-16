@@ -12,17 +12,17 @@ int PredictOrbitMod::RunTest()
 	printf("_________________________RUN TEST__________________________________\n");
 	printf("___________________________________________________________________\n");
 
-	char *fname1 = "data/test_orbit/ic_low.txt";
-	char *fname2 = "data/test_orbit/ic_low_res.txt";
-	char *fname3 = "data/test_orbit/ic_res.txt"; // 7.178520e-008 or 5.594739e-008
+	//char *fname1 = "data/test/orbit/ic_low.txt";
+	//char *fname2 = "data/test/orbit/ic_low_res.txt";
+	//char *fname3 = "data/test/orbit/ic_res.txt"; // 7.178520e-008 or 5.594739e-008
 
-	//char *fname1 = "data/test_orbit/leo.txt";
-	//char *fname2 = "data/test_orbit/leo+24h.txt";
-	//char *fname3 = "data/test_orbit/leo_res.txt"; //9.940702e-009
+	char *fname1 = "data/test/orbit/leo.txt";
+	char *fname2 = "data/test/orbit/leo+24h.txt";
+	char *fname3 = "data/test/orbit/leo_res.txt"; //9.940702e-009
 
-	//char *fname1 = "data/test_orbit/geo.txt";
-	//char *fname2 = "data/test_orbit/geo+240h.txt";
-	//char *fname3 = "data/test_orbit/geo+240h_res.txt"; // 3.334190e-005
+	//char *fname1 = "data/test/orbit/geo.txt";
+	//char *fname2 = "data/test/orbit/geo+240h.txt";
+	//char *fname3 = "data/test/orbit/geo+240h_res.txt"; // 3.334190e-005
 
 
 	//---------------------------------------------------------//
