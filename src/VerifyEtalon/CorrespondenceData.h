@@ -32,6 +32,7 @@ private:
 	void refractcorrect( double optRa, double optDec, double *Telicrf, double *outRa, double *outDec, double SatDist, double rDist );
 	void ConvertXYZtoRADEC( double *resultPosition, double *inTelescopePosition, double *Ra, double *Dec );
 	void ConvertTEMEtoICRF( double *inPTEME, double *outPICRF, TimePoint calcTime );
+	void ITRFToICRF(double jd, double *posITRF, double *posICRF);
 
 	// novas доработать
 	void Ter2Cel( double jday, double jdmeg, double *vec1, double *vec2 ); 

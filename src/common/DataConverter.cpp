@@ -117,3 +117,13 @@ double DataConverter::SECtoHHMMSS( double data, double jd )
 	return d2;
 }
 //==============================================================================//
+double DataConverter::HHMMSSToSec(double time)
+{
+	double h = (int)(time / 10000.0);
+	double m = (int)((time - h * 10000) / 100.0);
+	double s = time - h*10000.0 - m*100.0;
+
+	double sec = s + 60.0*m + 60.0*60.0*h;
+	return sec;
+}
+//==============================================================================//

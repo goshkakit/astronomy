@@ -1,4 +1,5 @@
 #include "CorrespondenceData.h"
+#include "common/DataConverter.h"
 
 extern "C" {
 #include "novac/novas.h"
@@ -93,6 +94,27 @@ void CorrespondenceData::RunCorrespondenceData( char *optfname, char *htsName, c
 
 	return;
 };
+void CorrespondenceData::ITRFToICRF( double jd, double *posITRF, double *posICRF)
+{
+	DataConverter Dconv;
+	// MDB
+	jd = jd +0.125;
+	double dataMDB = Dconv.JDtoYYYYMMDD(jd);
+	double timeMDB = Dconv.SECtoHHMMSS(dataMDB, jd);
+
+	// установка времени
+	double int1, ajd1, delt1;
+	IForce->set_time(dataMDB, timeMDB, &ajd1, &delt1, &int1);
+
+	// матрица перевода в земную систему
+	double Arot[9];
+	IForce->iers_update_matrix(int1, Arot, ajd1, delt1);
+	// матрица перехода из земной в нормальную систему
+	double invArot[9];
+	IForce->transpose(Arot, invArot);
+
+	IForce->matVecMul(invArot, posITRF, posICRF);
+}
 //==============================================================================//
 // проверка соответствия
 //==============================================================================//
@@ -117,8 +139,10 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 
 	// перевод в ICRF координат телескопа
 	double Telicrf[3];
-	IForce->matVecMul(  invArot, Tpos, Telicrf );
+	//IForce->matVecMul(  invArot, Tpos, Telicrf );
 	//Ter2Cel( jd, OpticArray[it].jd, Tpos, Telicrf );
+
+	ITRFToICRF(OpticArray[it].jd, Tpos, Telicrf);
 
 	// поправка на расстояние до спутника
 	if( Tcorr )
@@ -193,33 +217,32 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 	// вычисление просчитанных измерений
 	double Ra;
 	double Dec;
-	//ConvertXYZtoRADEC( Sicrf, Telicrf, &Ra, &Dec );
+	ConvertXYZtoRADEC( Sicrf, Telicrf, &Ra, &Dec );
 	// вектор направления
 	double pos[3];
 	pos[0] = Sicrf[0] - Telicrf[0];
 	pos[1] = Sicrf[1] - Telicrf[1];
 	pos[2] = Sicrf[2] - Telicrf[2];
+	//vector2radec( pos, &Ra, &Dec );
+	//Ra = Ra/12.0*pi;
+	//Dec = Dec/180.0*pi;
 
 	// дальность до объекта
-	double satDist = sqrt( pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2] );
-	double rDist = sqrt(  Sicrf[0]*Sicrf[0] + Sicrf[1]*Sicrf[1] + Sicrf[2]*Sicrf[2] );
+	double satDist = sqrt(pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2]);
+	double rDist = sqrt(Sicrf[0] * Sicrf[0] + Sicrf[1] * Sicrf[1] + Sicrf[2] * Sicrf[2]);
 	//printf("dist = %f\t %f\n", satDist, rDist );
-
-	vector2radec( pos, &Ra, &Dec );
-	Ra = Ra/12.0*pi;
-	Dec = Dec/180.0*pi;
 
 	// положение на секунду позже
 	double Ra1;
 	double Dec1;
-	//ConvertXYZtoRADEC( Sicrf2, Telicrf, &Ra1, &Dec1 );
+	ConvertXYZtoRADEC( Sicrf2, Telicrf, &Ra1, &Dec1 );
 	// вектор направления
-	pos[0] = Sicrf2[0] - Telicrf[0];
-	pos[1] = Sicrf2[1] - Telicrf[1];
-	pos[2] = Sicrf2[2] - Telicrf[2];
-	vector2radec( pos, &Ra1, &Dec1 );
-	Ra1 = Ra1/12.0*pi;
-	Dec1 = Dec1/180.0*pi;
+	//pos[0] = Sicrf2[0] - Telicrf[0];
+	//pos[1] = Sicrf2[1] - Telicrf[1];
+	//pos[2] = Sicrf2[2] - Telicrf[2];
+	//vector2radec( pos, &Ra1, &Dec1 );
+	//Ra1 = Ra1/12.0*pi;
+	//Dec1 = Dec1/180.0*pi;
 
 	double optRa =  OpticArray[it].Ra;
 	double optDec =  OpticArray[it].Dec;

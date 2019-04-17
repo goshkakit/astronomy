@@ -18,5 +18,6 @@ public:
 	double YYYYMMDDtoJD( double dt );
 	double JDtoYYYYMMDD( double ajd );
 	int NINTC( double A );
+	double HHMMSSToSec(double time);
 };
 //==============================================================================//

@@ -243,6 +243,12 @@ namespace Force
 		// Test
 		int TestRotation();
 		//================================================//
+
+		//================================================//
+		// convert coordinate
+		void ConvertXYZtoRADEC(double *posICRF, double *TelICRF, double *Ra, double *Dec);
+		void ITRFToICRF(double jd, double *posITRF, double *posICRF);
+		//================================================//
 	};
 };
 //==============================================================================//

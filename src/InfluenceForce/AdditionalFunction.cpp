@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "InfluenceForce.h"
+#include "common/DataConverter.h"
 
 namespace Force
 {
@@ -89,7 +90,6 @@ namespace Force
 
 		return res;
 	}
-
 	double InfluenceForce::DDIM( double X, double Y  )
 	{
 		double res = X-Y;
@@ -98,7 +98,6 @@ namespace Force
 
 		return res;
 	}
-
 	double InfluenceForce::DSIGN( double X, double Y )
 	{
 		double sig = 1;
@@ -126,4 +125,51 @@ namespace Force
 			return Y;
 	}
 	//==============================================================================//
+
+
+	//==============================================================================//
+	// перевод спрогнозированного положения в координаты RA DEC
+	//==============================================================================//
+	void InfluenceForce::ConvertXYZtoRADEC(double *posICRF, double *TelICRF, double *Ra, double *Dec)
+	{
+		// входные данные задаются в ICRF
+		// вектор направления в системе ICRF
+		double x = posICRF[0] - TelICRF[0];
+		double y = posICRF[1] - TelICRF[1];
+		double z = posICRF[2] - TelICRF[2];
+
+		double r = atan2(y, x);
+		double d = atan2(z, sqrt(x*x + y*y));
+
+		double pi = 3.1415926535;
+
+		if (r < 0)
+			r = 2.0*pi + r;
+
+		*Ra = r;
+		*Dec = d;
+	}
+
+	// jd full date
+	void InfluenceForce::ITRFToICRF(double jd, double *posITRF, double *posICRF)
+	{
+		DataConverter Dconv;
+		// MDB
+		jd = jd + 0.125;
+		double dataMDB = Dconv.JDtoYYYYMMDD(jd);
+		double timeMDB = Dconv.SECtoHHMMSS(dataMDB, jd);
+
+		// установка времени
+		double int1, ajd1, delt1;
+		set_time(dataMDB, timeMDB, &ajd1, &delt1, &int1);
+
+		// матрица перевода в земную систему
+		double Arot[9];
+		iers_update_matrix(int1, Arot, ajd1, delt1);
+		// матрица перехода из земной в нормальную систему
+		double invArot[9];
+		transpose(Arot, invArot);
+
+		matVecMul(invArot, posITRF, posICRF);
+	}
 };
