@@ -104,7 +104,7 @@ namespace Force
 		while( !rfs.eof() )
 		{
 			kl++;
-			printf( "k = %d\r", kl );
+			//printf( "k = %d\r", kl );
 			std::string line;
 			std::getline( rfs, line );
 

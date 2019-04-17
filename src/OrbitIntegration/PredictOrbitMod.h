@@ -19,8 +19,15 @@ private:
 
 public:
 
-	PredictOrbitMod(){ printf("PredictOrbitMod()\n"); };
-	~PredictOrbitMod(){ printf("~PredictOrbitMod()\n"); };
+	PredictOrbitMod()
+	{ 
+		printf("PredictOrbitMod()\n");
+		Init();
+	};
+	~PredictOrbitMod()
+	{ 
+		printf("~PredictOrbitMod()\n");
+	};
 
 	virtual int _stdcall Init();
 	virtual int _stdcall DeInit();

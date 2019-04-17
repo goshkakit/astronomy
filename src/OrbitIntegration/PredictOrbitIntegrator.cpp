@@ -591,7 +591,7 @@ namespace Orbit
 		if (hh * (t - TP0) < 0.0)
 		{ 
 			// direct change.
-			printf("direct change\n");
+			//printf("direct change\n");
 			for( int it = 0; it < NY; it++ )
 			{
 				double tmp = FP1[it];
@@ -874,7 +874,7 @@ namespace Orbit
 			printf("Arr size = %d\n", itwrites );
 		}
 		//------------------------------------------------//
-		printf( "\nPredict: N step = %d\nminstep = %f\n", isstep, minstep );
+		//printf( "\nPredict: N step = %d minstep = %f\n", isstep, minstep );
 	}
 	//==============================================================================//
 };

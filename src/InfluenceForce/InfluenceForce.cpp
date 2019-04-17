@@ -115,6 +115,8 @@ namespace Force
 		iers_init();
 		// гармоники
 		InitHarmInCPU();
+		// атмосфера
+		InitAtm();
 		ST = 0;
 
 #ifdef GPUCOMPILE

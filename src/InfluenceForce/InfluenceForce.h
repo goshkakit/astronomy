@@ -9,6 +9,7 @@
 #define _InfluenceForce_H_
 
 #include "DefineParam.h"
+#include <vector>
 
 #ifdef GPUCOMPILE
 #include "cuda_runtime.h"
@@ -17,6 +18,14 @@
 // name
 namespace Force
 {
+	struct atmIndex
+	{
+		int DD, MM, YYYY;
+		double F107;
+		double F81;
+		double aKp;
+		int data;
+	};
 	class InfluenceForce
 	{
 	private:
@@ -81,6 +90,8 @@ namespace Force
 		void Atm_drag( double *x, double t, double *f, double sigma_up, double ajd0, double delt0 );
 		// ֳ־ׁׂ אעלמספונû
 		//double Roa2004_2( double time, double *x, double ajd0, double delt0 );
+		void InitAtm();
+		std::vector<atmIndex> ListAtmIndex;
 		//================================================//
 
 		//================================================//
