@@ -141,7 +141,7 @@ namespace Force
 		// таблицы значений
 		int finals_n;
 		double *finals_tab;
-	
+
 		// инициализация модуля
 		void iers_init();
 		// удаление ресурсов
@@ -187,6 +187,10 @@ namespace Force
 	public:
 		InfluenceForce();
 		~InfluenceForce();
+
+		double current_px_ = 0; //sec.of arc
+		double current_py_ = 0; //sec.of arc
+		double current_dUt1_ = 0; //sec. of time
 
 		// коэффициенты
 		int ST;
