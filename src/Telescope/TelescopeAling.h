@@ -701,6 +701,38 @@ public:
 		Rmat = Mn;
 	}
 
+	S3DMatrix getRMatr(std::vector<SCoordinate> p_listAzEl_Tel, std::vector<SCoordinate> p_listAzEl_Real)
+	{
+		std::vector<S3DCoordinate> Ref_Real;
+		for (int i = 0; i < p_listAzEl_Real.size(); i++)
+		{
+			SCoordinate pt = p_listAzEl_Real[i];
+			S3DCoordinate pt3 = SphericalToXYZ_Deg(pt.x, pt.y, 1.0);
+			Ref_Real.push_back(pt3);
+		}
+
+		std::vector<S3DCoordinate> Ref_Tel;
+		for (int i = 0; i < p_listAzEl_Tel.size(); i++)
+		{
+			SCoordinate pt = p_listAzEl_Tel[i];
+			S3DCoordinate pt3 = SphericalToXYZ_Deg(pt.x, pt.y, 1.0);
+			Ref_Tel.push_back(pt3);
+		}
+
+		S3DMatrix Rmat;
+		estimateRT(Ref_Real, Ref_Tel, Rmat);
+		return Rmat;
+	}
+	
+	SCoordinate alignAzEl(SCoordinate p_azel_mount, S3DMatrix p_rmat)
+	{
+		S3DCoordinate viewInMount = p_rmat.inverse()*SphericalToXYZ_Deg(p_azel_mount.x, p_azel_mount.y, 1.0);
+		SCoordinate azel_view;
+		ConvertXYZtoRADEC(viewInMount, azel_view);
+
+		return azel_view*const_.RG;
+	}
+
 	void calculatePoints()
 	{
 		//######################//
@@ -730,6 +762,7 @@ public:
 		// Calculate pattern
 
 		// point for view [Tel ITRC System Coordinate]
+		
 		std::vector<SCoordinate> listAzEl_Tel = getListPointAzEl(5, 2, 20.0);
 		// Вычисление вектора в направлении азимута и угла места
 		std::vector<S3DCoordinate> listVectorAzEl_Tel;
@@ -752,8 +785,8 @@ public:
 		for (int i = 0; i < listAzEl_Tel.size(); i++)
 		{
 			SCoordinate pt = listAzEl_Tel[i];
-			pt.x += 5;
-			pt.y += 0;
+			pt.x += 10;
+			pt.y += 2;
 			listAzEl_Real.push_back(pt);
 		}
 
@@ -787,7 +820,7 @@ public:
 
 		S3DMatrix Rmat;
 		estimateRT(Ref_Real, Ref_Tel, Rmat);
-
+				
 		SCoordinate azel_mount = SCoordinate(40, 50);
 		S3DCoordinate viewInMount = Rmat.inverse()*SphericalToXYZ_Deg(azel_mount.x, azel_mount.y, 1.0);
 		SCoordinate azel_view;
@@ -795,7 +828,7 @@ public:
 		printf("azel_mount [az, el]");
 		azel_mount.print();
 		printf("azel_view [az, el]");
-		azel_view = azel_view*const_.RG;
+ 		azel_view = azel_view*const_.RG;
 		azel_view.print();
 	}
 };
