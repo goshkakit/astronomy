@@ -40,6 +40,9 @@
     <ProjectReference Include="..\..\Novac\Novac_vs2015.vcxproj">
       <Project>{07b58fc0-f6d9-441f-8a0c-bed17c32032e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\OrbitIntegration\OrbitIntegration_vs2015.vcxproj">
+      <Project>{112c2006-b8e8-4c89-90e3-c84acf7076c1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\VerifyEtalon\VerifyEtalon_vs2015.vcxproj">
       <Project>{13e3939a-e575-4166-88d3-7ea8adccb98f}</Project>
     </ProjectReference>
