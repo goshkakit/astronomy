@@ -546,6 +546,13 @@ namespace Force
 		xyt[1] = xyt4[1];
 		xyt[2] = xyt4[3];
 
+		//finals_tab[i + 2] = px / radsec;
+		//finals_tab[i + 3] = py / radsec;
+		//finals_tab[i + 4] = dUT1 / 1000.0;
+		double radsec = 206264.8062470970;
+		current_px_ = xyt4[0] * radsec;
+		current_py_ = xyt4[1] * radsec;
+		current_dUt1_ = xyt4[2] * 1000.0;
 		//printf( "get_xyt = %f %f %f\n", xyt[0], xyt[1], xyt[2] );
 	}
 	//==============================================================================//

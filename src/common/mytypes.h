@@ -196,6 +196,18 @@ public:
 		return R13(alfa13)*R23(alfa23)*R12(alfa12);
 	}
 
+	void print()
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%f ", a[i][j]);
+			}
+			printf("\n");
+		}
+	}
+
 };
 
 class CameraProjector
