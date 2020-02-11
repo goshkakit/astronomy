@@ -10,6 +10,7 @@
 #define _InfluenceForce_H_
 
 #include "DefineParam.h"
+#include <string>
 #include <vector>
 
 #ifdef GPUCOMPILE
