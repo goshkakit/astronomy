@@ -4,8 +4,10 @@
 #include "common/SimpleDatLoader.h"
 #include "common/StructTypes.h"
 #include "common/mytypes.h"
+#include "common/stV_type.h"
 
 #include "CPFLoader.h"
+#include "OrbitIntegration\IPredictOrbitMod.h"
 
 #ifndef _CorrespondenceData_H_
 #define _CorrespondenceData_H_
@@ -15,6 +17,7 @@ class CorrespondenceData
 private:
 	// модуль воздействий
 	Force::InfluenceForce *IForce;
+	IPredictOrbitMod *TestPredict;
 	// загрузчии данных
 	TLELoader tleload;
 	SimpleDatLoader optLoad;
@@ -27,7 +30,7 @@ private:
 
 	void RefractionCorrect( double inRa, double inDec, double *outRa, double *outDec, double *tel_icrf );
 	double GetZenitAngle( double inRa, double inDec, double *tel_icrf);
-	void CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bool abbcorr, bool refcorr );
+	void CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bool abbcorr, bool refcorr, const TstV &stV);
 	void CalcError( double Ra, double Dec, double Ra1, double Dec1, double optRa, double optDec, double *Telicrf );
 	void refractcorrect( double optRa, double optDec, double *Telicrf, double *outRa, double *outDec, double SatDist, double rDist );
 	void ConvertXYZtoRADEC( double *resultPosition, double *inTelescopePosition, double *Ra, double *Dec );
@@ -54,7 +57,7 @@ public:
 
 	void InitModyle();
 
-	void RunCorrespondenceData( char *optfname, char *htsName, char *tleName, double *Tpos );
+	void RunCorrespondenceData( char *optfname, char *htsName, char *tleName, double *Tpos ,const TstV &stV);
 
 	void RunCorrespondenceDataRLS(  );
 };

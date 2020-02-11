@@ -2,6 +2,7 @@
 // Andrianov N.G.
 // opbit predict module
 //==============================================================================//
+#pragma once
 #include <stdio.h>
 #include "PredictOrbitType.h"
 #include "InfluenceForce.h"

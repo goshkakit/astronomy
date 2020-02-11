@@ -5,6 +5,7 @@
 
 // files ftp://maia.usno.navy.mil/ser7
 //==============================================================================//
+#pragma once
 #ifndef _InfluenceForce_H_
 #define _InfluenceForce_H_
 
@@ -26,6 +27,14 @@ namespace Force
 		double aKp;
 		int data;
 	};
+	struct tmp_loadfinals
+	{
+		int y, m, d;
+		double mjd_cur;
+		double px, spx, py, spy, dUT1, sdUT1;
+
+		int ip1, ip2;
+	};
 	class InfluenceForce
 	{
 	private:
@@ -39,6 +48,7 @@ namespace Force
 		double *FileMemDE403;
 		// загрузка эфемерид
 		void DE403LoadFileToMemory();
+		void DE403LoadFileToMemory(std::string path_DE403);
 		// Очистка памяти
 		void DE403DeleteMemory();
 		// Planet Position
@@ -91,19 +101,16 @@ namespace Force
 		// ГОСТ атмосферы
 		//double Roa2004_2( double time, double *x, double ajd0, double delt0 );
 		void InitAtm();
+		void InitAtm(std::string path_atm_conf);
 		std::vector<atmIndex> ListAtmIndex;
 		//================================================//
 
 		//================================================//
 		// InfluenceTime.cpp
-		// поправки времени, перевод времени в разные системы
-		// Массив с поправками на время
-		int TAUUTC_size;
-		int TAUUTC_kmax;
-		double *TAIUTCCorrect;
 		
 		// задание массива с поправками на время
 		int InitTAU_UTCcorrect();
+		int InitTAU_UTCcorrect(std::string path_TAI_UTC);
 		// удаление массива
 		void DeInitTAU_UTCcorrect();
 		// получение размеров массива - число строк
@@ -144,6 +151,7 @@ namespace Force
 	
 		// инициализация модуля
 		void iers_init();
+		void iers_init(std::string path_finals);
 		// удаление ресурсов
 		void iers_delete();
 		// Процедура получения значения координат полюса Земли и сдвига
@@ -197,10 +205,20 @@ namespace Force
 		double S_delt0;
 		// инициализация памяти на CPU
 		void Init_CPU();
+		void Init_CPU(std::string path_TAI_UTC, std::string path_DE403, std::string path_finals, std::string path_atmconf);
 		void DeInit_CPU();
 		// Init koeff
 		void SetSigmaAtm( double sg ) { SIGMA_ATM = sg; };
 		void SetSigmaSun( double sg ) { SIGMA_SUN = sg; };
+		// Список положения полюсов
+		std::vector< tmp_loadfinals > pole_offset;
+		
+		// поправки времени, перевод времени в разные системы
+		// Массив с поправками на время
+		int TAUUTC_size;
+		int TAUUTC_kmax;
+		double *TAIUTCCorrect;
+
 
 		//================================================//
 #ifdef GPUCOMPILE
@@ -259,6 +277,7 @@ namespace Force
 		// convert coordinate
 		void ConvertXYZtoRADEC(double *posICRF, double *TelICRF, double *Ra, double *Dec);
 		void ITRFToICRF(double jd, double *posITRF, double *posICRF);
+		void ICRFToITRF(double jd, double *posICRF, double *posITRF);
 		//================================================//
 	};
 };

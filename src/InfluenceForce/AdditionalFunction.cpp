@@ -172,4 +172,23 @@ namespace Force
 
 		matVecMul(invArot, posITRF, posICRF);
 	}
+
+	void InfluenceForce::ICRFToITRF(double jd, double *posICRF, double *posITRF)
+	{
+		DataConverter Dconv;
+		// MDB
+		jd = jd + 0.125;
+		double dataMDB = Dconv.JDtoYYYYMMDD(jd);
+		double timeMDB = Dconv.SECtoHHMMSS(dataMDB, jd);
+
+		// установка времени
+		double int1, ajd1, delt1;
+		set_time(dataMDB, timeMDB, &ajd1, &delt1, &int1);
+
+		// матрица перевода в земную систему
+		double Arot[9];
+		iers_update_matrix(int1, Arot, ajd1, delt1);
+
+		matVecMul(Arot, posICRF, posITRF);
+	}
 };

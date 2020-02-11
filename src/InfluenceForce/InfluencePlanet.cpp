@@ -248,6 +248,26 @@ namespace Force
 		}
 		rfs.close();
 	}
+	void InfluenceForce::DE403LoadFileToMemory(std::string path_DE403)
+	{
+		printf("Load DE403\n");
+		// 21 347 536 byte
+		// 2668442 double
+		// 3577 block
+		DE403_clu = 3577;
+		DE403_step = 746;
+		DE403_size = 2668442;
+		FileMemDE403 = new double[DE403_size + 10000];
+
+		const char *DE_path = path_DE403.data();
+		std::ifstream rfs(DE_path, std::ios::in | std::ios::binary);
+		for (int it = 0; it < DE403_clu; it++)
+		{
+			double *ptr = &FileMemDE403[DE403_step*it];
+			rfs.read((char *)ptr, DE403_step * sizeof(double));
+		}
+		rfs.close();
+	}
 	//==============================================================================//
 	// clear all
 	//==============================================================================//

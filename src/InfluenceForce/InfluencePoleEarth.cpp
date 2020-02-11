@@ -16,14 +16,6 @@
 
 namespace Force
 {
-	struct tmp_loadfinals
-	{
-		int y, m, d;
-		double mjd_cur;
-		double px, spx, py, spy, dUT1, sdUT1;
-
-		int ip1, ip2;
-	};
 	//==============================================================================//
 	// удаление ресурсов
 	//==============================================================================//
@@ -99,7 +91,7 @@ namespace Force
 		std::ifstream rfs( TD_path, std::ios::in );
 		printf( "LOAD finals.all\n" );
 
-		std::vector< tmp_loadfinals > list;
+		
 		int kl = 0;
 		while( !rfs.eof() )
 		{
@@ -161,7 +153,7 @@ namespace Force
 				std::string s_t2 = line.substr( 69, 9 ); 
 				pt.sdUT1 = StdToDouble( s_t2 );
 
-				list.push_back( pt );
+				pole_offset.push_back( pt );
 			}
 			catch( ... )
 			{
@@ -171,7 +163,7 @@ namespace Force
 		}
 		rfs.close();
 
-		printf( "load size = %zu\n", list.size() );
+		printf( "load size = %zu\n", pole_offset.size() );
 		//FILE *flist = fopen( "data/tmp_fall.txt", "w" );
 		//for( unsigned int it = 0; it < list.size(); it++ )
 		//{
@@ -217,21 +209,21 @@ namespace Force
 		double dUT1;
 
 		j = 1;
-		for( unsigned int Klinei = 0; Klinei < list.size(); Klinei++ )
+		for( unsigned int Klinei = 0; Klinei < pole_offset.size(); Klinei++ )
 		{
 			// get param
 			//int y, m, d;
-			int ip1 = list[Klinei].ip1;
-			int ip2 = list[Klinei].ip2;
+			int ip1 = pole_offset[Klinei].ip1;
+			int ip2 = pole_offset[Klinei].ip2;
 
-			mjd_cur = list[Klinei].mjd_cur;
-			dUT1 = list[Klinei].dUT1;
+			mjd_cur = pole_offset[Klinei].mjd_cur;
+			dUT1 = pole_offset[Klinei].dUT1;
 
-			double px = list[Klinei].px;
-			double spx = list[Klinei].spx;
-			double py = list[Klinei].py;
-			double spy = list[Klinei].spy;
-			double sdUT1 = list[Klinei].sdUT1;
+			double px = pole_offset[Klinei].px;
+			double spx = pole_offset[Klinei].spx;
+			double py = pole_offset[Klinei].py;
+			double spy = pole_offset[Klinei].spy;
+			double sdUT1 = pole_offset[Klinei].sdUT1;
 			
 			i = (j-1)*5;
 			jd_cur = mjd_cur + mjd0;
@@ -294,6 +286,211 @@ namespace Force
 			finals_tab[i+4] = UT1_tdt*1000.0;
 		}
 		printf("finals_n = %d\n", finals_n );
+		delete utc;
+	}
+	void InfluenceForce::iers_init(std::string path_finals)
+	{
+		//------------------------------------//
+		// load file
+		const char *TD_path = path_finals.data();
+		std::ifstream rfs(TD_path, std::ios::in);
+		printf("LOAD finals.all\n");
+
+
+		int kl = 0;
+		while (!rfs.eof())
+		{
+			kl++;
+			//printf( "k = %d\r", kl );
+			std::string line;
+			std::getline(rfs, line);
+
+
+			if (line.length() < 70)
+				break;
+			try
+			{
+				tmp_loadfinals pt;
+
+				// data
+				std::string s_y = line.substr(0, 2);
+				pt.y = StdToInt(s_y);
+
+				std::string s_m = line.substr(2, 2);
+				pt.m = StdToInt(s_m);
+
+				std::string s_d = line.substr(4, 2);
+				pt.d = StdToInt(s_d);
+
+				// j data
+				std::string s_j = line.substr(7, 8);
+				pt.mjd_cur = StdToDouble(s_j);
+
+				// ip1
+				std::string s_ip1 = line.substr(16, 1);
+				if (s_ip1 == "I")
+					pt.ip1 = 1;
+				else
+					pt.ip1 = 2;
+				// ip2
+				std::string s_ip2 = line.substr(57, 1);
+				if (s_ip2 == "I")
+					pt.ip2 = 1;
+				else
+					pt.ip2 = 2;
+
+				// 28 8; 37 9;  47 8;  58 10;  69 9
+				// x
+				std::string s_px = line.substr(18, 9);
+				pt.px = StdToDouble(s_px);
+				std::string s_spx = line.substr(28, 8);
+				pt.spx = StdToDouble(s_spx);
+
+				// y
+				std::string s_py = line.substr(37, 9);
+				pt.py = StdToDouble(s_py);
+				std::string s_spy = line.substr(47, 8);
+				pt.spy = StdToDouble(s_spy);
+
+				// t
+				std::string s_t1 = line.substr(58, 10);
+				pt.dUT1 = StdToDouble(s_t1);
+				std::string s_t2 = line.substr(69, 9);
+				pt.sdUT1 = StdToDouble(s_t2);
+
+				pole_offset.push_back(pt);
+			}
+			catch (...)
+			{
+				printf("End, error convert\n");
+				break;
+			}
+		}
+		rfs.close();
+
+		printf("load size = %zu\n", pole_offset.size());
+		//FILE *flist = fopen( "data/tmp_fall.txt", "w" );
+		//for( unsigned int it = 0; it < list.size(); it++ )
+		//{
+		//	int ip1 = 1;
+		//	int ip2 = 1;
+		//	fprintf( flist, "%d %d %d %f %d %f %f %f %f %d %f %f\n", list[it].y, list[it].m, list[it].d, list[it].mjd_cur, ip1, list[it].px, list[it].spx, list[it].py, list[it].spy, ip2, list[it].dUT1, list[it].sdUT1 );
+		//}
+		//fclose( flist );
+		//------------------------------------//
+
+		// указатель на массив поправки времени
+		double *tab = TAIUTCCorrect;
+		// временный массив
+		double *utc = new double[40000];
+		// индекс максимальной записи 0 1 2 .. kmax
+		int tsize = GetTAU_UTC_size();
+		// массив с поправками
+		finals_tab = new double[260000];
+
+		// вычисления
+		double ajd50 = 2433282.50;
+		double mjd0 = 2400000.50;
+		double radsec = 206264.8062470970;
+		int ierr, i, j, jend, j_fin, k, un;
+		double jd_cur;
+		double b, t0, ak, jd_b, jd_e, tdt_UTC, UT1_tdt;
+
+		j = 1;
+		for (int it = 0; it < tsize; it++)
+		{
+			utc[it + 1] = tab[it];
+			j++;
+
+		}
+		j = j / 4;
+
+		jend = j;
+		jd_b = utc[1];
+		jd_e = utc[(jend - 1) * 4 + 1];
+		printf("j %d  jd_b %f  jd_e   %f\n (jend-1)*4+1 = %d\n", j, jd_b, jd_e, (jend - 1) * 4 + 1);
+
+		double mjd_cur;
+		double dUT1;
+
+		j = 1;
+		for (unsigned int Klinei = 0; Klinei < pole_offset.size(); Klinei++)
+		{
+			// get param
+			//int y, m, d;
+			int ip1 = pole_offset[Klinei].ip1;
+			int ip2 = pole_offset[Klinei].ip2;
+
+			mjd_cur = pole_offset[Klinei].mjd_cur;
+			dUT1 = pole_offset[Klinei].dUT1;
+
+			double px = pole_offset[Klinei].px;
+			double spx = pole_offset[Klinei].spx;
+			double py = pole_offset[Klinei].py;
+			double spy = pole_offset[Klinei].spy;
+			double sdUT1 = pole_offset[Klinei].sdUT1;
+
+			i = (j - 1) * 5;
+			jd_cur = mjd_cur + mjd0;
+			if (jd_cur < jd_b)
+			{
+				b = utc[2];
+				t0 = utc[3];
+				ak = utc[4];
+			}
+			else if (jd_cur > jd_e)
+			{
+				b = utc[(jend - 1) * 4 + 2];
+				t0 = utc[(jend - 1) * 4 + 3];
+				ak = utc[(jend - 1) * 4 + 4];
+			}
+			else
+			{
+				for (k = 1; k <= jend - 1; k++)
+				{
+					if ((jd_cur >= utc[(k - 1) * 4 + 1]) && (jd_cur < utc[k * 4 + 1]))
+					{
+						b = utc[(k - 1) * 4 + 2];
+						t0 = utc[(k - 1) * 4 + 3];
+						ak = utc[(k - 1) * 4 + 4];
+					}
+				}
+			}
+
+			double tdt_utc = b + (jd_cur - t0 - mjd0)*ak + 32.1840;
+			finals_tab[i + 1] = mjd_cur;
+
+			if ((ip1 != 1) && (ip1 != 2))
+			{
+				px = finals_tab[i - 3];
+				py = finals_tab[i - 2];
+				dUT1 = finals_tab[i - 1];
+			}
+
+			finals_tab[i + 2] = px / radsec;
+			finals_tab[i + 3] = py / radsec;
+			finals_tab[i + 4] = dUT1 / 1000.0;
+
+			UT1_tdt = (dUT1 - tdt_utc) / 1000.0;
+
+			finals_tab[i + 5] = -UT1_tdt*1000.0;
+
+			j = j + 1;
+		}
+
+		// дополнение таблицы нулями 
+		finals_n = j;
+		j_fin = j;
+		for (j = j_fin; j <= 20000; j++)
+		{
+			i = (j - 1) * 5;
+			finals_tab[i + 1] = mjd_cur + (double)(j_fin - j + 1);
+			finals_tab[i + 2] = 0.0;
+			finals_tab[i + 3] = 0.0;
+			finals_tab[i + 4] = dUT1 / 1000.0;
+			finals_tab[i + 4] = UT1_tdt*1000.0;
+		}
+		printf("finals_n = %d\n", finals_n);
 		delete utc;
 	}
 	//==============================================================================//

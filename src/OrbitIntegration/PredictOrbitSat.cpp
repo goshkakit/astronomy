@@ -17,12 +17,12 @@ namespace Orbit
 	// constructor
 	PredictOrbitSat::PredictOrbitSat()
 	{
-		printf("PredictOrbitSat()\n");
+		//printf("PredictOrbitSat()\n");
 	}
 	// delete
 	PredictOrbitSat::~PredictOrbitSat()
 	{
-		printf("~PredictOrbitSat()\n");
+		//printf("~PredictOrbitSat()\n");
 	}
 	//==============================================================================//
 	// init
