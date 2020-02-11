@@ -49,7 +49,7 @@ extern FILE *EPHFILE;
    Function prototypes
 */
 
-short int ephem_open (char *ephem_name,
+short int ephem_open (const char *ephem_name,
 
                       double *jd_begin, double *jd_end, 
                       short int *de_number);

@@ -4,6 +4,7 @@
 #include <iostream>
 #include "json/json.h"
 #include <vector>
+#include "common/stV_type.h"
 
 #include "VerifyEtalon/CorrespondenceData.h"
 
@@ -39,6 +40,24 @@ Json::Value read_Json(std::string &FileName)
 	}
 
 	return value;
+}
+
+void read_stV_Json(TstV &stV, Json::Value JstV) {
+	stV.jd = JstV["JD"].asDouble();
+	stV.ID = JstV["id"].asInt();
+	Json::Value est = JstV["est"];
+	stV.x = est[0].asDouble();
+	stV.y = est[1].asDouble();
+	stV.z = est[2].asDouble();
+	stV.Vx = est[3].asDouble();
+	stV.Vy = est[4].asDouble();
+	stV.Vz = est[5].asDouble();
+	if (est.size() >= 6) {
+		stV.BalFactor = est[6].asDouble();
+	}
+	if (est.size() == 7) {
+		stV.SMRatio = est[7].asDouble();
+	}
 }
 
 void read_tel_Json(Ttelescop &tel, Json::Value Jtel, std::string &FileName)
@@ -96,9 +115,35 @@ void main(int argc, char *argv[])
 	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
 	char *tleName = "etalon\\TLE20131020.txt";
 	char *optfname = "etalon\\track_13_10_22_22_23_simple_num199.dat";
+	std:string pinpf_stV = "etalon\\stV_lageos2.json";
 
-	Json::Value inpf, JTels;
+	/*std::string pinpf_tels = "etalon\\Ajisai\\tel_10989.json";
+	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
+	char *tleName = "etalon\\TLE20131020.txt";
+	char *optfname = "etalon\\Ajisai\\track_19_05_10_02_44_simple_num00000113.dat";
+	std:string pinpf_stV = "etalon\\Ajisai\\stV_ajisai_track_19_05_09.json";*/
+
+	/*std::string pinpf_tels = "etalon\\Ajisai\\tel_10995.json";
+	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
+	char *tleName = "etalon\\TLE20131020.txt";
+	char *optfname = "etalon\\Ajisai\\track_19_05_12_20_01_simple_num00031991.dat";
+	std:string pinpf_stV = "etalon\\Ajisai\\stV_ajisai_track_19_05_09.json";*/
+
+	/*std::string pinpf_tels = "etalon\\Starlette\\tel_10999.json";
+	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
+	char *tleName = "etalon\\TLE20131020.txt";
+	char *optfname = "etalon\\Starlette\\track_19_04_02_19_52_simple_num00044656.dat";
+	std:string pinpf_stV = "etalon\\Starlette\\stV_starlette_190402.json";*/
+
+	/*std::string pinpf_tels = "etalon\\Lares\\tel_10068.json";
+	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";	
+	char *tleName = "etalon\\TLE20131020.txt";
+	char *optfname = "etalon\\Lares\\track_19_02_01_08_58_simple_num00020619.dat";
+	std:string pinpf_stV = "etalon\\Lares\\stV_lares_track_19_02_01_1.json";*/
+
+	Json::Value inpf, JTels, JstV;
 	std::vector<Ttelescop> tels;
+	TstV stV;
 
 	inpf = read_Json(pinpf_tels);
 	if (inpf.isMember("Telescopes")) {
@@ -113,6 +158,10 @@ void main(int argc, char *argv[])
 
 	std::cout << "Count of telescopes in " << tels.size() << "\n";
 
+	JstV = read_Json(pinpf_stV);
+	read_stV_Json(stV, JstV);
+	std::cout << stV.jd << "  " << stV.x << "  " << stV.y << "  " << stV.z << "  " << stV.Vx << "  " << stV.Vy << "  " << stV.Vz << "  " << stV.BalFactor << std::endl;
+
 	CorrespondenceData CDD;
 	CDD.InitModyle();
 
@@ -124,5 +173,5 @@ void main(int argc, char *argv[])
 	printf("Telecope position: %f %f %f\n", telpos[0], telpos[1], telpos[2]);
 	printf("%s\n%s\n%s\n", htsName, tleName, optfname);
 
-	CDD.RunCorrespondenceData(optfname, htsName, tleName, telpos);
+	CDD.RunCorrespondenceData(optfname, htsName, tleName, telpos, stV);
 }

@@ -81,9 +81,15 @@ namespace Force
 		{
 			count++;
 			// Process str
-			if (str.size() > 10)
+			if (count >= 3)
 			{
-				std::vector<std::string> arr = split(str, ' ');
+				std::vector<std::string> arr;
+				arr.push_back(str.substr(2, 4));
+				arr.push_back(str.substr(7, 2));
+				arr.push_back(str.substr(10, 2));
+				arr.push_back(str.substr(16, 7));
+				arr.push_back(str.substr(27, 7));
+				arr.push_back(str.substr(39, 6));
 				if (arr.size() == 6 )
 				{
 					//YYYY MM DD F_10_7   F81   KP
@@ -97,6 +103,53 @@ namespace Force
 					pt.aKp = std::stod(arr[5]);
 
 					pt.data = pt.DD + 100 * pt.MM + 10000* pt.YYYY;
+					ListAtmIndex.push_back(pt);
+				}
+			}
+		}
+		if (ListAtmIndex.size() > 0)
+		{
+			printf("Load Atm index: %d from %d to %d \n", ListAtmIndex.size(), ListAtmIndex[0].data, ListAtmIndex[ListAtmIndex.size() - 1].data);
+		}
+		else
+		{
+			printf("Zero Load Atm index\n");
+		}
+	}
+	void InfluenceForce::InitAtm(std::string path_atmconf)
+	{
+		const char *fname = path_atmconf.data();
+
+		std::ifstream file(fname);
+		std::string str;
+
+		int count = 0;
+		while (std::getline(file, str))
+		{
+			count++;
+			// Process str
+			if (count >= 3)
+			{
+				std::vector<std::string> arr;
+				arr.push_back(str.substr(2, 4));
+				arr.push_back(str.substr(7, 2));
+				arr.push_back(str.substr(10, 2));
+				arr.push_back(str.substr(16, 7));
+				arr.push_back(str.substr(27, 7));
+				arr.push_back(str.substr(39, 6));
+				if (arr.size() == 6)
+				{
+					//YYYY MM DD F_10_7   F81   KP
+					atmIndex pt;
+					pt.YYYY = std::stoi(arr[0]);
+					pt.MM = std::stoi(arr[1]);
+					pt.DD = std::stoi(arr[2]);
+
+					pt.F107 = std::stod(arr[3]);
+					pt.F81 = std::stod(arr[4]);
+					pt.aKp = std::stod(arr[5]);
+
+					pt.data = pt.DD + 100 * pt.MM + 10000 * pt.YYYY;
 					ListAtmIndex.push_back(pt);
 				}
 			}
@@ -509,13 +562,14 @@ namespace Force
 			akst1=-0.137;
 			akst2=-7.8653E-4;
 		}
-		else if ((h >= 100.0)&&(h < 120.0)) 
+		else if ((h >= 100.0)&&(h <= 120.0)) 
 		{
 			h0=100.0;
 			ast0=3.66E-7;
 			akst1=-0.18553;
 			akst2=1.5397E-3;
 		}
+
 		power = (h-h0)*(akst1+akst2*(h-h0));
 		roa2004 = ast0*exp(power);
 		return roa2004;

@@ -207,15 +207,21 @@ void CorrespondenceData::refractcorrect( double optRa, double optDec, double *Te
 	//////////////////////////////////////////////////////////////////////
 
 	// K
-	//double pMillibar = 1.01325*1000.0*594.3/760.0;
+	double pMillibar = 1.01325*1000.0*594.3/760.0;
 	//double tKelvin = 273 - 3.0;	// T kelvin
-	//double tKelvin = 273.0 + 10.0;	// T kelvin
-	//double Rkm = 6371.0 + 2.0850013;
+	double tKelvin = 273.0 + 10.0;	// T kelvin
+	double Rkm = 6371.0 + 2.0850013;
 
 	// M
-	double pMillibar = 1.01325*1000.0*750.3/760.0;
-	double tKelvin = 273 + 10.0;	// T kelvin
-	double Rkm = 6371.0;
+	//double pMillibar = 1.01325*1000.0*750.3/760.0;
+	//double tKelvin = 273 + 10.0;	// T kelvin
+	//double Rkm = 6371.0;
+
+	//
+	//double pMillibar = 1.01325*1000.0*755 / 660.0;
+	//double tKelvin = 273 + 20.0;	// T kelvin
+	//double Rkm = 6371.0 + 1.576;
+
 
 	double Dkm = SatDist;
 	double THETAradians = pi/2.0-az;

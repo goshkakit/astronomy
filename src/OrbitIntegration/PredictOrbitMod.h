@@ -1,3 +1,4 @@
+#pragma once
 #include "PredictOrbitSat.h"
 #include "IPredictOrbitMod.h"
 #include "DataConverter.h"
