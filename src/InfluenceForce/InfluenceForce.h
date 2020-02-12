@@ -17,6 +17,8 @@
 #include "cuda_runtime.h"
 #endif
 
+extern int NHARM;
+
 // name
 namespace Force
 {

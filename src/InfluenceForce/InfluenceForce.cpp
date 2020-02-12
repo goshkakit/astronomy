@@ -245,7 +245,7 @@ namespace Force
 
 		// влияние гармоник
 		//GetF_Harm_egm96( x_g, 36, f_hrm );
-		GetF_Harm_egm96( x_g, 75, f_hrm );
+		GetF_Harm_egm96( x_g, NHARM, f_hrm );
 
 		// влияние атмосферы
 		double sigma_up = SIGMA_ATM;// 0.3E-2;
@@ -361,7 +361,7 @@ namespace Force
 		state_to_itrf( t, x, x_g, A_rot );
 
 		// влияние гармоник
-		GetF_Harm_egm96( x_g, 75, f_hrm );
+		GetF_Harm_egm96( x_g, NHARM, f_hrm );
 
 		// солнечное давление
 		double sp_q = 0.5E-05;
