@@ -1,0 +1,53 @@
+{
+	"Telescopes": [
+	{
+		"site_lon": 37.433736,
+		"site_lat": 55.858237,
+		"site_height": 0.186820250686651,
+		"id": 10991,
+		"Frame_rate": 5,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Moskva"
+	},
+	{
+		"site_lon": 50.667500036056,
+		"site_lat": 55.3525026303531,
+		"site_height": 0.146109706040079,
+		"id": 10995,
+		"Frame_rate": 5,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Chistopol"
+	},
+	{
+		"site_lon": -71.2500000018608,
+		"site_lat": -29.8999999960317,
+		"site_height": -5.44514477951452E-9,
+		"id": 1000001,
+		"Frame_rate": 5,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Chile"
+	},
+	{
+		"site_lon": 32.1954000000337,
+		"site_lat": 30.2170024692532,
+		"site_height": 0.313079642029152,
+		"id": 1000011,
+		"Frame_rate": 5,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Are_Site_1"
+	},
+	{
+		"site_lon": 30.03600000003,
+		"site_lat": 25.4848022056837,
+		"site_height": 0.59605820010438,
+		"id": 1000012,
+		"Frame_rate": 5,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Are_Site_2"
+	}]
+}
