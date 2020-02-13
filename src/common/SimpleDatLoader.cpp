@@ -72,8 +72,9 @@ void SimpleDatLoader::LoadData( const char *fname, bool AddFlag )
 		std::getline( fin, strg, '\n' );
 
 	const char *buffl = strg.c_str();
-	float tmp;
-	sscanf ( buffl,"%lf %lf %lf",&tx, &ty, &tz, &tmp ); // FIX read!!!!
+	float tmp, tmp2;
+	//sscanf ( buffl,"%lf %lf %lf",&tx, &ty, &tz, &tmp ); // FIX read!!!!
+	sscanf(buffl, "%lf %lf %lf %f %f", &tx, &ty, &tz, &tmp, &tmp2); // FIX read!!!! TODO!!
 	// положение телескопа
 	//fscanf( fre, "%lf %lf %lf", &tx, &ty, &tz );
 	TelPos[0] = tx;
