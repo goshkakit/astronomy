@@ -3,7 +3,7 @@
 #include "AstroDataManager.h"
 #include "TelescopeAling.h"
 
-int main_align()
+int main()
 {
 	TelescopeAling TA;
 	TA.Init();
@@ -12,7 +12,7 @@ int main_align()
 	return 0;
 }
 
-int main()
+int main_plan()
 {
 	printf("Start\n");
 
