@@ -1,17 +1,5 @@
-stages:
-  - build
-
-job:
-  stage: build
+ps_helloworld:
   script:
-  - git submodule update --init
-  - ''
-  - echo "Release build..."
-  - ''
-  - 'Start-Process "cmd.exe" "/c build_sdk.bat"'
-  - ''
-  - echo "Build success..."
+          - .\msbuild.ps1 | Out-File helloworld.txt
   tags: 
   - my-tag
-  except:
-  - tags
