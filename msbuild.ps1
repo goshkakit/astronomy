@@ -26,7 +26,7 @@ function buildVS
         }
 
         Write-Host "Building $($path)" -foregroundcolor green
-        & "$($msBuildExe)" "$($path)" /t:ReBuild /m
+        & "$($msBuildExe)" "$($path)" /t:ReBuild /property:Configuration=Release /property:Platform=x64 /m
     }
 }
 
