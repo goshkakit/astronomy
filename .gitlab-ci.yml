@@ -1,16 +1,13 @@
 stages:
   - build
 
-compile.windows.vs2015:
+job:
   stage: build
   script:
   - git submodule update --init
   - ''
-  - 'call "%VS140COMNTOOLS%VsDevCmd.bat"'
-  - ''
   - echo "Release build..."
-  - ''
-  - 'msbuild astronomy_sdk_vs2015.sln /t:Build /p:Configuration="Release" /p:Platform="x64"'
+  - '"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" /consoleloggerparameters:ErrorsOnly /maxcpucount /nologo /property:Configuration=Release /verbosity:quiet "astronomy_sdk_vs2015.sln"'
   - ''
   - echo "Build success."
   tags: 
