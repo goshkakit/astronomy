@@ -7,8 +7,7 @@ job:
   - git submodule update --init
   - call "%VS140COMNTOOLS%\vsvars32.bat"
   - ''
-  - devenv "%CD%\SearchAlgCpp\C++\ODSW_CPP\ODSW_CPP.sln" /rebuild "Release|x64"
-  - '"c:\nuget\nuget.exe" restore "TerminalClone.sln"'
+  - devenv "astronomy_sdk_vs2015.sln" /rebuild "Release|x64"
   - ''
   - echo "Build success."
   tags: 
