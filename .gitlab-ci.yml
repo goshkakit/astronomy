@@ -1,22 +1,18 @@
-variables:
-  Solution: astronomy_sdk_vs2015.sln 
-  
-before_script:
-  - "echo off"
-  - 'call "%VS120COMNTOOLS%\vsvars32.bat"'
-  # output environment variables (usefull for debugging, propably not what you want to do if your ci server is public)
-  - echo.
-  - set
-  - echo.
-  
- stages:
+stages:
   - build
-  
-build:
+
+job:
   stage: build
   script:
-  - echo building...
-  - 'msbuild.exe "%Solution%"'
+  - git submodule update --init
+  - ''
+  - 'call "%VS140COMNTOOLS%VsDevCmd.bat"'
+  - ''
+  - echo "Release build..."
+  - ''
+  - 'msbuild astronomy_sdk_vs2015.sln /t:Build /p:Configuration="Release" /p:Platform="x64"'
+  - ''
+  - echo "Build success."
   tags: 
   - my-tag
   except:
