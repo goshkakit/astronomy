@@ -1,13 +1,13 @@
-stages:
+﻿stages:
   - build
 
 job:
   stage: build
   script:
   - git submodule update --init
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\vsvars32.bat"
   - ''
-  - devenv "astronomy_sdk_vs2015.sln" /rebuild "Release|x64"
+  - echo "Release build..."
+  - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe /consoleloggerparameters:ErrorsOnly /maxcpucount /nologo /property:Configuration=Release /verbosity:quiet "astronomy_sdk_vs2015.sln"
   - ''
   - echo "Build success."
   tags: 
