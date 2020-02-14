@@ -1,4 +1,8 @@
-ps_helloworld:
+stages:
+  - build
+
+msvs_2015:
+  stage: build
   script:
        - .\msbuild.ps1 
   tags: 

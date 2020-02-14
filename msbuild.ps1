@@ -26,8 +26,8 @@ function buildVS
         }
 
         Write-Host "Building $($path)" -foregroundcolor green
-        & "$($msBuildExe)" "$($path)" /t:Build /m
+        & "$($msBuildExe)" "$($path)" /t:ReBuild /m
     }
 }
 
-buildVS -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $false
+buildVS -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $true
