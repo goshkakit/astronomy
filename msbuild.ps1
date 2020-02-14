@@ -29,3 +29,5 @@ function buildVS
         & "$($msBuildExe)" "$($path)" /t:Build /m
     }
 }
+
+buildVS -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $false
