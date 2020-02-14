@@ -10,7 +10,7 @@ job:
   - ''
   - 'Start-Process "cmd.exe" "/c build_sdk.bat"'
   - ''
-  - echo "Build success."
+  - echo "Build success..."
   tags: 
   - my-tag
   except:
