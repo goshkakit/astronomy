@@ -5,7 +5,7 @@ job:
   stage: build
   script:
   - git submodule update --init
-  - call "%VS140COMNTOOLS%\vsvars32.bat"
+  - call C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\vsvars32.bat"
   - ''
   - devenv "astronomy_sdk_vs2015.sln" /rebuild "Release|x64"
   - ''
