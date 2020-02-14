@@ -12,5 +12,6 @@ job:
   - ''
   - echo "Build success."
   tags: 
+  - my-tag
   except:
   - tags
