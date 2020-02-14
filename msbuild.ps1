@@ -30,4 +30,5 @@ function buildVS
     }
 }
 
+chcp 850
 buildVS -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $true
