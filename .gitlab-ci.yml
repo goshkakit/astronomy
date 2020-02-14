@@ -1,5 +1,5 @@
 ps_helloworld:
   script:
-          - .\msbuild.ps1 -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $false
+       - .\msbuild.ps1 -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $false
   tags: 
   - my-tag
