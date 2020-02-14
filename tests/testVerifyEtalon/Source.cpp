@@ -121,7 +121,7 @@ void main(int argc, char *argv[])
 
 	// 2
 	std::string pinpf_tels = "data/etalon2/tels.json";
-	char *htsName = "data/etalon2/lares_cpf_200210_5411.sgf";
+	char *htsName = "data/etalon2/cryosat2_cpf_200210_5411.esa";
 	char *tleName = "data/etalon2/TLE20200210.txt";
 	char *optfname = "data/etalon2/track_20_02_10_18_33_simple_num00016078.dat";
 	std:string pinpf_stV = "data/etalon2/stV_lageos2.json";
