@@ -116,7 +116,7 @@ namespace Force
 		// гармоники
 		InitHarmInCPU();
 		// атмосфера
-		InitAtm();
+		InitAtm( "data/solarinex.txt" );
 		ST = 0;
 
 #ifdef GPUCOMPILE
