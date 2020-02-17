@@ -19,12 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Calibration.cpp" />
     <ClCompile Include="Convertor.cpp" />
-    <ClCompile Include="ConvertorMain.cpp" />
+    <ClCompile Include="MountControlMain.cpp" />
+    <ClCompile Include="Mat3x3.cpp" />
     <ClCompile Include="WGS84.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calibration.h" />
     <ClInclude Include="Convertor.h" />
+    <ClInclude Include="Mat3x3.h" />
     <ClInclude Include="WGS84.h" />
   </ItemGroup>
   <ItemGroup>

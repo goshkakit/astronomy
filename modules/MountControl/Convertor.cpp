@@ -1,5 +1,7 @@
 #include "Convertor.h"
 #include "WGS84.h"
+#include "Mat3x3.h"
+
 #include <iostream>
 
 Convertor::Convertor() {
@@ -21,6 +23,15 @@ Convertor::Convertor() {
 	tel.longitude = 0;
 	tel.pressure = 1000;
 	tel.temperature = 0;
+
+	//StandartConv
+	A.resize(6);
+	A[0] = 1.0;
+	A[1] = 0.0;
+	A[2] = 0.0;
+	A[3] = 0.0;
+	A[4] = 1.0;
+	A[5] = 0.0;
 
 	InitIntegrator();
 }
@@ -127,6 +138,26 @@ void Convertor::SetRaDecPos(const double &Jd, const double &Ra, const double &De
 	Convert2AlphBet();
 }
 
+void Convertor::SetAlphBetPos(const double &Jd, const double &Alph, const double &Bet) {
+	cur_Jd = Jd;
+	cur_Alph = Alph;
+	cur_Bet = Bet;
+
+	//Alph, Bet -> Az, Elev
+	std::vector<double> InvA(4);
+	std::vector<double> A_(4);
+	A_[0] = A[0];
+	A_[1] = A[1];
+	A_[2] = A[3];
+	A_[3] = A[4];
+	InvA = Inversion2x2(A_);
+	cur_Az = InvA[0] * (Alph - A[2]) + InvA[1] * (Alph - A[2]);
+	cur_Elev = InvA[2] * (Bet - A[5]) + InvA[3] * (Bet - A[5]);
+
+	//Az, Elev -> Ra, Dec
+	AzElev2RaDec();
+}
+
 bool Convertor::SetDateAndPolePos(const double &Jd) {
 	//Get dAT
 	double *tab = IForce1->TAIUTCCorrect;
@@ -174,9 +205,15 @@ bool Convertor::SetDateAndPolePos(const double &Jd) {
 	return true;
 }
 
+void Convertor::SetConvMatr(const std::vector<double>& M) {
+	for (int i = 0; i < M.size(); i++) {
+		A[i] = M[i];
+	}
+}
+
 void Convertor::Convert2AlphBet() {
-	cur_Alph = cur_Elev;
-	cur_Bet = cur_Az;
+	cur_Alph = A[0] * cur_Az + A[1] * cur_Elev + A[2];
+	cur_Bet = A[3] * cur_Az + A[4] * cur_Elev + A[5];
 }
 
 void Convertor::RaDec2AzElev() {

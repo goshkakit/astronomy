@@ -25,6 +25,8 @@ public:
 	void SetTelTP(const double &T, const double &P);
 	void SetAzElevPos(const double &Jd, const double &Az, const double &Elev);
 	void SetRaDecPos(const double &Jd, const double &Ra, const double &Dec);
+	void SetAlphBetPos(const double &Jd, const double &Ra, const double &Dec);
+	void SetConvMatr(const std::vector<double>& M);
 
 	std::pair<double, double> GetAzElevPos();
 	std::pair<double, double> GetRaDecPos();
@@ -58,6 +60,9 @@ private:
 
 	//Initialization
 	void InitIntegrator();
+
+	//ConvMatr
+	std::vector<double> A;
 
 	bool SetDateAndPolePos(const double &Jd);
 	void Convert2AlphBet();
