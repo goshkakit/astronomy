@@ -27,6 +27,19 @@ function buildVS
 
         Write-Host "Building $($path)" -foregroundcolor green
         & "$($msBuildExe)" "$($path)" /t:ReBuild /property:Configuration=Release /property:Platform=x64 /m
+		$MyLastExitCode = $LastExitCode
+		
+        Write-Host ("BUILD END")
+        if( $MyLastExitCode -eq 0 )	
+        {	
+			Write-Host ("BUILD OK")
+        }
+        else
+        {			
+			Write-Host ("BUILD ERROR")	
+            Write-Error ( $MyLastExitCode )
+			exit 1
+        }
     }
 }
 
