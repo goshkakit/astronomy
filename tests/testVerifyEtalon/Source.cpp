@@ -112,20 +112,20 @@ void main(int argc, char *argv[])
 	*/
 
 	// 1 tests
-	//std::string pinpf_tels = "data/etalon/tels.json";
-	//char *htsName = "data/etalon/lageos2_cpf_131022_7951.sgf";
-	//char *tleName = "data/etalon/TLE20131020.txt";
-	//char *optfname = "data/etalon/track_13_10_22_22_23_simple_num199.dat";
-	//std:string pinpf_stV = "data/etalon/stV_lageos2.json";
-	//bool useSTV = false;
+	std::string pinpf_tels = "data/etalon/tels.json";
+	char *htsName = "data/etalon/lageos2_cpf_131022_7951.sgf";
+	char *tleName = "data/etalon/TLE20131020.txt";
+	char *optfname = "data/etalon/track_13_10_22_22_23_simple_num199.dat";
+	std:string pinpf_stV = "data/etalon/stV_lageos2.json";
+	bool useSTV = false;
 
 	// 2
-	std::string pinpf_tels = "data/etalon2/tels.json";
-	char *htsName = "data/etalon2/cryosat2_cpf_200210_5411.esa";
-	char *tleName = "data/etalon2/TLE20200210.txt";
-	char *optfname = "data/etalon2/track_20_02_10_18_33_simple_num00016078.dat";
-	std:string pinpf_stV = "data/etalon2/stV_lageos2.json";
-	bool useSTV = false;
+	//std::string pinpf_tels = "data/etalon2/tels.json";
+	//char *htsName = "data/etalon2/cryosat2_cpf_200210_5411.esa";
+	//char *tleName = "data/etalon2/TLE20200210.txt";
+	//char *optfname = "data/etalon2/track_20_02_10_18_33_simple_num00016078.dat";
+	//std:string pinpf_stV = "data/etalon2/stV_lageos2.json";
+	//bool useSTV = false;
 
 	/*std::string pinpf_tels = "etalon\\Ajisai\\tel_10989.json";
 	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
