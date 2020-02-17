@@ -785,8 +785,8 @@ public:
 		for (int i = 0; i < listAzEl_Tel.size(); i++)
 		{
 			SCoordinate pt = listAzEl_Tel[i];
-			pt.x += 10;
-			pt.y += 2;
+			pt.x += 5;
+			pt.y += 0;
 			listAzEl_Real.push_back(pt);
 		}
 
