@@ -1,14 +1,14 @@
 stages:
   - build
 
-msvs_2015_release_x64:
+vc14_x64_release:
   stage: build
   script:
        - .\msbuild_R.ps1 
   tags: 
   - my-tag
   
-msvs_2015_debug_x64:
+vc14_x64_debug:
   stage: build
   script:
        - .\msbuild_D.ps1 
