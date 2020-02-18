@@ -3,6 +3,7 @@
 #include "Mat3x3.h"
 
 #include <iostream>
+#include <math.h>
 
 Convertor::Convertor() {
 	//CurrentPosition
@@ -13,6 +14,8 @@ Convertor::Convertor() {
 	cur_Dec = 0;
 	cur_Alph = 0;
 	cur_Bet = 0;
+	cur_mot1 = 0;
+	cur_mot2 = 0;
 
 	//TelescopePosition
 	tel_pos_ITRF[0] = 0;
@@ -23,6 +26,14 @@ Convertor::Convertor() {
 	tel.longitude = 0;
 	tel.pressure = 1000;
 	tel.temperature = 0;
+
+	//StandartTelescopeSpec
+	a_max = 1000.0;
+	V_max = 10000.0;
+	Gear_ratio = 745.0;
+	circle_motor = 3200.0;
+	circle_mount = circle_motor * Gear_ratio;
+	step = 2 * pi / circle_mount;
 
 	//StandartConv
 	A.resize(6);
@@ -63,6 +74,15 @@ void Convertor::InitIntegrator() {
 	}
 }
 
+void Convertor::InitMountSpec(const double &a, const double &V, const double &ratio, const double &steps) {
+	a_max = a;
+	V_max = V;
+	Gear_ratio = ratio;
+	circle_motor = steps;
+	circle_mount = circle_motor * Gear_ratio;
+	step = 2 * pi / circle_mount;
+}
+
 std::pair<double, double> Convertor::GetAzElevPos() {
 	return{ cur_Az, cur_Elev };
 }
@@ -73,6 +93,10 @@ std::pair<double, double> Convertor::GetRaDecPos() {
 
 std::pair<double, double> Convertor::GetAlphBetPos() {
 	return{ cur_Alph, cur_Bet };
+}
+
+std::pair<double, double> Convertor::GetMotorsPos() {
+	return{ cur_mot1, cur_mot2 };
 }
 
 void Convertor::SetTelPosITRF(const double &x, const double &y, const double &z) {
@@ -156,6 +180,11 @@ void Convertor::SetAlphBetPos(const double &Jd, const double &Alph, const double
 
 	//Az, Elev -> Ra, Dec
 	AzElev2RaDec();
+}
+
+void Convertor::SetMotorsPos(const double &mot1, const double &mot2) {
+	cur_mot1 = mot1;
+	cur_mot2 = mot2;
 }
 
 bool Convertor::SetDateAndPolePos(const double &Jd) {
@@ -266,4 +295,65 @@ void Convertor::AzElevR2XYZ_ITRF(double* pos) {
 	pos[0] = R * cos(dec) * cos(ra);
 	pos[1] = R * cos(dec) * sin(ra);
 	pos[2] = R * sin(dec);
+}
+
+traject Convertor::CalcTraject(const double &inAlph, const double &inBet, const double &outAlph, const double &outBet) {
+	traject tr;
+	tr.startpos.first = cur_mot1;
+	tr.startpos.second = cur_mot2;
+	
+	//Общее кол-во шагов по двум осям
+	double stepsA = (outAlph - inAlph) / step;
+	double stepsB = (outBet - inBet) / step;
+	tr.endpos.first = cur_mot1 + stepsA;
+	tr.endpos.second = cur_mot2 + stepsB;
+
+	double signA = sign(stepsA);
+	double signB = sign(stepsB);
+	stepsA = abs(stepsA);
+	stepsB = abs(stepsB);
+
+	tr.a.first = signA * a_max;
+	tr.a.second = signB * a_max;
+
+	//Время ускорения + торможения
+	double Ta = 2 * (V_max / a_max);
+	//Расстояние пройденное за ускорение + торможение
+	double Sa = 2 * (V_max * V_max / (2 * a_max));
+	
+	double T_A;
+	//Если выходит на максимальную скорость
+	if (stepsA > Sa) {
+		tr.V.first = signA * V_max;
+		T_A = Ta + (stepsA - Sa) / V_max;
+	}
+	//Если не может достигнуть максималдьной скорости
+	else {
+		double V = sqrt(2 * (stepsA / 2) * a_max);
+		tr.V.first = signA * V;
+		T_A = 2 * V / a_max;
+	}
+
+	double T_B;
+	//Если выходит на максимальную скорость
+	if (stepsB > Sa) {
+		tr.V.second = signB * V_max;
+		T_B = Ta + (stepsB - Sa) / V_max;
+	}
+	//Если не может достигнуть максимальной скорости
+	else {
+		double V = sqrt(2 * (stepsB / 2) * a_max);
+		tr.V.second = signB * V;
+		T_B = 2 * V / a_max;
+	}
+
+	//Выбрать максимальное время
+	if (T_A >= T_B) {
+		tr.T = T_A;
+	}
+	else {
+		tr.T = T_B;
+	}
+	
+	return tr;
 }
