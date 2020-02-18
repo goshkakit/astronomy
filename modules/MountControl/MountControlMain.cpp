@@ -53,17 +53,29 @@ int main() {
 	//Test Calibration::CalculateA(...)
 	{
 		std::cout << "Test Calibration::CalculateA(...)" << std::endl;
-		std::vector<std::pair<double, double>> real_points = { { 0.0, pi / 6.0 },{ 2.0 * pi / 3.0, pi / 6.0 + pi / 8.0 },{ 4.0 * pi / 3.0, pi / 6.0 + pi / 4.0 } };
-		double deltAlph = 5 * pi / 180;
-		double deltBet = 10 * pi / 180;
-		std::vector<std::pair<double, double>> tel_points = { { 0.0 + deltAlph, pi / 6.0 + deltBet },{ 2.0 * pi / 3.0 + deltAlph, pi / 6.0 + pi / 8.0 + deltBet },{ 4.0 * pi / 3.0 + deltAlph, pi / 6.0 + pi / 4.0 + deltBet } };
+		std::vector<std::pair<double, double>> real_points = { { 0, pi },{ pi, pi / 2 },{ 3 * pi / 2, pi } };
+		double deltAlph = 10 / 180 * pi;
+		double deltBet = 10 / 180 * pi;
+		//double deltBet = pi;
+		std::vector<std::pair<double, double>> tel_points = { { 0 + deltAlph, pi + deltBet },{ pi + deltAlph, pi / 2 + deltBet },{ 3 * pi / 2 + deltAlph, pi + deltBet } };
 		std::vector<double> A(6);
 		A = test.CalculateA(tel_points, real_points);
+		std::vector<double> Y1 = { real_points[0].first, real_points[0].second, 1 };
+		std::vector<double> Y2 = { real_points[1].first, real_points[1].second, 1 };
+		std::vector<double> Y3 = { real_points[2].first, real_points[2].second, 1 };
+		std::vector<double> X1 = Mat3x3XStolb3x1(A, Y1);
+		std::vector<double> X2 = Mat3x3XStolb3x1(A, Y2);
+		std::vector<double> X3 = Mat3x3XStolb3x1(A, Y3);
+
+		std::cout << "CalcAlph1 - Alph1 = " << X1[0] - tel_points[0].first << ", CalcBet1 - Bet1 = " << X1[1] - tel_points[0].second << ", CalcAlph2 - Alph2 = " << X2[0] - tel_points[1].first 
+			<< ", CalcBet2 - Bet2 = " << X2[1] - tel_points[1].second << ", CalcAlph3 - Alph3 = " << X3[0] - tel_points[2].first << ", CalcBet3 - Bet3 = " << X3[1] - tel_points[2].second << std::endl;
+		/*
 		double deltAlph_ = A[2] * 180 / pi;
 		double deltBet_ = A[5] * 180 / pi;
 
 		std::cout << "deltAlph = 5 deg, deltBet = 10 deg" << std::endl;
 		std::cout << "Calc_deltAlph = " << deltAlph_ << " deg, Calc_deltBet = " << deltBet_ << " deg" << std::endl;
+		*/
 	}
 
 	std::cout << std::endl;

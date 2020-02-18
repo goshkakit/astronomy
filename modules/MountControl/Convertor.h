@@ -51,8 +51,9 @@ public:
 
 	//Вычислить траекторию для шаговых двигателей
 	traject CalcTraject(const double &inAlph, const double &inBet, const double &outAlph, const double &outBet);
-	traject CalcTrajectRaDec();
-	traject CalcTrajectAzElev();
+	traject CalcTraject(const double &mot1, const double &mot2, const double &inAlph, const double &inBet, const double &outAlph, const double &outBet);
+	traject GoToRaDec();
+	traject GoToAzElev();
 
 	//Получить текущее положение в разных системах координат
 	std::pair<double, double> GetAzElevPos();

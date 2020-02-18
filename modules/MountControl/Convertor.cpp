@@ -357,3 +357,15 @@ traject Convertor::CalcTraject(const double &inAlph, const double &inBet, const 
 	
 	return tr;
 }
+
+traject Convertor::CalcTraject(const double &mot1, const double &mot2, const double &inAlph, const double &inBet, const double &outAlph, const double &outBet) {
+	double mot1_tmp = cur_mot1;
+	double mot2_tmp = cur_mot2;
+	cur_mot1 = mot1;
+	cur_mot2 = mot2;
+	traject tr = CalcTraject(inAlph, inBet, outAlph, outBet);
+	cur_mot1 = mot1_tmp;
+	cur_mot2 = mot2_tmp;
+	return tr;
+}
+
