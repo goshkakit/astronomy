@@ -11,6 +11,10 @@ int main() {
 	Telpos[1] = 3298.4;
 	Telpos[2] = 2758.99;
 	telescope.SetTelPosITRF(Telpos);
+	std::cout << std::endl;
+
+	Calibration test(Telpos, 2458896.0, 0.0, pi / 2);
+	std::cout << std::endl;
 
 	//Test Convertor::GetAlphBetPos(...) from Ra, Dec
 	std::cout << "Test Convertor::GetAlphBetPos(...) from Ra, Dec" << std::endl;
@@ -49,7 +53,6 @@ int main() {
 	//Test Calibration::CalculateA(...)
 	{
 		std::cout << "Test Calibration::CalculateA(...)" << std::endl;
-		Calibration test(Telpos, 2458896.0, 0.0, pi / 2);
 		std::vector<std::pair<double, double>> real_points = { { 0.0, pi / 6.0 },{ 2.0 * pi / 3.0, pi / 6.0 + pi / 8.0 },{ 4.0 * pi / 3.0, pi / 6.0 + pi / 4.0 } };
 		double deltAlph = 5 * pi / 180;
 		double deltBet = 10 * pi / 180;
@@ -59,8 +62,11 @@ int main() {
 		double deltAlph_ = A[2] * 180 / pi;
 		double deltBet_ = A[5] * 180 / pi;
 
-		std::cout << std::endl;
+		std::cout << "deltAlph = 5 deg, deltBet = 10 deg" << std::endl;
+		std::cout << "Calc_deltAlph = " << deltAlph_ << " deg, Calc_deltBet = " << deltBet_ << " deg" << std::endl;
 	}
+
+	std::cout << std::endl;
 
 	//Test Convertor::CalcTraject(...)
 	{
