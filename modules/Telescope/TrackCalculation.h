@@ -426,7 +426,7 @@ public:
 				Position_TimeAz += stepSec / 60.0;
 			}
 			//printf("AZ: %f %f %f %e %e\t|\t T: %f %f %e AZ: %f %f\n", stepT0.x, stepT1.x, stepTaz_curr, (stepTaz_curr- stepT1.x)*MCS, dstepTaz, Position_TimeAz, ptt1, (Position_TimeAz-ptt1)*60.0, Position_Az, pt1.az);
-			stepTaz_prev = stepTaz_curr;
+			
 
 			// идем по шагам и проверяем точность по наклонению
 			for (int j = 0; j < abs(Ni_el); j++)
@@ -450,6 +450,8 @@ public:
 				Position_TimeEl += stepSec / 60.0;
 			}
 			//printf("EL: %f %f %f %e %e\t|\t T: %f %f %e EL: %f %f\n", stepT0.y, stepT1.y, stepTel_curr, (stepTel_curr - stepT1.y)*MCS, dstepTel, Position_TimeEl, ptt1, (Position_TimeEl-ptt1)*60.0, Position_El, pt1.el);
+			
+			stepTaz_prev = stepTaz_curr;
 			stepTel_prev = stepTel_curr;
 
 			// смотрим ошибки
@@ -459,7 +461,7 @@ public:
 			if (maxErr_El < Err_el) maxErr_El = Err_el;
 
 
-			printf("AZ: %5.2f %5.2f %5.2f %d [err:%5.4f, %5.4f]\t EL:  %5.2f %5.2f %5.2f %d [err:%5.4f %5.4f]\n", pt0.az, d_az, N_az, Ni_az, Err_az, maxErrMi_Az,    pt0.el, d_el, N_el, Ni_el, Err_el, maxErrMi_El);
+			printf("AZ: %5.2f %5.2f %5.2f %5.2f %d [err:%5.4f, %5.4f]\t EL:  %5.2f %5.2f %5.2f %5.2f %d [err:%5.4f %5.4f]\n", pt0.az, d_az, stepV0.x, N_az, Ni_az, Err_az, maxErrMi_Az,    pt0.el, d_el, stepV0.y, N_el, Ni_el, Err_el, maxErrMi_El);
 			printf("\n");
 		}
 
