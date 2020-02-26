@@ -3,20 +3,21 @@
 #include "AstroDataManager.h"
 #include "TelescopeAling.h"
 
-int main()
+int main_TelescopeAling()
 {
 	TelescopeAling TA;
 	TA.Init();
-	TA.calculatePoints();
+	//TA.calculatePoints();
+	TA.aline3DPoints();
 
 	return 0;
 }
 
-int main_plan()
+int main_TrackCalculation()
 {
 	printf("Start\n");
 
-	string DBRoot = "telescope";
+	string DBRoot = "data/telescope";
 	std::string pinpf_tels = DBRoot + "/tels_simulation.json";
 	std::string tle_input = DBRoot + "/TLE20180724.txt";
 
@@ -40,5 +41,12 @@ int main_plan()
 			trackCalculation->PrepareTracks(tel, orb);
 		}
 	}
+	return 0;
+}
+
+int main() {
+
+	main_TrackCalculation();
+
 	return 0;
 }

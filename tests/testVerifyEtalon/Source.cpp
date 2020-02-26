@@ -111,11 +111,21 @@ void main(int argc, char *argv[])
 	char *optfname = argv[4];
 	*/
 
-	std::string pinpf_tels = "etalon\\tels.json";
-	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
-	char *tleName = "etalon\\TLE20131020.txt";
-	char *optfname = "etalon\\track_13_10_22_22_23_simple_num199.dat";
-	std:string pinpf_stV = "etalon\\stV_lageos2.json";
+	// 1 tests
+	std::string pinpf_tels = "data/etalon/tels.json";
+	char *htsName = "data/etalon/lageos2_cpf_131022_7951.sgf";
+	char *tleName = "data/etalon/TLE20131020.txt";
+	char *optfname = "data/etalon/track_13_10_22_22_23_simple_num199.dat";
+	std:string pinpf_stV = "data/etalon/stV_lageos2.json";
+	bool useSTV = false;
+
+	// 2
+	//std::string pinpf_tels = "data/etalon2/tels.json";
+	//char *htsName = "data/etalon2/cryosat2_cpf_200210_5411.esa";
+	//char *tleName = "data/etalon2/TLE20200210.txt";
+	//char *optfname = "data/etalon2/track_20_02_10_18_33_simple_num00016078.dat";
+	//std:string pinpf_stV = "data/etalon2/stV_lageos2.json";
+	//bool useSTV = false;
 
 	/*std::string pinpf_tels = "etalon\\Ajisai\\tel_10989.json";
 	char *htsName = "etalon\\lageos2_cpf_131022_7951.sgf";
@@ -158,9 +168,12 @@ void main(int argc, char *argv[])
 
 	std::cout << "Count of telescopes in " << tels.size() << "\n";
 
-	JstV = read_Json(pinpf_stV);
-	read_stV_Json(stV, JstV);
-	std::cout << stV.jd << "  " << stV.x << "  " << stV.y << "  " << stV.z << "  " << stV.Vx << "  " << stV.Vy << "  " << stV.Vz << "  " << stV.BalFactor << std::endl;
+	if (useSTV)
+	{
+		JstV = read_Json(pinpf_stV);
+		read_stV_Json(stV, JstV);
+		std::cout << stV.jd << "  " << stV.x << "  " << stV.y << "  " << stV.z << "  " << stV.Vx << "  " << stV.Vy << "  " << stV.Vz << "  " << stV.BalFactor << std::endl;
+	}
 
 	CorrespondenceData CDD;
 	CDD.InitModyle();
@@ -173,5 +186,5 @@ void main(int argc, char *argv[])
 	printf("Telecope position: %f %f %f\n", telpos[0], telpos[1], telpos[2]);
 	printf("%s\n%s\n%s\n", htsName, tleName, optfname);
 
-	CDD.RunCorrespondenceData(optfname, htsName, tleName, telpos, stV);
+	CDD.RunCorrespondenceData(optfname, htsName, tleName, telpos, stV, useSTV);
 }

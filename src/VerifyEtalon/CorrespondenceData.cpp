@@ -21,7 +21,7 @@ void CorrespondenceData::InitModyle()
 	short int error = 0;
 	short int de_num = 0;
 	double jd_beg, jd_end;
-	if ((error = ephem_open ("data\\eph\\lnx1900.405", &jd_beg,&jd_end,&de_num)) != 0)
+	if ((error = ephem_open ("data/eph/lnx1900.405", &jd_beg,&jd_end,&de_num)) != 0)
 	{
 		if (error == 1)
 			printf ("JPL ephemeris file not found.\n");
@@ -39,7 +39,7 @@ void CorrespondenceData::InitModyle()
 //==============================================================================//
 // тест соответствия с лазерными измерениями
 //==============================================================================//
-void CorrespondenceData::RunCorrespondenceData( char *optfname, char *htsName, char *tleName, double *Tpos, const TstV &stV)
+void CorrespondenceData::RunCorrespondenceData( char *optfname, char *htsName, char *tleName, double *Tpos, const TstV &stV, bool useSTV)
 {
 	printf("\n**********************************************\n");
 
@@ -68,26 +68,26 @@ void CorrespondenceData::RunCorrespondenceData( char *optfname, char *htsName, c
 	printf("\nNO CORRECT:\ndRa\tdDec\tPro\tNor\tZ\n");
 	for( int it = 0; it < OpticArray.size(); it ++ )
 	{
-		CorrespondenceCPF( it, false, Tpos, false, false, stV);
+		CorrespondenceCPF( it, false, Tpos, false, false, stV, useSTV);
 	}
 	printf("----------------------------------------------------------\n");
 	printf("\nABBERATION CORRECT:\ndRa\tdDec\tPro\tNor\tZ\n");
 	for( int it = 0; it < OpticArray.size(); it ++ )
 	{
-		CorrespondenceCPF( it, false, Tpos, true, false, stV);
+		CorrespondenceCPF( it, false, Tpos, true, false, stV, useSTV);
 	}
 	
 	printf("\nABBERATION AND TIME CORRECT:\ndRa\tdDec\tPro\tNor\tZ\n");
 	for( int it = 0; it < OpticArray.size(); it ++ )
 	{
-		CorrespondenceCPF( it, true, Tpos, true, false, stV);
+		CorrespondenceCPF( it, true, Tpos, true, false, stV, useSTV);
 	}
 
 	printf("----------------------------------------------------------\n");
 	printf("\nABBERATION, REFRACTION AND TIME CORRECT:\ndRa\tdDec\tPro\tNor\tZ\n");
 	for( int it = 0; it < OpticArray.size(); it ++ )
 	{
-		CorrespondenceCPF( it, true, Tpos, true, true, stV);
+		CorrespondenceCPF( it, true, Tpos, true, true, stV, useSTV);
 	}
 	printf("----------------------------------------------------------\n");
 
@@ -127,7 +127,7 @@ double sign(double Val)
 	else return -1;
 }
 
-void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bool abbcorr, bool refcorr,const TstV &stV)
+void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bool abbcorr, bool refcorr,const TstV &stV, bool useSTV)
 {
 	// отстование по времени
 	double Toffset = 0;
@@ -154,70 +154,71 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 	ITRFToICRF(OpticArray[it].jd, Tpos, Telicrf);
 
 	// поправка на расстояние до спутника
-	if( Tcorr )
+	if (Tcorr)
 	{
 		double jdmeg = OpticArray[it].jd;
 		// прогнозируем ТЛЕ на момент измерения м
 		// прогноз по SGP4
 		double Tpredict = jdmeg - orbitN->Epoch().Date();
-		
-		/*
 
-		Tpredict = Tpredict*24.0*60.0;
-		cEciTime eci1 = orbitN->GetPosition( Tpredict );
-
-		double Ptle[3];
-		// прогноз положения в километрах
-		Ptle[0] = eci1.Position().m_x;
-		Ptle[1] = eci1.Position().m_y;
-		Ptle[2] = eci1.Position().m_z;
-
-		TimePoint calcTime;
-		calcTime.jd = OpticArray[it].jd;
-		calcTime.gdata = OpticArray[it].dataMDB;
-		calcTime.gtime = OpticArray[it].timeMDB;
-
-		// положение спутника по TLE в момент измерения
-		double PICRF[3];
-		ConvertTEMEtoICRF( Ptle, PICRF, calcTime );
-
-		double lx = PICRF[0] - Telicrf[0];
-		double ly = PICRF[1] - Telicrf[1];
-		double lz = PICRF[2] - Telicrf[2];
-		double satDistTle = sqrt( lx*lx + ly*ly + lz*lz );
-
-		Toffset = satDistTle/300.0; // задержка в мисисекундах
-		//printf("\n\nTIME CORRECT = %.2f\tdist = %f\n", Toffset, satDistTle );
-		Toffset = Toffset/1000.0;	// задержка в секундах
-
-		*/
-		
-		const double J1957 = 2436203.5;
-		double JdE = OpticArray[it].jd;
-		double Jd = stV.jd + J1957;
-		int direction = (int)sign(JdE - Jd);
-		if (direction != 0)
+		if (!useSTV)
 		{
-			SatParamToPredictJD sptrjd;
-			sptrjd.inX[0] = stV.x / 1000.0;
-			sptrjd.inX[1] = stV.y / 1000.0;
-			sptrjd.inX[2] = stV.z / 1000.0;
-			sptrjd.inX[3] = stV.Vx;
-			sptrjd.inX[4] = stV.Vy;
-			sptrjd.inX[5] = stV.Vz;
-			sptrjd.atm = stV.BalFactor;
-			sptrjd.sun = stV.SMRatio;// 0.5E - 05;
-			sptrjd.JD_start = Jd;
-			sptrjd.JD_end = JdE;
-			TestPredict->GetNewPositionForJD(sptrjd);
-			double x = sptrjd.outX[0] * 1000.0;
-			double y = sptrjd.outX[1] * 1000.0;
-			double z = sptrjd.outX[2] * 1000.0;
-			double Vx = sptrjd.outX[3];
-			double Vy = sptrjd.outX[4];
-			double Vz = sptrjd.outX[5];
-			Toffset = sqrt((x - Telicrf[0])*(x - Telicrf[0]) + (y - Telicrf[1])*(y - Telicrf[1]) + (z - Telicrf[2])*(z - Telicrf[2])) / 299792.458;
-			//ITRFToICRF(OpticArray[it].jd - Toffset / 86400.0, Tpos, Telicrf);
+			Tpredict = Tpredict*24.0*60.0;
+			cEciTime eci1 = orbitN->GetPosition(Tpredict);
+
+			double Ptle[3];
+			// прогноз положения в километрах
+			Ptle[0] = eci1.Position().m_x;
+			Ptle[1] = eci1.Position().m_y;
+			Ptle[2] = eci1.Position().m_z;
+
+			TimePoint calcTime;
+			calcTime.jd = OpticArray[it].jd;
+			calcTime.gdata = OpticArray[it].dataMDB;
+			calcTime.gtime = OpticArray[it].timeMDB;
+
+			// положение спутника по TLE в момент измерения
+			double PICRF[3];
+			ConvertTEMEtoICRF(Ptle, PICRF, calcTime);
+
+			double lx = PICRF[0] - Telicrf[0];
+			double ly = PICRF[1] - Telicrf[1];
+			double lz = PICRF[2] - Telicrf[2];
+			double satDistTle = sqrt(lx*lx + ly*ly + lz*lz);
+
+			Toffset = satDistTle / 300.0; // задержка в мисисекундах
+			//printf("\n\nTIME CORRECT = %.2f\tdist = %f\n", Toffset, satDistTle );
+			Toffset = Toffset / 1000.0;	// задержка в секундах
+		}
+		else
+		{
+			const double J1957 = 2436203.5;
+			double JdE = OpticArray[it].jd;
+			double Jd = stV.jd + J1957;
+			int direction = (int)sign(JdE - Jd);
+			if (direction != 0)
+			{
+				SatParamToPredictJD sptrjd;
+				sptrjd.inX[0] = stV.x / 1000.0;
+				sptrjd.inX[1] = stV.y / 1000.0;
+				sptrjd.inX[2] = stV.z / 1000.0;
+				sptrjd.inX[3] = stV.Vx;
+				sptrjd.inX[4] = stV.Vy;
+				sptrjd.inX[5] = stV.Vz;
+				sptrjd.atm = stV.BalFactor;
+				sptrjd.sun = stV.SMRatio;// 0.5E - 05;
+				sptrjd.JD_start = Jd;
+				sptrjd.JD_end = JdE;
+				TestPredict->GetNewPositionForJD(sptrjd);
+				double x = sptrjd.outX[0] * 1000.0;
+				double y = sptrjd.outX[1] * 1000.0;
+				double z = sptrjd.outX[2] * 1000.0;
+				double Vx = sptrjd.outX[3];
+				double Vy = sptrjd.outX[4];
+				double Vz = sptrjd.outX[5];
+				Toffset = sqrt((x - Telicrf[0])*(x - Telicrf[0]) + (y - Telicrf[1])*(y - Telicrf[1]) + (z - Telicrf[2])*(z - Telicrf[2])) / 299792.458;
+				//ITRFToICRF(OpticArray[it].jd - Toffset / 86400.0, Tpos, Telicrf);
+			}
 		}
 	}
 
@@ -240,68 +241,70 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 	// вычисление положения на орбите через интерполяцию
 	// time
 	
-	/*double jd = IForce->dt_ajd( OpticArray[it].dataUTC ) - 0.5;
-	double secday = (OpticArray[it].jd - jd )*86400.0;
-	secday = secday - Toffset;
-
-	double Sicrf[3];
-	double Gpos[6];
-	cpfe.GetPos( jd, secday, Gpos );
-	IForce->matVecMul(  invArot_m, Gpos, Sicrf );
-	//Ter2Cel( jd, OpticArray[it].jd, Gpos, Sicrf );
-
-	double Sicrf2[3];
-	double Gpos2[6];
-	cpfe.GetPos( jd, secday+0.2, Gpos2 );
-	IForce->matVecMul(  invArot_m, Gpos2, Sicrf2 );
-	//Ter2Cel( jd, OpticArray[it].jd, Gpos2, Sicrf2 );
-	*/
-	const double J1957 = 2436203.5;
-	double JdE = OpticArray[it].jd;
-	double Jd = stV.jd + J1957;
-	int direction = (int)sign(JdE - Jd);
 	double Sicrf[6];
 	double Sicrf2[6];
-	if (direction != 0)
+	if(!useSTV)
 	{
-		SatParamToPredictJD sptrjd;
-		sptrjd.inX[0] = stV.x / 1000.0;
-		sptrjd.inX[1] = stV.y / 1000.0;
-		sptrjd.inX[2] = stV.z / 1000.0;
-		sptrjd.inX[3] = stV.Vx;
-		sptrjd.inX[4] = stV.Vy;
-		sptrjd.inX[5] = stV.Vz;
-		sptrjd.atm = stV.BalFactor;
-		sptrjd.sun = stV.SMRatio;// 0.5E - 05;
-		sptrjd.JD_start = Jd;
-		sptrjd.JD_end = JdE - Toffset/86400.0;
-		TestPredict->GetNewPositionForJD(sptrjd);
-		Sicrf[0] = sptrjd.outX[0] * 1000.0;
-		Sicrf[1] = sptrjd.outX[1] * 1000.0;
-		Sicrf[2] = sptrjd.outX[2] * 1000.0;
-		Sicrf[3] = sptrjd.outX[3];
-		Sicrf[4] = sptrjd.outX[4];
-		Sicrf[5] = sptrjd.outX[5];
-		
-		sptrjd.inX[0] = stV.x / 1000.0;
-		sptrjd.inX[1] = stV.y / 1000.0;
-		sptrjd.inX[2] = stV.z / 1000.0;
-		sptrjd.inX[3] = stV.Vx;
-		sptrjd.inX[4] = stV.Vy;
-		sptrjd.inX[5] = stV.Vz;
-		sptrjd.atm = stV.BalFactor;
-		sptrjd.sun = stV.SMRatio;// 0.5E - 05;
-		sptrjd.JD_start = Jd;
-		sptrjd.JD_end = JdE + 0.10/86400 - Toffset/86400.0;
-		TestPredict->GetNewPositionForJD(sptrjd);
-		Sicrf2[0] = sptrjd.outX[0] * 1000.0;
-		Sicrf2[1] = sptrjd.outX[1] * 1000.0;
-		Sicrf2[2] = sptrjd.outX[2] * 1000.0;
-		Sicrf2[3] = sptrjd.outX[3];
-		Sicrf2[4] = sptrjd.outX[4];
-		Sicrf2[5] = sptrjd.outX[5];
+		double jd = IForce->dt_ajd( OpticArray[it].dataUTC ) - 0.5;
+		double secday = (OpticArray[it].jd - jd )*86400.0;
+		secday = secday - Toffset;
+		double Gpos[6];
+		cpfe.GetPos( jd, secday, Gpos );
+		IForce->matVecMul(  invArot_m, Gpos, Sicrf );
+		//Ter2Cel( jd, OpticArray[it].jd, Gpos, Sicrf );
+
+		double Gpos2[6];
+		cpfe.GetPos( jd, secday+0.2, Gpos2 );
+		IForce->matVecMul(  invArot_m, Gpos2, Sicrf2 );
+		//Ter2Cel( jd, OpticArray[it].jd, Gpos2, Sicrf2 );
 	}
-	
+	else
+	{
+		const double J1957 = 2436203.5;
+		double JdE = OpticArray[it].jd;
+		double Jd = stV.jd + J1957;
+		int direction = (int)sign(JdE - Jd);
+
+		if (direction != 0)
+		{
+			SatParamToPredictJD sptrjd;
+			sptrjd.inX[0] = stV.x / 1000.0;
+			sptrjd.inX[1] = stV.y / 1000.0;
+			sptrjd.inX[2] = stV.z / 1000.0;
+			sptrjd.inX[3] = stV.Vx;
+			sptrjd.inX[4] = stV.Vy;
+			sptrjd.inX[5] = stV.Vz;
+			sptrjd.atm = stV.BalFactor;
+			sptrjd.sun = stV.SMRatio;// 0.5E - 05;
+			sptrjd.JD_start = Jd;
+			sptrjd.JD_end = JdE - Toffset / 86400.0;
+			TestPredict->GetNewPositionForJD(sptrjd);
+			Sicrf[0] = sptrjd.outX[0] * 1000.0;
+			Sicrf[1] = sptrjd.outX[1] * 1000.0;
+			Sicrf[2] = sptrjd.outX[2] * 1000.0;
+			Sicrf[3] = sptrjd.outX[3];
+			Sicrf[4] = sptrjd.outX[4];
+			Sicrf[5] = sptrjd.outX[5];
+
+			sptrjd.inX[0] = stV.x / 1000.0;
+			sptrjd.inX[1] = stV.y / 1000.0;
+			sptrjd.inX[2] = stV.z / 1000.0;
+			sptrjd.inX[3] = stV.Vx;
+			sptrjd.inX[4] = stV.Vy;
+			sptrjd.inX[5] = stV.Vz;
+			sptrjd.atm = stV.BalFactor;
+			sptrjd.sun = stV.SMRatio;// 0.5E - 05;
+			sptrjd.JD_start = Jd;
+			sptrjd.JD_end = JdE + 0.10 / 86400 - Toffset / 86400.0;
+			TestPredict->GetNewPositionForJD(sptrjd);
+			Sicrf2[0] = sptrjd.outX[0] * 1000.0;
+			Sicrf2[1] = sptrjd.outX[1] * 1000.0;
+			Sicrf2[2] = sptrjd.outX[2] * 1000.0;
+			Sicrf2[3] = sptrjd.outX[3];
+			Sicrf2[4] = sptrjd.outX[4];
+			Sicrf2[5] = sptrjd.outX[5];
+		}
+	}
 	//-------------------------------------------------------//
 
 	// вычисление просчитанных измерений
