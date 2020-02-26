@@ -7,7 +7,8 @@ int main()
 {
 	TelescopeAling TA;
 	TA.Init();
-	TA.calculatePoints();
+	//TA.calculatePoints();
+	TA.aline3DPoints();
 
 	return 0;
 }
