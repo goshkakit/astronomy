@@ -2,14 +2,14 @@
 #include "Mat3x3.h"
 #include <math.h>
 
-Calibration::Calibration(double* pos, const double& Jd, const double& Alph, const double& Bet) {
+Calibration::Calibration(double* pos, const double& Jd, const double& Az, const double& Elev) {
 	telpos.SetTelPosITRF(pos);
-	telpos.SetAlphBetPos(Jd, Alph, Bet);
+	telpos.SetAzElevPos(Jd, Az, Elev);
 }
 
-Calibration::Calibration(const double& x, const double& y, const double& z, const double& Jd, const double& Alph, const double& Bet) {
+Calibration::Calibration(const double& x, const double& y, const double& z, const double& Jd, const double& Az, const double& Elev) {
 	telpos.SetTelPosITRF(x, y, z);
-	telpos.SetAlphBetPos(Jd, Alph, Bet);
+	telpos.SetAzElevPos(Jd, Az, Elev);
 }
 
 Calibration::~Calibration() {

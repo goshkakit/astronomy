@@ -26,6 +26,9 @@
     <ClCompile Include="MountControlMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="comPortControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convertor.h">
@@ -38,6 +41,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mat3x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="comPortControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

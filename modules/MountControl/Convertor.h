@@ -28,7 +28,7 @@ public:
 	~Convertor();
 
 	//»нициализаци€ параметров монтировки
-	void InitMountSpec(const double &a, const double &V, const double &ratio, const double &steps);
+	void InitMountSpec(const double &st, const double &a, const double &V, const double &ratio, const double &steps);
 	//«адать позицию телескопа в ITRF
 	void SetTelPosITRF(const double &x, const double &y, const double &z);
 	void SetTelPosITRF(double *pos);
@@ -42,18 +42,23 @@ public:
 	void SetAzElevPos(const double &Jd, const double &Az, const double &Elev);
 	//«адать направление наблюдени€ Ra, Dec
 	void SetRaDecPos(const double &Jd, const double &Ra, const double &Dec);
-	//«адать направление наблюдени€ Alph, Bet
-	void SetAlphBetPos(const double &Jd, const double &Alph, const double &Bet);
 	//«адать текущее положение двигателей в шагах mot1, mot2
 	void SetMotorsPos(const double &mot1, const double &mot2);
 	//«адать матрицу преобразовани€ Az, Elev -> Alph, Bet
 	void SetConvMatr(const std::vector<double>& M);
 
+	//ѕреобразовани€ координат
+	std::vector<double> AzElev2AlphBet(const std::vector<double>& AzElev);
+
 	//¬ычислить траекторию дл€ шаговых двигателей
 	traject CalcTraject(const double &inAlph, const double &inBet, const double &outAlph, const double &outBet);
-	traject CalcTraject(const double &mot1, const double &mot2, const double &inAlph, const double &inBet, const double &outAlph, const double &outBet);
-	traject GoToRaDec();
-	traject GoToAzElev();
+
+	//ѕереехать из текущего положени€ в заданное
+	traject GoToRaDec(const double &Jd, const double &outRa, const double &outDec);
+	traject GoToAzElev(const double &Jd, const double &outAz, const double &outElev);
+
+	//ѕроверка на ограничени€
+	int LimitsAzElev(const double &outAz, const double &outElev);
 
 	//ѕолучить текущее положение в разных системах координат
 	std::pair<double, double> GetAzElevPos();
@@ -69,6 +74,7 @@ private:
 	double cur_Jd;
 
 	//MountSpec
+	double num;
 	double a_max;
 	double V_max;
 	double Gear_ratio;
@@ -100,7 +106,7 @@ private:
 	void InitIntegrator();
 
 	//ConvMatr
-	std::vector<double> A;
+	std::vector<double> R;
 
 	bool SetDateAndPolePos(const double &Jd);
 	void Convert2AlphBet();
@@ -110,3 +116,5 @@ private:
 };
 
 double Modulus(double x, double y);
+std::vector<double> AzElev2XYZ(const std::vector<double> &AzElev);
+std::vector<double> XYZ2AzElev(const std::vector<double> &xyz);

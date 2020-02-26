@@ -5,6 +5,7 @@
 #include <iostream>
 #include <math.h>
 
+//Конструктор
 Convertor::Convertor() {
 	//CurrentPosition
 	cur_Jd = 0;
@@ -28,28 +29,34 @@ Convertor::Convertor() {
 	tel.temperature = 0;
 
 	//StandartTelescopeSpec
+	num = 8;
 	a_max = 1000.0;
 	V_max = 10000.0;
-	Gear_ratio = 745.0;
-	circle_motor = 3200.0;
+	Gear_ratio = 720.0;
+	circle_motor = 200 * num;
 	circle_mount = circle_motor * Gear_ratio;
 	step = 2 * pi / circle_mount;
 
 	//StandartConv
-	A.resize(6);
-	A[0] = 1.0;
-	A[1] = 0.0;
-	A[2] = 0.0;
-	A[3] = 0.0;
-	A[4] = 1.0;
-	A[5] = 0.0;
+	R.resize(9);
+	R[0] = 0;
+	R[1] = 0;
+	R[2] = 1;
+	R[3] = 0;
+	R[4] = -1;
+	R[5] = 0;
+	R[6] = 1;
+	R[7] = 0;
+	R[8] = 0;
 
 	InitIntegrator();
 }
 
+//Деструктор
 Convertor::~Convertor() {
 }
 
+//Инициализация интегратора
 void Convertor::InitIntegrator() {
 	IForce1 = new Force::InfluenceForce();
 	IForce1->Init_CPU();
@@ -74,31 +81,38 @@ void Convertor::InitIntegrator() {
 	}
 }
 
-void Convertor::InitMountSpec(const double &a, const double &V, const double &ratio, const double &steps) {
+//Инициализация характеристик монтировки
+void Convertor::InitMountSpec(const double &st, const double &a, const double &V, const double &ratio, const double &steps) {
+	num = st;
 	a_max = a;
 	V_max = V;
 	Gear_ratio = ratio;
-	circle_motor = steps;
+	circle_motor = steps * num;
 	circle_mount = circle_motor * Gear_ratio;
-	step = 2 * pi / circle_mount;
+	step = 2 * pi / circle_mount; 
 }
 
+//Выдать текущую позицию Az, Elev
 std::pair<double, double> Convertor::GetAzElevPos() {
 	return{ cur_Az, cur_Elev };
 }
 
+//Выдать текущую позицию Ra, Dec
 std::pair<double, double> Convertor::GetRaDecPos() {
 	return{ cur_Ra, cur_Dec };
 }
 
+//Выдать текущую позицию Alph, Bet
 std::pair<double, double> Convertor::GetAlphBetPos() {
 	return{ cur_Alph, cur_Bet };
 }
 
+//Выдать текущую позицию mot1, mot2
 std::pair<double, double> Convertor::GetMotorsPos() {
 	return{ cur_mot1, cur_mot2 };
 }
 
+//Задать позицию телескопа через x, y, z [км]
 void Convertor::SetTelPosITRF(const double &x, const double &y, const double &z) {
 	tel_pos_ITRF[0] = x;
 	tel_pos_ITRF[1] = y;
@@ -108,6 +122,7 @@ void Convertor::SetTelPosITRF(const double &x, const double &y, const double &z)
 	//tel.height *= 1000;
 }
 
+//Задать позицию телескопа через массив x, y, z [км]
 void Convertor::SetTelPosITRF(double *pos) {
 	tel_pos_ITRF[0] = pos[0];
 	tel_pos_ITRF[1] = pos[1];
@@ -117,6 +132,7 @@ void Convertor::SetTelPosITRF(double *pos) {
 	//tel.height *= 1000;
 }
 
+//Задать позицию телескопа через lat, lon, elev [град, км]
 void Convertor::SetTelPosLatLonElev(const double &Lat, const double &Lon, const double &Elev) {
 	tel.height = Elev * 1000;
 	tel.latitude = Lat;
@@ -125,6 +141,7 @@ void Convertor::SetTelPosLatLonElev(const double &Lat, const double &Lon, const 
 	WGS84_XYZ(Elev * 1000, Lat, Lon, tel_pos_ITRF[0], tel_pos_ITRF[1], tel_pos_ITRF[2]);
 }
 
+//Задать позицию телескопа через массив lat, lon, elev [град, км]
 void Convertor::SetTelPosLatLonElev(double *pos) {
 	tel.latitude = pos[0];
 	tel.longitude = pos[1];
@@ -133,11 +150,13 @@ void Convertor::SetTelPosLatLonElev(double *pos) {
 	WGS84_XYZ(pos[2] * 1000, pos[0], pos[1], tel_pos_ITRF[0], tel_pos_ITRF[1], tel_pos_ITRF[2]);
 }
 
+//Задать температуру [С], давление [мбар] в точке наблюдения
 void Convertor::SetTelTP(const double &T, const double &P) {
 	tel.pressure = P;
 	tel.temperature = T;
 }
 
+//Задать направление наблюдения через Jd, Az, Elev
 void Convertor::SetAzElevPos(const double &Jd, const double &Az, const double &Elev) {
 	cur_Jd = Jd;
 	cur_Az = Az;
@@ -150,6 +169,7 @@ void Convertor::SetAzElevPos(const double &Jd, const double &Az, const double &E
 	Convert2AlphBet();
 }
 
+//Задать направление наблюдения через Jd, Ra, Dec
 void Convertor::SetRaDecPos(const double &Jd, const double &Ra, const double &Dec) {
 	cur_Jd = Jd;
 	cur_Ra = Ra;
@@ -162,31 +182,13 @@ void Convertor::SetRaDecPos(const double &Jd, const double &Ra, const double &De
 	Convert2AlphBet();
 }
 
-void Convertor::SetAlphBetPos(const double &Jd, const double &Alph, const double &Bet) {
-	cur_Jd = Jd;
-	cur_Alph = Alph;
-	cur_Bet = Bet;
-
-	//Alph, Bet -> Az, Elev
-	std::vector<double> InvA(4);
-	std::vector<double> A_(4);
-	A_[0] = A[0];
-	A_[1] = A[1];
-	A_[2] = A[3];
-	A_[3] = A[4];
-	InvA = Inversion2x2(A_);
-	cur_Az = InvA[0] * (Alph - A[2]) + InvA[1] * (Alph - A[2]);
-	cur_Elev = InvA[2] * (Bet - A[5]) + InvA[3] * (Bet - A[5]);
-
-	//Az, Elev -> Ra, Dec
-	AzElev2RaDec();
-}
-
+//Задать текущее положение двигателей mot1, mot2
 void Convertor::SetMotorsPos(const double &mot1, const double &mot2) {
 	cur_mot1 = mot1;
 	cur_mot2 = mot2;
 }
 
+//Задать поправки ко времнеи и положение полюсов по Jd
 bool Convertor::SetDateAndPolePos(const double &Jd) {
 	//Get dAT
 	double *tab = IForce1->TAIUTCCorrect;
@@ -234,17 +236,58 @@ bool Convertor::SetDateAndPolePos(const double &Jd) {
 	return true;
 }
 
+//Задать матрицу преобразования Az,Elev -> Alph, Bet [3x3] 
 void Convertor::SetConvMatr(const std::vector<double>& M) {
 	for (int i = 0; i < M.size(); i++) {
-		A[i] = M[i];
+		R[i] = M[i];
 	}
 }
 
+//Az, Elev -> Alph, Bet
 void Convertor::Convert2AlphBet() {
-	cur_Alph = A[0] * cur_Az + A[1] * cur_Elev + A[2];
-	cur_Bet = A[3] * cur_Az + A[4] * cur_Elev + A[5];
+	std::vector<double> AzElev = { cur_Az, cur_Elev };
+	
+	std::vector<double> AlphBet = AzElev2AlphBet(AzElev);
+
+	cur_Alph = AlphBet[0];
+	cur_Bet = AlphBet[1];
 }
 
+//Az, Elev -> Alph, Bet
+std::vector<double> Convertor::AzElev2AlphBet(const std::vector<double>& AzElev) {
+	std::cout << "Az = " << AzElev[0] * 180 / M_PI << ", Elev = " << AzElev[1] * 180 / M_PI << std::endl;
+	std::vector<double> xyz = AzElev2XYZ(AzElev);
+	std::vector<double> xyz1 = Mat3x3XStolb3x1(R, xyz);
+
+	std::vector<double> AlphBet(2);
+	if (xyz1[2] != 1) {
+		AlphBet = XYZ2AzElev(xyz1);
+		//if (AzElev[0] >= 0 && AzElev[0] <= M_PI) {
+		if (AlphBet[0] < 0) {
+			AlphBet[0] = AlphBet[0] + M_PI;
+			AlphBet[1] = AlphBet[1] - M_PI / 2;
+		}
+		else {
+			AlphBet[1] = M_PI / 2 - AlphBet[1];
+		}
+	}
+	else {
+		AlphBet[0] = M_PI / 2;
+		AlphBet[1] = 0;
+	}
+
+	//std::cout << "x = " << xyz[0] << ", y = " << xyz[1] << ", z = " << xyz[2] << std::endl;
+	//std::vector<double> xyz2 = AzElev2XYZ(AlphBet);
+	//std::vector<double> InvR = Inversion3x3(R);
+	//std::vector<double> xyz_new = Mat3x3XStolb3x1(InvR, xyz2);
+	//std::cout << "x_n = " << xyz_new[0] << ", y_n = " << xyz_new[1] << ", z_n = " << xyz_new[2] << std::endl;
+
+	std::cout << "Alph = " << AlphBet[0] * 180 / M_PI << ", Bet = " << AlphBet[1] * 180 / M_PI << std::endl;
+
+	return AlphBet;
+}
+
+//Ra, Dec -> Az, Elev
 void Convertor::RaDec2AzElev() {
 	//Set Date and Pole position
 	SetDateAndPolePos(cur_Jd);
@@ -259,6 +302,7 @@ void Convertor::RaDec2AzElev() {
 	cur_Az = az * pi / 180;
 }
 
+//Az, Elev -> Ra, Dec
 void Convertor::AzElev2RaDec() {
 	//Set Date and Pole position
 	SetDateAndPolePos(cur_Jd);
@@ -284,6 +328,22 @@ double Modulus(double x, double y)
 		return (modu + y);
 }
 
+std::vector<double> AzElev2XYZ(const std::vector<double> &AzElev) {
+	std::vector<double> xyz(3);
+	xyz[0] = cos(AzElev[1]) * cos(AzElev[0]);
+	xyz[1] = cos(AzElev[1]) * sin(AzElev[0]);
+	xyz[2] = sin(AzElev[1]);
+	return xyz;
+}
+
+std::vector<double> XYZ2AzElev(const std::vector<double> &xyz) {
+	std::vector<double> AzElev(2);
+	AzElev[0] = atan(xyz[1] / xyz[0]);
+	AzElev[1] = asin(xyz[2]);
+	return AzElev;
+}
+
+//Az, Elev -> XYZ_ITRF
 void Convertor::AzElevR2XYZ_ITRF(double* pos) {
 	double sindec = sin(cur_Elev) * sin(tel.latitude * pi / 180) + cos(cur_Elev) * cos(tel.latitude * pi / 180) * cos(cur_Az);
 	double dec = asin(sindec);
@@ -297,6 +357,7 @@ void Convertor::AzElevR2XYZ_ITRF(double* pos) {
 	pos[2] = R * sin(dec);
 }
 
+//Вычисление траектории из заданного положения inAlph, inBet в положение outAlph, outBet
 traject Convertor::CalcTraject(const double &inAlph, const double &inBet, const double &outAlph, const double &outBet) {
 	traject tr;
 	tr.startpos.first = cur_mot1;
@@ -358,14 +419,42 @@ traject Convertor::CalcTraject(const double &inAlph, const double &inBet, const 
 	return tr;
 }
 
-traject Convertor::CalcTraject(const double &mot1, const double &mot2, const double &inAlph, const double &inBet, const double &outAlph, const double &outBet) {
-	double mot1_tmp = cur_mot1;
-	double mot2_tmp = cur_mot2;
-	cur_mot1 = mot1;
-	cur_mot2 = mot2;
-	traject tr = CalcTraject(inAlph, inBet, outAlph, outBet);
-	cur_mot1 = mot1_tmp;
-	cur_mot2 = mot2_tmp;
+//Переехать из текущего положения cur_Jd, cur_Ra, cur_Dec в заданное Jd, outRa, outDec
+traject Convertor::GoToRaDec(const double &Jd, const double &outRa, const double &outDec) {
+	double inAlph = cur_Alph;
+	double inBet = cur_Bet;
+	SetRaDecPos(Jd, outRa, outDec);
+	traject tr = CalcTraject(inAlph, inBet, cur_Alph, cur_Bet);
+	SetMotorsPos(tr.endpos.first, tr.endpos.second);
+
 	return tr;
 }
 
+//Переехать из текущего положения cur_Jd, cur_Az, cur_Elev в заданное Jd, outAz, outElev
+traject Convertor::GoToAzElev(const double &Jd, const double &outAz, const double &outElev) {
+	double inAlph = cur_Alph;
+	double inBet = cur_Bet;
+	SetAzElevPos(Jd, outAz, outElev);
+	traject tr = CalcTraject(inAlph, inBet, cur_Alph, cur_Bet);
+	SetMotorsPos(tr.endpos.first, tr.endpos.second);
+
+	return tr;
+}
+
+//Проверка ограничений
+int Convertor::LimitsAzElev(const double &outAz, const double &outElev) {
+	//Проверка начального положения
+	if ((cur_Az < 0 && cur_Az > 2 * pi) || (cur_Elev < 0 && cur_Elev > pi / 2)) {
+		return -1;
+	}
+	//Проверка конечного положения
+	if ((outAz < 0 && outAz > 2 * pi) || (outElev < 0 && outElev > pi / 2)) {
+		return -2;
+	}
+	//Проверка пересечения линии севера
+	std::vector<double> AlphBet = AzElev2AlphBet({ outAz, outElev });
+	if ((cur_Alph < pi / 2) && (AlphBet[0] > pi / 2) || (cur_Alph > pi / 2) && (AlphBet[0] < pi / 2)) {
+		return 1;
+	}
+	return 0;
+}

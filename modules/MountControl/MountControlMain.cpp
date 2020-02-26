@@ -1,10 +1,12 @@
 #include "Convertor.h"
 #include "Mat3x3.h"
 #include "Calibration.h"
+#include "comPortControl.h"
 
 #include <iostream>
 
-int main() {
+int main2() {
+	
 	Convertor telescope;
 	double Telpos[3];
 	Telpos[0] = 4604.18;
@@ -13,7 +15,7 @@ int main() {
 	telescope.SetTelPosITRF(Telpos);
 	std::cout << std::endl;
 
-	Calibration test(Telpos, 2458896.0, 0.0, pi / 2);
+	Calibration test(Telpos, 2458896.0, 0.0, 0.0);
 	std::cout << std::endl;
 
 	//Test Convertor::GetAlphBetPos(...) from Ra, Dec
@@ -58,14 +60,14 @@ int main() {
 		double deltBet = 10 / 180 * pi;
 		//double deltBet = pi;
 		std::vector<std::pair<double, double>> tel_points = { { 0 + deltAlph, pi + deltBet },{ pi + deltAlph, pi / 2 + deltBet },{ 3 * pi / 2 + deltAlph, pi + deltBet } };
-		std::vector<double> A(6);
-		A = test.CalculateA(tel_points, real_points);
+		std::vector<double> R(9);
+		R = test.CalculateA(tel_points, real_points);
 		std::vector<double> Y1 = { real_points[0].first, real_points[0].second, 1 };
 		std::vector<double> Y2 = { real_points[1].first, real_points[1].second, 1 };
 		std::vector<double> Y3 = { real_points[2].first, real_points[2].second, 1 };
-		std::vector<double> X1 = Mat3x3XStolb3x1(A, Y1);
-		std::vector<double> X2 = Mat3x3XStolb3x1(A, Y2);
-		std::vector<double> X3 = Mat3x3XStolb3x1(A, Y3);
+		std::vector<double> X1 = Mat3x3XStolb3x1(R, Y1);
+		std::vector<double> X2 = Mat3x3XStolb3x1(R, Y2);
+		std::vector<double> X3 = Mat3x3XStolb3x1(R, Y3);
 
 		std::cout << "CalcAlph1 - Alph1 = " << X1[0] - tel_points[0].first << ", CalcBet1 - Bet1 = " << X1[1] - tel_points[0].second << ", CalcAlph2 - Alph2 = " << X2[0] - tel_points[1].first 
 			<< ", CalcBet2 - Bet2 = " << X2[1] - tel_points[1].second << ", CalcAlph3 - Alph3 = " << X3[0] - tel_points[2].first << ", CalcBet3 - Bet3 = " << X3[1] - tel_points[2].second << std::endl;
@@ -90,7 +92,7 @@ int main() {
 		std::cout << "stepsAlph = 298000, stepsBet = 298000, T = 39.8" << std::endl;
 		traject tr = telescope.CalcTraject(0.0, 0.0, pi / 4, pi / 4);
 		std::cout << "Real_stepsAlph = " << tr.endpos.first - tr.startpos.first << ", Real_stepsBet = " << tr.endpos.second - tr.startpos.second << ", Real_T = " << tr.T << std::endl;
-
+		
 		std::cout << "Test 2:" << std::endl;
 		std::cout << "inAlph = 0.0, inBet = 0.0, outAlph = pi/4, outBet = pi/2" << std::endl;
 		std::cout << "stepsAlph = 298000, stepsBet = 596000, T = 69.6" << std::endl;
@@ -121,4 +123,72 @@ int main() {
 	std::cout << std::endl;
 
 	return 0;
+}
+
+int main() {
+	Convertor telescope;
+	double Telpos[3];
+	Telpos[0] = 4604.18;
+	Telpos[1] = 3298.4;
+	Telpos[2] = 2758.99;
+	telescope.SetTelPosITRF(Telpos);
+	telescope.InitMountSpec(8, 1000, 5000, 720, 200);
+	//Начальное положение
+	telescope.SetAzElevPos(2458896.0, 0.0, 0.0);
+	std::pair<double, double> AlphBet = telescope.GetAlphBetPos();
+	telescope.SetMotorsPos(0.0, 0.0);
+
+	traject tr;
+
+	//
+	printf("Connect\n");
+	// Init
+	ComPortControl CPC;
+	int res = CPC.OpenCOM(L"COM4");
+	if (res != 0)
+	{
+		return 0;
+	}
+	// Wait
+	Sleep(2000);
+	printf("Start stepper control!\n");
+	// Read data after connect
+	std::string result = CPC.ReadResponce();
+	std::cout << "Recive: " << result << std::endl;
+
+	CPC.getPosition();
+
+	printf("\nSet 2 absolute position:\n");
+	int k = 0;
+	while (k < 100)
+	{
+		double Az = 0.0;
+		double Elev = 0.0;
+		std::cin >> Az;
+		std::cin >> Elev;
+		
+		int flag = telescope.LimitsAzElev(Az * pi / 180, Elev * pi / 180);
+		if (flag == -2) {
+			std::cout << "Target position out of range!" << std::endl;
+		}
+		else if (flag == -1) {
+			std::cout << "Current position out of range!" << std::endl;
+		}
+		else if (flag == 0) {
+			tr = telescope.GoToAzElev(2458896.0, Az * pi / 180, Elev * pi / 180);
+			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
+			printf("\nSet 2 absolute position:\n");
+			k++;
+		}
+		else {
+			tr = telescope.GoToAzElev(2458896.0, 0.0, 0.0);
+			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
+			printf("\nSet 2 absolute position:\n");
+			tr = telescope.GoToAzElev(2458896.0, Az * pi / 180, Elev * pi / 180);
+			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
+			printf("\nSet 2 absolute position:\n");
+		}
+	}
+
+	std::cout << std::endl;
 }
