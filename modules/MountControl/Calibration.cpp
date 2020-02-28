@@ -57,21 +57,4 @@ std::vector<double> Calibration::CalculateA(const std::vector<std::pair<double, 
 	R[8] = x3[2];
 
 	return R;
-
-	/*
-	std::vector<double> res(6);
-	double SumDelt1 = 0, SumDelt2 = 0;
-	for (int i = 0; i < tel_points.size(); i++) {
-		SumDelt1 += (tel_points[i].first - real_points[i].first);
-		SumDelt2 += (tel_points[i].second - real_points[i].second);
-	}
-	res[0] = 1.0;
-	res[1] = 0.0;
-	res[2] = SumDelt1 / tel_points.size();
-	res[3] = 0.0;
-	res[4] = 1.0;
-	res[5] = SumDelt2 / tel_points.size();
-
-	return res;
-	*/
 }

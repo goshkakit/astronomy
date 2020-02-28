@@ -1,18 +1,21 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include "WGS84.h"
 #include "InfluenceForce\InfluenceForce.h"
 #include "OrbitIntegration\IPredictOrbitMod.h"
 #include "OrbitIntegration\PredictOrbitMod.h"
 #include "common\DataConverter.h"
+#include "common\TLELoader.h"
 
 extern "C" {
 #include "novac/novas.h"
 #include "novac/eph_manager.h"
 }
 
+//Траектория переезда
 struct traject {
 	double T;
 	std::pair<double, double> V;
@@ -21,6 +24,21 @@ struct traject {
 	std::pair<double, double> endpos;
 };
 
+//Структура меток для сопровождения
+struct AccompPoints {
+	double V0;
+	double T;
+	double N;
+};
+
+//Структура углов для сопровождения
+struct AccompAngs {
+	double Jd;
+	double Az;
+	double Elev;
+};
+
+//Управляющий класс
 class Convertor {
 public:
 	//Конструктор/Деструктор
@@ -60,6 +78,15 @@ public:
 	//Проверка на ограничения
 	int LimitsAzElev(const double &outAz, const double &outElev);
 
+	//Задать путь к TLE файлу
+	void SetTLEparams(const std::string &path, const int &num_str);
+	//Задать интервал между точками в сек
+	void SetStep(const double &step);
+	//Вычислить массив углов для сопровождения
+	std::vector<AccompAngs> CalculateAngs(const int &NoradId, const double &JdStart, const double &JdEnd);
+	//Вычисление массива точек для микроконтроллера
+	std::vector<AccompPoints> CalculatePoints(const std::vector<AccompAngs> &ags);
+
 	//Получить текущее положение в разных системах координат
 	std::pair<double, double> GetAzElevPos();
 	std::pair<double, double> GetRaDecPos();
@@ -97,6 +124,14 @@ private:
 	double tel_pos_ITRF[3];
 	on_surface tel;
 
+	//TLEparams
+	std::string TLEpath;
+	int numb_of_line;
+	TLELoader tleLoader;
+	cOrbit* orb;
+	double stepSec;
+	double stepMin;
+
 	//Integrator
 	Force::InfluenceForce *IForce1;
 	Orbit::PredictOrbitSat POSat1;
@@ -108,11 +143,15 @@ private:
 	//ConvMatr
 	std::vector<double> R;
 
+	//Функции внутренней конвертации
 	bool SetDateAndPolePos(const double &Jd);
 	void Convert2AlphBet();
 	void RaDec2AzElev();
 	void AzElev2RaDec();
 	void AzElevR2XYZ_ITRF(double* pos);
+
+	//Выбрать орбиту NaradId
+	bool GetOrb(const int &NoradId);
 };
 
 double Modulus(double x, double y);

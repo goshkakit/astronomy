@@ -49,6 +49,10 @@ Convertor::Convertor() {
 	R[7] = 0;
 	R[8] = 0;
 
+	//Standart steps for TLEpredict
+	stepSec = 1.0;
+	stepMin = 1.0 / 60.0;
+
 	InitIntegrator();
 }
 
@@ -457,4 +461,63 @@ int Convertor::LimitsAzElev(const double &outAz, const double &outElev) {
 		return 1;
 	}
 	return 0;
+}
+
+//Задать TLE параметры
+void Convertor::SetTLEparams(const std::string &path, const int &num_str) {
+	TLEpath = path;
+	numb_of_line = num_str;
+	tleLoader.LoadData(TLEpath.c_str(), numb_of_line);
+}
+
+//Задать интервал между точками в сек
+void Convertor::SetStep(const double &step) {
+	stepSec = step;
+	stepMin = stepSec / 60.0;
+}
+
+//Выбрать орбиту NaradId
+bool Convertor::GetOrb(const int &NoradId) {
+	tleLoader.GetFromID(NoradId);
+	if (orb != NULL) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+//Вычислить массив углов для сопровождения
+std::vector<AccompAngs> Convertor::CalculateAngs(const int &NoradId, const double &JdStart, const double &JdEnd) {
+	std::vector<AccompAngs> angs;
+
+	cSite siteView(tel.latitude, tel.longitude, tel.height / 1000);
+
+	if (GetOrb(NoradId)) {
+		double JdEpoch = orb->Epoch().Date();
+		for (double Jd = JdStart; Jd < JdEnd; Jd + stepSec / 86400) {
+			//Количество времени от записи tle в мин.
+			double mpe = (Jd - JdEpoch) * 24 * 60;
+
+			// Get the position of the satellite at time "mpe"
+			cEciTime eci = orb->GetPosition(mpe);
+
+			// Now get the "look angle" from the site to the satellite. 
+			// Note that the ECI object "eciSDP4" contains a time associated
+			// with the coordinates it contains; this is the time at which
+			// the look angle is valid.
+			cTopo topoLook = siteView.GetLookAngle(eci);
+
+			angs.push_back({ Jd, topoLook.AzimuthRad(), topoLook.ElevationRad() });
+		}
+	}
+
+	return angs;
+}
+
+//Вычисление массива точек для микроконтроллера
+std::vector<AccompPoints> Convertor::CalculatePoints(const std::vector<AccompAngs> &ags) {
+	std::vector<AccompPoints> points;
+
+	return points;
 }

@@ -18,8 +18,5 @@ private:
 	Convertor telpos;
 
 	//Люфты
-	double backlash_pp, backlash_pm, backlash_mm, backlash_mp;
-
-	//Матрицы преобрзования
-	std::vector<double> App, Apm, Amm, Amp;
+	double backlash_Ap, backlash_Am, backlash_Bm, backlash_Bp;
 };
