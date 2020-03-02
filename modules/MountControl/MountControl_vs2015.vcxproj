@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Calibration.cpp" />
+    <ClCompile Include="Calibration.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="comPortControl.cpp" />
     <ClCompile Include="Convertor.cpp" />
     <ClCompile Include="MountControlMain.cpp" />
@@ -28,7 +31,10 @@
     <ClCompile Include="WGS84.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Calibration.h" />
+    <ClInclude Include="Calibration.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="comPortControl.h" />
     <ClInclude Include="Convertor.h" />
     <ClInclude Include="Mat3x3.h" />

@@ -14,9 +14,9 @@ int main() {
 	telescope.SetTelPosITRF(Telpos);
 	telescope.InitMountSpec(8, 1000, 5000, 720, 200);
 	//Начальное положение
-	telescope.SetAzElevPos(2458896.0, 0.0, 0.0);
-	std::pair<double, double> AlphBet = telescope.GetAlphBetPos();
-	telescope.SetMotorsPos(0.0, 0.0);
+	telescope.SetAzElevPos({ 2458896.0, 0.0, 0.0 });
+	Angs AlphBet = telescope.GetAlphBetPos();
+	telescope.SetMotorsPos({ 0.0, 0.0 });
 
 	traject tr;
 
@@ -46,8 +46,8 @@ int main() {
 		double Elev = 0.0;
 		std::cin >> Az;
 		std::cin >> Elev;
-		
-		int flag = telescope.LimitsAzElev(Az * pi / 180, Elev * pi / 180);
+
+		int flag = telescope.LimitsAzElev({ 2458896.0, Az * pi / 180, Elev * pi / 180 });
 		if (flag == -2) {
 			std::cout << "Target position out of range!" << std::endl;
 		}
@@ -55,16 +55,16 @@ int main() {
 			std::cout << "Current position out of range!" << std::endl;
 		}
 		else if (flag == 0) {
-			tr = telescope.GoToAzElev(2458896.0, Az * pi / 180, Elev * pi / 180);
+			tr = telescope.GoToAzElev({ 2458896.0, Az * pi / 180, Elev * pi / 180 });
 			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
 			printf("\nSet 2 absolute position:\n");
 			k++;
 		}
 		else {
-			tr = telescope.GoToAzElev(2458896.0, 0.0, 0.0);
+			tr = telescope.GoToAzElev({ 2458896.0, 0.0, 0.0 });
 			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
 			printf("\nSet 2 absolute position:\n");
-			tr = telescope.GoToAzElev(2458896.0, Az * pi / 180, Elev * pi / 180);
+			tr = telescope.GoToAzElev({ 2458896.0, Az * pi / 180, Elev * pi / 180 });
 			CPC.runCommand(tr.endpos.first, -tr.endpos.second);
 			printf("\nSet 2 absolute position:\n");
 		}

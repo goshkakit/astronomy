@@ -31,11 +31,23 @@ struct AccompPoints {
 	double N;
 };
 
-//Структура углов для сопровождения
-struct AccompAngs {
+//Структура угловых измерений
+struct Angs {
 	double Jd;
-	double Az;
-	double Elev;
+	double ang1;
+	double ang2;
+};
+
+//Структура положения двигателей
+struct MotPos {
+	double mot1;
+	double mot2;
+};
+
+//Структура угловых измерений и угловых скоростей
+struct AngsVels :Angs {
+	double ang1_vel;
+	double ang2_vel;
 };
 
 //Управляющий класс
@@ -57,48 +69,50 @@ public:
 	void SetTelTP(const double &T, const double &P);
 	
 	//Задать направление наблюдения Az, Elev
-	void SetAzElevPos(const double &Jd, const double &Az, const double &Elev);
+	void SetAzElevPos(const Angs &AzElev);
 	//Задать направление наблюдения Ra, Dec
-	void SetRaDecPos(const double &Jd, const double &Ra, const double &Dec);
+	void SetRaDecPos(const Angs &RaDec);
 	//Задать текущее положение двигателей в шагах mot1, mot2
-	void SetMotorsPos(const double &mot1, const double &mot2);
+	void SetMotorsPos(const MotPos &Motors);
 	//Задать матрицу преобразования Az, Elev -> Alph, Bet
 	void SetConvMatr(const std::vector<double>& M);
 
 	//Преобразования координат
-	std::vector<double> AzElev2AlphBet(const std::vector<double>& AzElev);
+	Angs AzElev2AlphBet(const Angs &AzElev);
+	MotPos AlphBet2Motors(const Angs &AlphBet);
+	MotPos AzElev2Motors(const Angs &AzElev);
 
 	//Вычислить траекторию для шаговых двигателей
-	traject CalcTraject(const double &inAlph, const double &inBet, const double &outAlph, const double &outBet);
+	traject CalcTraject(const Angs &inAlphBet, const Angs &outAlphBet);
 
 	//Переехать из текущего положения в заданное
-	traject GoToRaDec(const double &Jd, const double &outRa, const double &outDec);
-	traject GoToAzElev(const double &Jd, const double &outAz, const double &outElev);
+	traject GoToRaDec(const Angs &outRaDec);
+	traject GoToAzElev(const Angs &outAzElev);
 
 	//Проверка на ограничения
-	int LimitsAzElev(const double &outAz, const double &outElev);
+	int LimitsAzElev(const Angs &outAzElev);
 
 	//Задать путь к TLE файлу
 	void SetTLEparams(const std::string &path, const int &num_str);
 	//Задать интервал между точками в сек
 	void SetStep(const double &step);
 	//Вычислить массив углов для сопровождения
-	std::vector<AccompAngs> CalculateAngs(const int &NoradId, const double &JdStart, const double &JdEnd);
+	std::vector<Angs> CalculateAzElev(const int &NoradId, const double &JdStart, const double &JdEnd);
+	std::vector<AngsVels> CalculateAlphBetVels(const int &NoradId, const double &JdStart, const double &JdEnd);
 	//Вычисление массива точек для микроконтроллера
-	std::vector<AccompPoints> CalculatePoints(const std::vector<AccompAngs> &ags);
+	std::pair<std::vector<AccompPoints>, std::vector<AccompPoints>> CalculatePoints(const std::vector<AngsVels> &AzElevArr);
 
 	//Получить текущее положение в разных системах координат
-	std::pair<double, double> GetAzElevPos();
-	std::pair<double, double> GetRaDecPos();
-	std::pair<double, double> GetAlphBetPos();
-	std::pair<double, double> GetMotorsPos();
+	Angs GetAzElevPos();
+	Angs GetRaDecPos();
+	Angs GetAlphBetPos();
+	MotPos GetMotorsPos();
 private:
 	//CurrentPosition
-	double cur_Az, cur_Elev;
-	double cur_Ra, cur_Dec;
-	double cur_Alph, cur_Bet;
-	double cur_mot1, cur_mot2;
-	double cur_Jd;
+	Angs curAzElev;
+	Angs curRaDec;
+	Angs curAlphBet;
+	MotPos curMotors;
 
 	//MountSpec
 	double num;
@@ -155,5 +169,5 @@ private:
 };
 
 double Modulus(double x, double y);
-std::vector<double> AzElev2XYZ(const std::vector<double> &AzElev);
-std::vector<double> XYZ2AzElev(const std::vector<double> &xyz);
+std::vector<double> AzElev2XYZ(const Angs &AzElev);
+Angs XYZ2AzElev(const std::vector<double> &xyz);
