@@ -8,6 +8,13 @@
 #include <cmath>
 #include <stdio.h>
 
+#include <string>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <sstream>
+#include <iostream>
+
 #include "InfluenceForce.h"
 
 namespace Force
@@ -49,10 +56,117 @@ namespace Force
 
 		return res;
 	};
+
+	std::vector<std::string> split(std::string strToSplit, char delimeter)
+	{
+		std::stringstream ss(strToSplit);
+		std::string item;
+		std::vector<std::string> splittedStrings;
+		while (std::getline(ss, item, delimeter))
+		{
+			splittedStrings.push_back(item);
+		}
+		return splittedStrings;
+	}
+
+	void InfluenceForce::InitAtm()
+	{
+		char *fname = "data/atm.config";
+
+		std::ifstream file(fname);
+		std::string str;
+
+		int count = 0;
+		while (std::getline(file, str))
+		{
+			count++;
+			// Process str
+			if (count >= 3)
+			{
+				std::vector<std::string> arr;
+				arr.push_back(str.substr(2, 4));
+				arr.push_back(str.substr(7, 2));
+				arr.push_back(str.substr(10, 2));
+				arr.push_back(str.substr(16, 7));
+				arr.push_back(str.substr(27, 7));
+				arr.push_back(str.substr(39, 6));
+				if (arr.size() == 6 )
+				{
+					//YYYY MM DD F_10_7   F81   KP
+					atmIndex pt;
+					pt.YYYY = std::stoi(arr[0]);
+					pt.MM = std::stoi(arr[1]);
+					pt.DD = std::stoi(arr[2]);
+
+					pt.F107 = std::stod(arr[3]);
+					pt.F81 = std::stod(arr[4]);
+					pt.aKp = std::stod(arr[5]);
+
+					pt.data = pt.DD + 100 * pt.MM + 10000* pt.YYYY;
+					ListAtmIndex.push_back(pt);
+				}
+			}
+		}
+		if (ListAtmIndex.size() > 0)
+		{
+			printf("Load Atm index: %d from %d to %d \n", ListAtmIndex.size(), ListAtmIndex[0].data, ListAtmIndex[ListAtmIndex.size() - 1].data);
+		}
+		else
+		{
+			printf("Zero Load Atm index\n");
+		}
+	}
+	void InfluenceForce::InitAtm(std::string path_atmconf)
+	{
+		const char *fname = path_atmconf.data();
+
+		std::ifstream file(fname);
+		std::string str;
+
+		int count = 0;
+		while (std::getline(file, str))
+		{
+			count++;
+			// Process str
+			if (count >= 3)
+			{
+				std::vector<std::string> arr;
+				arr.push_back(str.substr(2, 4));
+				arr.push_back(str.substr(7, 2));
+				arr.push_back(str.substr(10, 2));
+				arr.push_back(str.substr(16, 7));
+				arr.push_back(str.substr(27, 7));
+				arr.push_back(str.substr(39, 6));
+				if (arr.size() == 6)
+				{
+					//YYYY MM DD F_10_7   F81   KP
+					atmIndex pt;
+					pt.YYYY = std::stoi(arr[0]);
+					pt.MM = std::stoi(arr[1]);
+					pt.DD = std::stoi(arr[2]);
+
+					pt.F107 = std::stod(arr[3]);
+					pt.F81 = std::stod(arr[4]);
+					pt.aKp = std::stod(arr[5]);
+
+					pt.data = pt.DD + 100 * pt.MM + 10000 * pt.YYYY;
+					ListAtmIndex.push_back(pt);
+				}
+			}
+		}
+		if (ListAtmIndex.size() > 0)
+		{
+			printf("Load Atm index: %d from %d to %d \n", ListAtmIndex.size(), ListAtmIndex[0].data, ListAtmIndex[ListAtmIndex.size() - 1].data);
+		}
+		else
+		{
+			printf("Zero Load Atm index\n");
+		}
+	}
 	//==============================================================================//
 	// Функция расчет плотности верхних слоев атмосферы согласно ГОСТу.
 	//==============================================================================//
-	double Roa2004_2( double time, double *x, double ajd0, double delt0 )
+	double Roa2004_2(double time, double *x, double ajd0, double delt0, double F107, double F81, double aKp)
 	{
 		double f0t[7] = {  75.0, 100.0, 125.0, 150.0, 175.0, 200.0, 200.0 };
 		double Re = 6378.136;
@@ -65,11 +179,12 @@ namespace Force
 		double   an1 =  .58870000E-02;
 		double  an2 = -.40120000E-05;
 
-		double saem[4];
-		saem[0] = 100.0;
-		saem[1] = 100.0;
-		saem[2] = 100.0;
-		saem[3] = 3.0;
+		//double saem[4];
+		//saem[0] = 100.0;
+		//saem[1] = 100.0;
+		//saem[2] = 100.0;
+		//saem[3] = 3.0;
+
 		double h_tick[42] = {  
 			 500.0, 600.0, 640.0, 1500.0, 600.0, 640.0,  
 			 500.0, 660.0, 700.0, 1500.0, 700.0, 660.0,  
@@ -274,7 +389,8 @@ namespace Force
 			  .28519300E-10, .25131600E-10, .20571000E-10, .87527200E-11,  
 			  .80827200E-11,-.12616200E-10,-.20961000E-10 };
 
-		double Rmod, sinF, h, F107, F81, aKp, F0;
+		//double F107, F81, aKp,
+		double Rmod, sinF, h, F0;
 		double e0, e1, e2, e3, e4, e5, e6, e7, e8;
 		double a0, a1, a2, a3, a4, a5, a6;
 		double al0, al1, al2, al3, al4;
@@ -301,9 +417,9 @@ namespace Force
 		}
 		else if (h > 120.0) 
 		{
-			F107 = saem[1];
-			F81  = saem[2];
-			aKp  = saem[3];
+			//F107 = saem[1];
+			//F81  = saem[2];
+			//aKp  = saem[3];
 			iq = mmin(mmax(nint((F81-75.0)/25.0), 0), 7) +1;
 			
 			F0 = f0t[iq-1]; //!!!
@@ -446,13 +562,14 @@ namespace Force
 			akst1=-0.137;
 			akst2=-7.8653E-4;
 		}
-		else if ((h >= 100.0)&&(h < 120.0)) 
+		else if ((h >= 100.0)&&(h <= 120.0)) 
 		{
 			h0=100.0;
 			ast0=3.66E-7;
 			akst1=-0.18553;
 			akst2=1.5397E-3;
 		}
+
 		power = (h-h0)*(akst1+akst2*(h-h0));
 		roa2004 = ast0*exp(power);
 		return roa2004;
@@ -465,7 +582,26 @@ namespace Force
 		double v;
 		v = sqrt( x[3]*x[3] + x[4]*x[4] + x[5]*x[5] );
 
-		double rc = Roa2004_2( t, x, ajd0, delt0 );
+		double jd_current = ajd0 + (delt0 + t) / 86.40;
+		double data_current = Ajd_dt(jd_current);
+		int datai_current = data_current;
+
+		double F107 = 100;
+		double F81 = 100;
+		double aKp = 3;
+
+		// find index
+		for (int i = 0; i < ListAtmIndex.size(); i++)
+		{
+			if (ListAtmIndex[i].data == datai_current)
+			{
+				F107 = ListAtmIndex[i].F107;
+				F81 = ListAtmIndex[i].F81;
+				aKp = ListAtmIndex[i].aKp;
+			}
+		}
+
+		double rc = Roa2004_2(t, x, ajd0, delt0, F107, F81, aKp );
 		double coeff =  rc*sigma_up*v*1.0E+6;
 
 		f[0] = -x[3]*coeff;

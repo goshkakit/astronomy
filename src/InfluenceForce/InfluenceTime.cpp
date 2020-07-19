@@ -116,6 +116,59 @@ namespace Force
 		}
 		return 0;
 	}
+	int InfluenceForce::InitTAU_UTCcorrect(std::string path_TAI_UTC)
+	{
+		// list load
+		std::vector< tmp_loadtauutc > list;
+
+		// load file
+		const char *TD_path = path_TAI_UTC.data();
+		std::ifstream rfs(TD_path, std::ios::in);
+		printf("LOAD TAU-UTC.DAT\n");
+
+		while (!rfs.eof())
+		{
+			std::string line;
+			std::getline(rfs, line);
+			if (line.length() < 10)
+				break;
+
+			tmp_loadtauutc pt;
+
+			// юлианская дата
+			std::string s_jd = line.substr(17, 9);
+			pt.jd = StdToDouble2(s_jd);		//!!!!linux
+
+											// поправка
+			std::string s_dt = line.substr(38, 10);
+			pt.dt = StdToDouble2(s_dt);
+
+			// k1
+			std::string s_k1 = line.substr(60, 5);
+			pt.k1 = StdToDouble2(s_k1);
+			// k2
+			std::string s_k2 = line.substr(70, 9);
+			pt.k2 = StdToDouble2(s_k2);
+
+			list.push_back(pt);
+		}
+		rfs.close();
+
+		printf("Size TAU-UTC.DAT = %zu\n", list.size());
+
+		TAUUTC_size = list.size() * 4; // 39*4
+		TAUUTC_kmax = list.size() - 1; // 38
+
+		TAIUTCCorrect = new double[TAUUTC_size];
+		for (unsigned int kl = 0; kl < list.size(); kl++)
+		{
+			TAIUTCCorrect[4 * kl + 0] = list[kl].jd;
+			TAIUTCCorrect[4 * kl + 1] = list[kl].dt;
+			TAIUTCCorrect[4 * kl + 2] = list[kl].k1;
+			TAIUTCCorrect[4 * kl + 3] = list[kl].k2;
+		}
+		return 0;
+	}
 	//==============================================================================//
 	// удаление массива
 	//==============================================================================//

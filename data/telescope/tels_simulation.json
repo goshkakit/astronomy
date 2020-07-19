@@ -1,0 +1,13 @@
+{
+	"Telescopes": [
+	{
+		"site_lon": 32.1954000000337,
+		"site_lat": 30.2170024692532,
+		"site_height": 0.313079642029152,
+		"id": 1,
+		"Frame_rate": 11,
+		"RMS": 0.001389,
+		"Max_dur": 120,
+		"name": "Site 1"
+	}]
+}

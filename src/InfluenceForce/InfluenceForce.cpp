@@ -115,6 +115,8 @@ namespace Force
 		iers_init();
 		// гармоники
 		InitHarmInCPU();
+		// атмосфера
+		InitAtm( "data/solarinex.txt" );
 		ST = 0;
 
 #ifdef GPUCOMPILE
@@ -122,6 +124,27 @@ namespace Force
 #endif
 		printf("OK\n");
 	}
+	void InfluenceForce::Init_CPU(std::string path_TAI_UTC, std::string path_DE403, std::string path_finals, std::string path_atmconf)
+	{
+		printf("Init Influence Force module CPU.... \n");
+		// установка поправок для TAI UTC
+		InitTAU_UTCcorrect(path_TAI_UTC);
+		// загрузка эфемерид
+		DE403LoadFileToMemory(path_DE403);
+		// иницилизация модуля движения земли
+		iers_init(path_finals);
+		// гармоники
+		InitHarmInCPU();
+		// атмосфера
+		InitAtm(path_atmconf);
+		ST = 0;
+
+#ifdef GPUCOMPILE
+		Init_GPU();
+#endif
+		printf("OK\n");
+	}
+
 	//==============================================================================//
 	// Init GPU
 	//==============================================================================//

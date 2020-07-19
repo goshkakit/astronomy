@@ -142,6 +142,9 @@
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="Norad_Test.h" />
+    <ClInclude Include="sgp4ext.h" />
+    <ClInclude Include="sgp4io.h" />
+    <ClInclude Include="sgp4unit.h" />
     <ClInclude Include="std_add.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +160,9 @@
     <ClCompile Include="cVector.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="Norad_Test.cpp" />
+    <ClCompile Include="sgp4ext.cpp" />
+    <ClCompile Include="sgp4io.cpp" />
+    <ClCompile Include="sgp4unit.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

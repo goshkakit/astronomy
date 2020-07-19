@@ -23,6 +23,9 @@
     <ClCompile Include="TLELoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleDatLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="long_jd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,7 +43,16 @@
     <ClInclude Include="TLELoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleDatLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="long_jd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stV_type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

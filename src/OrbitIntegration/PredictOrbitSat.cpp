@@ -17,12 +17,12 @@ namespace Orbit
 	// constructor
 	PredictOrbitSat::PredictOrbitSat()
 	{
-		printf("PredictOrbitSat()\n");
+		//printf("PredictOrbitSat()\n");
 	}
 	// delete
 	PredictOrbitSat::~PredictOrbitSat()
 	{
-		printf("~PredictOrbitSat()\n");
+		//printf("~PredictOrbitSat()\n");
 	}
 	//==============================================================================//
 	// init
@@ -88,7 +88,7 @@ namespace Orbit
 	//==============================================================================//
 	void PredictOrbitSat::CalcNewPosition( double t0, double *x0, double t, Force::InfluenceForce *inIF, double *OrbitPointsArray )
 	{
-		printf("Calc New Position CPU\n");
+		//printf("Calc New Position CPU\n");
 		IF = inIF;
 		SetStepIntegration(0);
 		SetTolerance();

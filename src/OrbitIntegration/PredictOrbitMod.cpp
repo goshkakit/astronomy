@@ -87,6 +87,42 @@ int PredictOrbitMod::GetNewPosition( SatParamToPredict &sptr )
 	printf("___________________________________________________________________\n\n");
 	return 0;
 }
+int PredictOrbitMod::GetNewPositionForJD(SatParamToPredictJD &sptr)
+{
+	double JDs = sptr.JD_start + 0.125;						// полная юлианская дата по московскому времени
+	double date = DC.JDtoYYYYMMDD(JDs);
+	double time = DC.SECtoHHMMSS(date, JDs);
+
+	double JDe = sptr.JD_end + 0.125;						// полная юлианская дата по московскому времени
+	double date_end = DC.JDtoYYYYMMDD(JDs);
+	double time_end = DC.SECtoHHMMSS(date_end, JDe);
+
+	// начальный вектор состояния
+	double XS[6];
+	for (int it = 0; it < 6; it++)
+		XS[it] = sptr.inX[it];
+
+	double t, ajd0, delt0;
+	IForce->set_time(date, time, &ajd0, &delt0, &t);
+	double t_e = IForce->get_time(date_end, time_end, ajd0, delt0);
+	IForce->S_ajd0 = ajd0;
+	IForce->S_delt0 = delt0;
+
+	const double Satm = sptr.atm;
+	const double Ssun = sptr.sun;
+	IForce->SetSigmaAtm(Satm);
+	IForce->SetSigmaSun(Ssun);
+
+	// вычисление прогноза по начальному приближению
+	POSat.CalcNewPosition(t, XS, t_e, IForce);
+
+	for (int it = 0; it < 6; it++)
+	{
+		sptr.outX[it] = XS[it];
+	}
+	//printf("___________________________________________________________________\n\n");
+	return 0;
+}
 //=========================================================================//
 // заполнение списка спутников
 // интегрирование списка на CPU и на GPU

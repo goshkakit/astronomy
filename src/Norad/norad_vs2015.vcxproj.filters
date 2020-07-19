@@ -56,6 +56,15 @@
     <ClInclude Include="std_add.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sgp4ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sgp4io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sgp4unit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cEci.cpp">
@@ -92,6 +101,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Norad_Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sgp4ext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sgp4io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sgp4unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
