@@ -1,4 +1,5 @@
 #pragma once
+
 struct SatParamToPredict
 {
 	double inX[6];

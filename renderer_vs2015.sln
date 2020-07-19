@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EarthSpaceRenderer", "src\EarthSpaceRenderer\EarthSpaceRenderer_vs2015.vcxproj", "{807FB673-4785-4118-AE36-3B05258DABB4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testEarthSpaceRenderer", "src\tests\testEarthSpaceRenderer\testEarthSpaceRenderer_vs2015.vcxproj", "{846F53C6-3AB6-4338-86D2-177F009B24BF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testEarthSpaceRenderer", "tests\testEarthSpaceRenderer\testEarthSpaceRenderer_vs2015.vcxproj", "{846F53C6-3AB6-4338-86D2-177F009B24BF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{4B5DEA67-4B52-49D6-8D1E-485DDC5FE860}"
 EndProject

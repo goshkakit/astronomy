@@ -361,19 +361,21 @@ void COpenGLView::OnMouseWheel(short zDelta)
 
 void COpenGLView::OnPaint()
 {
-	static DWORD LastFPSTime = GetTickCount(), LastFrameTime = LastFPSTime, FPS = 0;
+	double Time = TimeModel.Update();
+	static double LastFPSTime = Time;
+	static int FPS = 0;
+
+	static double LastFrameTime = Time;
+	float FrameTime = (float)(Time - LastFrameTime);
+	LastFrameTime = Time;
+
+	globalTime = TimeModel.now();
 
 	PAINTSTRUCT ps;
 
 	HDC hDC = BeginPaint(hWnd, &ps);
 
-	DWORD Time = GetTickCount();
-
-	float FrameTime = (Time - LastFrameTime) * 0.001f;
-
-	LastFrameTime = Time;
-
-	if (Time - LastFPSTime > 1000)
+	if (Time - LastFPSTime > 1.)
 	{
 		CString Text = Title;
 
@@ -439,8 +441,6 @@ void COpenGLView::OnPaint()
 	//----------------------------------------------------------------------------------------------------------------------
 
 	tw_Zoom = 0;
-
-	globalTime += FrameTime;
 
 	OpenGLRenderer.RenderFinish();
 

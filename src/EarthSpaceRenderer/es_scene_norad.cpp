@@ -1,5 +1,8 @@
 #include "es_scene_norad.h"
 #include "es_globals.h"
+#include "space_defines.h"
+
+#include "Norad/exceptions.h"
 
 Scene::CNoradLayer::CNoradLayer()
 	: CPointArrayLayer()
@@ -8,17 +11,17 @@ Scene::CNoradLayer::CNoradLayer()
 
 }
 
-Scene::CNoradLayer::CNoradLayer(const char *tlepath)
+Scene::CNoradLayer::CNoradLayer(const char *tlepath, int numbLine)
 	: CPointArrayLayer()
 	, tleloader()
 {
-	tleloader.LoadData(tlepath, 2);
+	tleloader.LoadData(tlepath, numbLine);
 }
 
-void Scene::CNoradLayer::Load(const char *tlepath)
+void Scene::CNoradLayer::Load(const char *tlepath, int numbLine)
 {
 	tleloader.clear();
-	tleloader.LoadData(tlepath, 2);
+	tleloader.LoadData(tlepath, numbLine);
 }
 
 Scene::CNoradLayer::~CNoradLayer()
@@ -28,12 +31,14 @@ Scene::CNoradLayer::~CNoradLayer()
 
 void Scene::CNoradLayer::Update(float time)
 {
-	const double C = 4.0 * ((double)Camera.PlanetRadius) / 6356000.0;
+	const double C = 4. * ((double)Camera.PlanetRadius) / EARTH_RADIUS_M;
 
 	points.clear();
 	points.reserve(tleloader.NORADList.size());
 
 	for (Zeptomoby::OrbitTools::cOrbit * elem : tleloader.NORADList)
+	{
+	try
 	{
 		Zeptomoby::OrbitTools::cEciTime eci1 = elem->GetPosition(time);
 
@@ -45,5 +50,16 @@ void Scene::CNoradLayer::Update(float time)
 				, (float)(pos.m_x * C)
 			)
 		);
+	}
+	catch (Zeptomoby::OrbitTools::cDecayException &ex)
+	{
+		// TODO: implement
+		throw ex;
+	}
+	catch (Zeptomoby::OrbitTools::cPropagationException &ex)
+	{
+		// TODO: implement
+		throw ex;
+	}
 	}
 }

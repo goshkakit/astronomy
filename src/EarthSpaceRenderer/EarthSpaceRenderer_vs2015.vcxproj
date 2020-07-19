@@ -132,28 +132,46 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cearth.cpp" />
+    <ClCompile Include="corbit_norad.cpp" />
+    <ClCompile Include="corbit_predict.cpp" />
     <ClCompile Include="es_buffer.cpp" />
     <ClCompile Include="es_camera.cpp" />
+    <ClCompile Include="es_earth_model.cpp" />
     <ClCompile Include="es_globals.cpp" />
     <ClCompile Include="es_renderer.cpp" />
     <ClCompile Include="es_scene.cpp" />
     <ClCompile Include="es_scene_norad.cpp" />
+    <ClCompile Include="es_scene_orbit.cpp" />
     <ClCompile Include="es_texture.cpp" />
+    <ClCompile Include="es_time_model.cpp" />
     <ClCompile Include="es_view.cpp" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="space_force.cpp" />
+    <ClCompile Include="space_math.cpp" />
     <ClCompile Include="string.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cearth.h" />
+    <ClInclude Include="corbit_norad.h" />
+    <ClInclude Include="corbit_predict.h" />
     <ClInclude Include="es_buffer.h" />
     <ClInclude Include="es_camera.h" />
     <ClInclude Include="es_defines.h" />
+    <ClInclude Include="es_earth_model.h" />
     <ClInclude Include="es_globals.h" />
     <ClInclude Include="es_renderer.h" />
     <ClInclude Include="es_scene.h" />
     <ClInclude Include="es_scene_norad.h" />
+    <ClInclude Include="es_scene_orbit.h" />
     <ClInclude Include="es_texture.h" />
+    <ClInclude Include="es_time_model.h" />
     <ClInclude Include="es_view.h" />
     <ClInclude Include="glmath.h" />
+    <ClInclude Include="iorbit.h" />
+    <ClInclude Include="space_defines.h" />
+    <ClInclude Include="space_force.h" />
+    <ClInclude Include="space_math.h" />
     <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>

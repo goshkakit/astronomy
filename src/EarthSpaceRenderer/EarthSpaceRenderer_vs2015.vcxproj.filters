@@ -44,6 +44,30 @@
     <ClCompile Include="es_scene_norad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="es_scene_orbit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="corbit_norad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="corbit_predict.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="space_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="space_force.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cearth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_time_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="es_earth_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glmath.h">
@@ -77,6 +101,36 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="es_scene_norad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_scene_orbit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iorbit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="corbit_norad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="corbit_predict.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="space_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="space_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="space_force.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cearth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_time_model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="es_earth_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
