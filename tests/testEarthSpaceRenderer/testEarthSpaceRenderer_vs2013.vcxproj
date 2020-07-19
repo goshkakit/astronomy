@@ -151,7 +151,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EarthSpaceRenderer\EarthSpaceRenderer_vs2013.vcxproj">
+    <ProjectReference Include="..\..\src\EarthSpaceRenderer\EarthSpaceRenderer_vs2013.vcxproj">
       <Project>{e6508e88-424f-426d-8859-c589580763f7}</Project>
     </ProjectReference>
   </ItemGroup>

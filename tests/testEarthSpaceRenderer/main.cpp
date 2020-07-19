@@ -117,8 +117,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 		printf("\nError on north pole = %g m\n", dr.abs());
 
 		#ifdef _DEBUG
-		printf("\nPress ENTER to continue...\n");
-		getc(stdin);
+		//printf("\nPress ENTER to continue...\n");
+		//getc(stdin);
 		#endif
 	}
 
@@ -154,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine,
 	if (OpenGLView.Init(hInstance, AppName, 800, 600, 4))
 	{
         bCameraRotationEnabled = 1;
-        TimeModel.setTimeMultiplier(36000.*7);
+        TimeModel.setTimeMultiplier(86400. / 4 / 60);
         EarthModel.setEpochStart(jd_start);
 
 		Scene::CScene scene;

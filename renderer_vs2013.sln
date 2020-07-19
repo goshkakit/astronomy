@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EarthSpaceRenderer", "src\E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8C267709-7077-4D6E-A08C-67E18885183F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testEarthSpaceRenderer", "src\tests\testEarthSpaceRenderer\testEarthSpaceRenderer_vs2013.vcxproj", "{13934502-F785-44CA-B5F5-3E372E644C46}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testEarthSpaceRenderer", "tests\testEarthSpaceRenderer\testEarthSpaceRenderer_vs2013.vcxproj", "{13934502-F785-44CA-B5F5-3E372E644C46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
