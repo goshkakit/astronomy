@@ -4,6 +4,7 @@
 #include "InfluenceForce\InfluenceForce.h"
 #include "AstroDataManager.h"
 #include "AstroTypes.h"
+#include <conio.h>
 
 class TrackCalculation
 {
@@ -272,7 +273,7 @@ public:
 
 		return pt;
 	}
-	void ProcessTrack(TelescopeTrack &telescopeTrack, cOrbit* orbit, cSite siteView)
+	void ProcessTrack_v3(TelescopeTrack &telescopeTrack, cOrbit* orbit, cSite siteView)
 	{
 		double stepSec = telescopeTrack.stepSec_;
 		int Nglobal = 700;
@@ -304,6 +305,8 @@ public:
 		double Position_TimeAz = telescopeTrack.track[idPointStart].TimeAfterEpohe;
 		double Position_TimeEl = telescopeTrack.track[idPointStart].TimeAfterEpohe;
 
+		FILE *flogstep = fopen("orbit_steps.log", "w");
+
 		// prev speed
 		double stepTaz_prev = 0;
 		double stepTel_prev = 0;
@@ -319,6 +322,9 @@ public:
 			TelescopeViewParams pt0 = telescopeTrack.track[i];
 			double ptt0 = telescopeTrack.track[i].TimeAfterEpohe;
 			SCoordinate Vsat0 = getSpeedAz(orbit, siteView, ptt0, StepSizeDeg, stepV0, stepT0);
+
+			//fprintf(flogstep, "%f %f %f\n", ptt0*60.0, pt0.az, pt0.el);
+			
 
 			//if (i == idPointStart)
 			{
@@ -387,6 +393,9 @@ public:
 				//printf("Revert motion El\n");
 				reverEl = true;
 			}
+
+			double dstepTaz2 = (stepSec - abs(stepT0.x*Ni_az)) * 2.0 / (abs(Ni_az)*(abs(Ni_az) - 1.0));
+			fprintf(flogstep, "%lf %.12lf %.12lf %d %.16lf %.16lf \n", ptt0*60.0, pt0.az, d_az / StepSizeDeg, Ni_az, stepT0.x, dstepTaz);
 
 			//double a_az = a0_az;
 			//double a_el = a0_el;
@@ -462,6 +471,522 @@ public:
 		printf("Max Err AZ: %f EL %f\n", maxErr_Az, maxErr_El);
 		printf("Max ErrM AZ: %f EL %f\n", maxErrM_Az, maxErrM_El);
 		printf("Common: %f %f %f\t %f %f, %f\n", SumDist_az, Sum_N_az*StepSizeDeg, Sum_Ni_az*StepSizeDeg, SumDist_el, Sum_N_el*StepSizeDeg, Sum_Ni_el*StepSizeDeg);
+
+		fclose(flogstep);
+		getch();
+	}
+
+	void ProcessTrack_v4(TelescopeTrack &telescopeTrack, cOrbit* orbit, cSite siteView)
+	{
+		double stepSec = telescopeTrack.stepSec_;
+		int Nglobal = 700;
+		int StepperCount = 200;
+		int StepDivider = 16;
+		double StepSizeDeg = 360.0 / Nglobal / StepperCount / StepDivider;
+		double StepSizeRad = StepSizeDeg * 3600.0;
+		printf("stepSec = %f, StepSizeDeg = %f, StepSizeRad = %f\n", stepSec, StepSizeDeg, StepSizeRad);
+
+		double Sum_N_az = 0;
+		double Sum_N_el = 0;
+		double Sum_Ni_az = 0;
+		double Sum_Ni_el = 0;
+
+		double Nd_az = 0;
+		double Nd_el = 0;
+
+		double maxErr_Az = 0;
+		double maxErr_El = 0;
+
+		double maxErr_VAz = 0;
+		double maxErr_VEl = 0;
+
+		double maxErrM_Az = 0;
+		double maxErrM_El = 0;
+
+		int countPoint = telescopeTrack.track.size();
+		int idPointStart = 2;
+		int idPointEnd = countPoint - 2;
+		double Position_Az = telescopeTrack.track[idPointStart].az;
+		double Position_El = telescopeTrack.track[idPointStart].el;
+		double Position_TimeAz = telescopeTrack.track[idPointStart].TimeAfterEpohe;
+		double Position_TimeEl = telescopeTrack.track[idPointStart].TimeAfterEpohe;
+
+		FILE *flogstep_az = fopen("orbit_steps_az.log", "w");
+		FILE *flogstep_el = fopen("orbit_steps_el.log", "w");
+
+		// prev speed
+		double stepTaz_prev = 0;
+		double stepTel_prev = 0;
+
+		// processing track
+		for (int i = idPointStart; i < idPointEnd; i++)
+		{
+			// теущая скорость в точке
+			SCoordinate stepV0;										// Число шагов в секунду
+			SCoordinate stepT0;										// Интервал времени между импульсами 
+			TelescopeViewParams pt0 = telescopeTrack.track[i];		// Положение спутника
+			double ptt0 = telescopeTrack.track[i].TimeAfterEpohe;	// время в точке
+			SCoordinate Vsat0 = getSpeedAz(orbit, siteView, ptt0, StepSizeDeg, stepV0, stepT0);
+
+			// Интервал времени между импульсами 
+  			//if (i == idPointStart)
+			{
+				stepTaz_prev = stepT0.x;
+				stepTel_prev = stepT0.y;
+			}
+
+			// Следуюущая тока
+			SCoordinate stepV1; 
+			SCoordinate stepT1;
+			TelescopeViewParams pt1 = telescopeTrack.track[i + 1];
+			double ptt1 = telescopeTrack.track[i + 1].TimeAfterEpohe;
+			SCoordinate Vsat1 = getSpeedAz(orbit, siteView, ptt1, StepSizeDeg, stepV1, stepT1);
+
+
+			// Изменение угла
+			double d_az = (pt1.az - pt0.az);
+			double d_el = (pt1.el - pt0.el);
+
+			// Число шагов за интервал с учетом остатка
+			double N_az = d_az / StepSizeDeg + Nd_az;
+			double N_el = d_el / StepSizeDeg + Nd_el;
+			double N_az_real = d_az / StepSizeDeg;
+			double N_el_real = d_el / StepSizeDeg;
+
+			// Целое число шагов
+			int Ni_az = N_az;
+			int Ni_el = N_el;
+
+			// Остаток шага для переноса
+			Nd_az = N_az - Ni_az;
+			Nd_el = N_el - Ni_el;
+
+			// Суммирование по шагам, целох и точных
+			Sum_N_az += N_az_real;
+			Sum_N_el += N_el_real;
+			Sum_Ni_az += Ni_az;
+			Sum_Ni_el += Ni_el;
+
+			// Ускорение на интервале - линейное
+			double dstepTaz = 0;
+			double dstepTel = 0;
+			if (abs(Ni_az) > 1)
+			{
+				dstepTaz = (stepSec - abs(/*stepT0.x*/stepTaz_prev*Ni_az)) * 2.0 / (abs(Ni_az)*(abs(Ni_az) - 1.0));
+			}
+			if (abs(Ni_az) == 1)
+			{
+				dstepTaz = stepT1.x - stepTaz_prev;// stepT0.x;
+			}
+
+			if (abs(Ni_el) > 1)
+			{
+				dstepTel = (stepSec - abs(/*stepT0.y*/stepTel_prev*Ni_el)) * 2.0 / (abs(Ni_el)*(abs(Ni_el) - 1.0));
+			}
+			if (abs(Ni_el) == 1)
+			{
+				dstepTel = stepT1.y - stepTel_prev;// stepT0.y;
+			}
+
+			// Переключение направления
+			bool reverAz = false;
+			if (sgn(stepV1.x) != sgn(stepV0.x))
+			{
+				//printf("Revert motion Az\n");
+				reverAz = true;
+			}
+			bool reverEl = false;
+			if (sgn(stepV1.y) != sgn(stepV0.y))
+			{
+				//printf("Revert motion El\n");
+				reverEl = true;
+			}
+
+			// Симуляция по шаганию по точкам
+			// Ошибки на интервали из-за линейности
+			double maxErrMi_Az = 0;
+			double maxErrMi_El = 0;
+			// Интервал времени между импульсами на начало интервала
+			double stepTaz_curr = stepTaz_prev;// stepT0.x;
+			double stepTel_curr = stepTel_prev;// stepT0.y;
+
+			// проход по интервалу
+			for (int j = 0; j < abs(Ni_az); j++)
+			{
+				if (!reverAz)
+				{
+					// Вычисление координат объекта
+					cEciTime eci = orbit->GetPosition(Position_TimeAz);
+					cTopo topoLook = siteView.GetLookAngle(eci);
+					double az = topoLook.AzimuthDeg();
+
+					// Невязка в точке
+					double dt_az = abs(az - Position_Az)*const_.DtoSec;
+					if (maxErrM_Az < dt_az) maxErrM_Az = dt_az;
+					if (maxErrMi_Az < dt_az) maxErrMi_Az = dt_az;
+
+					// изменение по времени и по  Интервалу времени между импульсами
+					Position_TimeAz += stepTaz_curr / 60.0;
+					stepTaz_curr += dstepTaz;
+				}
+
+				// Изменение положения двигателя
+				Position_Az += StepSizeDeg*sgn(Ni_az);
+			}
+
+			// фикс на изменение направления или 0 шагов
+			if (abs(Ni_az) == 0 || reverAz)
+			{
+				Position_TimeAz += stepSec / 60.0;
+				stepTaz_curr = stepT1.x;
+			}
+
+			// Скорость на конце интервала
+			stepTaz_prev = stepTaz_curr;
+			// Ошибка по скорости на конец интервала
+			double stepTiaz_error = abs(1.0/stepT1.x - 1.0/stepTaz_curr);
+
+			// сохранение интервала
+			fprintf(flogstep_az, "%lf %.12lf %.12lf %d %.16lf %.16lf %.16lf %.16lf\n", ptt0*60.0, pt0.az, d_az / StepSizeDeg, Ni_az, stepT0.x, dstepTaz, maxErrMi_Az, stepTiaz_error);
+
+			// Повторение для второго угла
+			for (int j = 0; j < abs(Ni_el); j++)
+			{
+				if (!reverEl)
+				{
+					cEciTime eci = orbit->GetPosition(Position_TimeEl);
+					cTopo topoLook = siteView.GetLookAngle(eci);
+					double el = topoLook.ElevationDeg();
+					double dt_el = abs(el - Position_El)*const_.DtoSec;
+					if (maxErrM_El < dt_el) maxErrM_El = dt_el;
+					if (maxErrMi_El < dt_el) maxErrMi_El = dt_el;
+					Position_TimeEl += stepTel_curr / 60.0;
+					stepTel_curr += dstepTel;
+				}
+
+				Position_El += StepSizeDeg*sgn(Ni_el);
+			}
+			if (abs(Ni_el) == 0 || reverEl)
+			{
+				Position_TimeEl += stepSec / 60.0;
+				stepTel_curr = stepT1.y;
+			}
+
+			stepTel_prev = stepTel_curr;
+			// Ошибка по скорости на конец интервала
+			double stepTiel_error = abs(1.0/stepT1.y - 1.0/stepTel_curr);
+
+			fprintf(flogstep_el, "%lf %.12lf %.12lf %d %.16lf %.16lf %.16lf %.16lf\n", ptt0*60.0, pt0.el, d_el / StepSizeDeg, Ni_el, stepT0.y, dstepTel, maxErrMi_El, stepTiel_error);
+
+			// Ошибка положения в конечной точке интервала
+			double Err_az = abs(Position_Az - pt1.az)*const_.DtoSec;
+			double Err_el = abs(Position_El - pt1.el)*const_.DtoSec;
+
+			// поиск максимума невязки по углам
+			if (maxErr_Az < Err_az) maxErr_Az = Err_az;
+			if (maxErr_El < Err_el) maxErr_El = Err_el;
+
+			// поиск максимума невязки по скоростям 
+			if (maxErr_VAz < stepTiaz_error) maxErr_VAz = stepTiaz_error;
+			if (maxErr_VEl < stepTiel_error) maxErr_VEl = stepTiel_error;
+
+			if (i % 10 == 0)
+			{
+				printf("AZ: %5.2f %5.2f %5.2f %d [err:%5.4f, %5.4f]\t EL:  %5.2f %5.2f %5.2f %d [err:%5.4f %5.4f]\n", pt0.az, d_az, N_az, Ni_az, Err_az, maxErrMi_Az, pt0.el, d_el, N_el, Ni_el, Err_el, maxErrMi_El);
+				printf("\n");
+			}
+		}
+
+		// Суммарный переход по углам
+		double SumDist_az = telescopeTrack.track[idPointEnd].az - telescopeTrack.track[idPointStart].az;
+		double SumDist_el = telescopeTrack.track[idPointEnd].el - telescopeTrack.track[idPointStart].el;
+
+
+		printf("Max error at end of interval AZ: %f asec\t EL %f asec\n", maxErr_Az, maxErr_El);
+		printf("Max error on interval  AZ: %f asec\t EL %f asec\n", maxErrM_Az, maxErrM_El);
+		printf("Max error speed at end of interval   AZ: %f [step/sec]\t EL %f [step/sec]\n", maxErr_VAz, maxErr_VEl);
+
+		printf("Summ dist AZ: %f %f %f deg\t %f asec \n", SumDist_az, Sum_N_az*StepSizeDeg, Sum_Ni_az*StepSizeDeg, (SumDist_az - Sum_Ni_az*StepSizeDeg)*const_.DtoSec);
+		printf("Summ dist EL: %f %f %f deg\t %f asec \n", SumDist_el, Sum_N_el*StepSizeDeg, Sum_Ni_el*StepSizeDeg, (SumDist_el - Sum_Ni_el*StepSizeDeg)*const_.DtoSec);
+
+		fclose(flogstep_az);
+		fclose(flogstep_el);
+		getch();
+	}
+
+	void ProcessTrack(TelescopeTrack &telescopeTrack, cOrbit* orbit, cSite siteView)
+	{
+		double stepSec = telescopeTrack.stepSec_;
+		int Nglobal = 700;
+		int StepperCount = 200;
+		int StepDivider = 16;
+		double StepSizeDeg = 360.0 / Nglobal / StepperCount / StepDivider;
+		double StepSizeRad = StepSizeDeg * 3600.0;
+		printf("stepSec = %f, StepSizeDeg = %f, StepSizeRad = %f\n", stepSec, StepSizeDeg, StepSizeRad);
+
+		double Sum_N_az = 0;
+		double Sum_N_el = 0;
+		double Sum_Ni_az = 0;
+		double Sum_Ni_el = 0;
+
+		double Nd_az = 0;
+		double Nd_el = 0;
+
+		double maxErr_Az = 0;
+		double maxErr_El = 0;
+
+		double maxErr_VAz = 0;
+		double maxErr_VEl = 0;
+
+		double maxErrM_Az = 0;
+		double maxErrM_El = 0;
+
+		int countPoint = telescopeTrack.track.size();
+		int idPointStart = 2;
+		int idPointEnd = countPoint - 2;
+		double Position_Az = telescopeTrack.track[idPointStart].az;
+		double Position_El = telescopeTrack.track[idPointStart].el;
+		double Position_TimeAz = telescopeTrack.track[idPointStart].TimeAfterEpohe;
+		double Position_TimeEl = telescopeTrack.track[idPointStart].TimeAfterEpohe;
+
+		FILE *flogstep_az = fopen("orbit_steps_az.log", "w");
+		FILE *flogstep_el = fopen("orbit_steps_el.log", "w");
+
+		// prev speed
+		double stepTaz_prev = 0;
+		double stepTel_prev = 0;
+
+		double stepTaz_V0 = 0;
+		double stepTel_V0 = 0;
+		double stepTaz_V1 = 0;
+		double stepTel_V1 = 0;
+
+		// processing track
+		for (int i = idPointStart; i < idPointEnd; i++)
+		{
+			// теущая скорость в точке
+			SCoordinate stepV0;										// Число шагов в секунду
+			SCoordinate stepT0;										// Интервал времени между импульсами 
+			TelescopeViewParams pt0 = telescopeTrack.track[i];		// Положение спутника
+			double ptt0 = telescopeTrack.track[i].TimeAfterEpohe;	// время в точке
+			SCoordinate Vsat0 = getSpeedAz(orbit, siteView, ptt0, StepSizeDeg, stepV0, stepT0);
+
+			// Интервал времени между импульсами 
+			//if (i == idPointStart)
+			{
+				stepTaz_prev = stepT0.x;
+				stepTel_prev = stepT0.y;
+			}
+
+			// Следуюущая тока
+			SCoordinate stepV1;
+			SCoordinate stepT1;
+			TelescopeViewParams pt1 = telescopeTrack.track[i + 1];
+			double ptt1 = telescopeTrack.track[i + 1].TimeAfterEpohe;
+			SCoordinate Vsat1 = getSpeedAz(orbit, siteView, ptt1, StepSizeDeg, stepV1, stepT1);
+
+			// начальная точка по скорости
+			if (i == idPointStart)
+			{
+				stepTaz_V0 = stepT0.x;
+				stepTel_V0 = stepT0.y;
+			}
+			// находимся по времени и по положению в этой точке по скорости движения
+			else
+			{
+				stepTaz_V0 = stepTaz_V1;
+				stepTel_V0 = stepTel_V1;
+			}
+
+			// Изменение угла
+			double d_az = (pt1.az - pt0.az);
+			double d_el = (pt1.el - pt0.el);
+
+			// Число шагов за интервал с учетом остатка
+			double N_az = d_az / StepSizeDeg + Nd_az;
+			double N_el = d_el / StepSizeDeg + Nd_el;
+			double N_az_real = d_az / StepSizeDeg;
+			double N_el_real = d_el / StepSizeDeg;
+
+			// Целое число шагов
+			int Ni_az = N_az;
+			int Ni_el = N_el;
+
+			// Остаток шага для переноса
+			Nd_az = N_az - Ni_az;
+			Nd_el = N_el - Ni_el;
+
+			// Суммирование по шагам, целох и точных
+			Sum_N_az += N_az_real;
+			Sum_N_el += N_el_real;
+			Sum_Ni_az += Ni_az;
+			Sum_Ni_el += Ni_el;
+
+			// коррекция конечной скорости
+			stepTaz_V1 = stepT1.x;
+			stepTel_V1 = stepT1.y;
+			double stepTaz_Vi = (stepTaz_V1 - stepTaz_V0) / abs(N_az)*(double)abs(Ni_az) + stepTaz_V0;
+			double stepTel_Vi = (stepTel_V1 - stepTel_V0) / abs(N_el)*(double)abs(Ni_el) + stepTel_V0;
+			stepTaz_V1 = stepTaz_Vi;
+			stepTel_V1 = stepTel_Vi;
+			double dstepTaz_Vi = (stepTaz_V1 - stepTaz_V0) / (double)abs(Ni_az);
+			double dstepTel_Vi = (stepTel_V1 - stepTel_V0) / (double)abs(Ni_el);
+
+			//printf("%f %f\n", stepTaz_V0, stepTel_V0);
+
+			// Ускорение на интервале - линейное
+			double dstepTaz = 0;
+			double dstepTel = 0;
+			if (abs(Ni_az) > 1)
+			{
+				dstepTaz = (stepSec - abs(/*stepT0.x*/stepTaz_prev*Ni_az)) * 2.0 / (abs(Ni_az)*(abs(Ni_az) - 1.0));
+			}
+			if (abs(Ni_az) == 1)
+			{
+				dstepTaz = stepT1.x - stepTaz_prev;// stepT0.x;
+			}
+
+			if (abs(Ni_el) > 1)
+			{
+				dstepTel = (stepSec - abs(/*stepT0.y*/stepTel_prev*Ni_el)) * 2.0 / (abs(Ni_el)*(abs(Ni_el) - 1.0));
+			}
+			if (abs(Ni_el) == 1)
+			{
+				dstepTel = stepT1.y - stepTel_prev;// stepT0.y;
+			}
+
+			// Переключение направления
+			bool reverAz = false;
+			if (sgn(stepV1.x) != sgn(stepV0.x))
+			{
+				//printf("Revert motion Az\n");
+				reverAz = true;
+			}
+			bool reverEl = false;
+			if (sgn(stepV1.y) != sgn(stepV0.y))
+			{
+				//printf("Revert motion El\n");
+				reverEl = true;
+			}
+
+			// Симуляция по шаганию по точкам
+			// Ошибки на интервали из-за линейности
+			double maxErrMi_Az = 0;
+			double maxErrMi_El = 0;
+			
+			// Интервал времени между импульсами на начало интервала
+			//double stepTaz_curr = stepTaz_prev;// stepT0.x;
+			//double stepTel_curr = stepTel_prev;// stepT0.y;
+			double stepTaz_curr = stepTaz_V0 + dstepTaz_Vi;
+			double stepTel_curr = stepTel_V0;
+											   // проход по интервалу
+			for (int j = 0; j < abs(Ni_az); j++)
+			{
+				if (!reverAz)
+				{
+					// Вычисление координат объекта
+					cEciTime eci = orbit->GetPosition(Position_TimeAz);
+					cTopo topoLook = siteView.GetLookAngle(eci);
+					double az = topoLook.AzimuthDeg();
+
+					// Невязка в точке
+					double dt_az = abs(az - Position_Az)*const_.DtoSec;
+					if (maxErrM_Az < dt_az) maxErrM_Az = dt_az;
+					if (maxErrMi_Az < dt_az) maxErrMi_Az = dt_az;
+
+					// изменение по времени и по  Интервалу времени между импульсами
+					Position_TimeAz += stepTaz_curr / 60.0;
+					
+					// ускорение по формуле
+					//stepTaz_curr += dstepTaz;
+
+					// ускорение по среднему с коррекцией начала и конца
+					stepTaz_curr += dstepTaz_Vi;
+				}
+
+				// Изменение положения двигателя
+				Position_Az += StepSizeDeg*sgn(Ni_az);
+			}
+
+			// фикс на изменение направления или 0 шагов
+			if (abs(Ni_az) == 0 || reverAz)
+			{
+				Position_TimeAz += stepSec / 60.0;
+				stepTaz_curr = stepT1.x;
+			}
+
+			// Скорость на конце интервала
+			stepTaz_prev = stepTaz_curr;
+			// Ошибка по скорости на конец интервала
+			//double stepTiaz_error = abs(1.0 / stepT1.x - 1.0 / stepTaz_curr);
+			double stepTiaz_error = abs(1.0 / stepTaz_V1 - 1.0 / stepTaz_curr);
+			// сохранение интервала
+			//fprintf(flogstep_az, "%lf %.12lf %.12lf %d %.16lf %.16lf %.16lf %.16lf\n", ptt0*60.0, pt0.az, d_az / StepSizeDeg, Ni_az, stepT0.x, dstepTaz, maxErrMi_Az, stepTiaz_error);
+			fprintf(flogstep_az, "%lf %.12lf %.12lf %d %.16lf %.16lf %.16lf %.16lf\n", ptt0*60.0, pt0.az, d_az / StepSizeDeg, Ni_az, stepTaz_V0, dstepTaz_Vi, maxErrMi_Az, stepTiaz_error);
+
+			// Повторение для второго угла
+			for (int j = 0; j < abs(Ni_el); j++)
+			{
+				if (!reverEl)
+				{
+					cEciTime eci = orbit->GetPosition(Position_TimeEl);
+					cTopo topoLook = siteView.GetLookAngle(eci);
+					double el = topoLook.ElevationDeg();
+					double dt_el = abs(el - Position_El)*const_.DtoSec;
+					if (maxErrM_El < dt_el) maxErrM_El = dt_el;
+					if (maxErrMi_El < dt_el) maxErrMi_El = dt_el;
+					Position_TimeEl += stepTel_curr / 60.0;
+					stepTel_curr += dstepTel;
+				}
+
+				Position_El += StepSizeDeg*sgn(Ni_el);
+			}
+			if (abs(Ni_el) == 0 || reverEl)
+			{
+				Position_TimeEl += stepSec / 60.0;
+				stepTel_curr = stepT1.y;
+			}
+
+			stepTel_prev = stepTel_curr;
+			// Ошибка по скорости на конец интервала
+			double stepTiel_error = abs(1.0 / stepT1.y - 1.0 / stepTel_curr);
+
+			fprintf(flogstep_el, "%lf %.12lf %.12lf %d %.16lf %.16lf %.16lf %.16lf\n", ptt0*60.0, pt0.el, d_el / StepSizeDeg, Ni_el, stepT0.y, dstepTel, maxErrMi_El, stepTiel_error);
+
+			// Ошибка положения в конечной точке интервала
+			double Err_az = abs(Position_Az - pt1.az)*const_.DtoSec;
+			double Err_el = abs(Position_El - pt1.el)*const_.DtoSec;
+
+			// поиск максимума невязки по углам
+			if (maxErr_Az < Err_az) maxErr_Az = Err_az;
+			if (maxErr_El < Err_el) maxErr_El = Err_el;
+
+			// поиск максимума невязки по скоростям 
+			if (maxErr_VAz < stepTiaz_error) maxErr_VAz = stepTiaz_error;
+			if (maxErr_VEl < stepTiel_error) maxErr_VEl = stepTiel_error;
+
+			if (i % 10 == 0)
+			{
+				printf("AZ: %5.2f %5.2f %5.2f %d [err:%5.4f, %5.4f]\t EL:  %5.2f %5.2f %5.2f %d [err:%5.4f %5.4f]\n", pt0.az, d_az, N_az, Ni_az, Err_az, maxErrMi_Az, pt0.el, d_el, N_el, Ni_el, Err_el, maxErrMi_El);
+				printf("\n");
+			}
+		}
+
+		// Суммарный переход по углам
+		double SumDist_az = telescopeTrack.track[idPointEnd].az - telescopeTrack.track[idPointStart].az;
+		double SumDist_el = telescopeTrack.track[idPointEnd].el - telescopeTrack.track[idPointStart].el;
+
+
+		printf("Max error at end of interval AZ: %f asec\t EL %f asec\n", maxErr_Az, maxErr_El);
+		printf("Max error on interval  AZ: %f asec\t EL %f asec\n", maxErrM_Az, maxErrM_El);
+		printf("Max error speed at end of interval   AZ: %f [step/sec]\t EL %f [step/sec]\n", maxErr_VAz, maxErr_VEl);
+
+		printf("Summ dist AZ: %f %f %f deg\t %f asec \n", SumDist_az, Sum_N_az*StepSizeDeg, Sum_Ni_az*StepSizeDeg, (SumDist_az - Sum_Ni_az*StepSizeDeg)*const_.DtoSec);
+		printf("Summ dist EL: %f %f %f deg\t %f asec \n", SumDist_el, Sum_N_el*StepSizeDeg, Sum_Ni_el*StepSizeDeg, (SumDist_el - Sum_Ni_el*StepSizeDeg)*const_.DtoSec);
+
+		fclose(flogstep_az);
+		fclose(flogstep_el);
+		getch();
 	}
 
 	void PrepareTracks(TelescopObject tel, cOrbit* orbit)

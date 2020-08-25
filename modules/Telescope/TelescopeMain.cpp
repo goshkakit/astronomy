@@ -2,8 +2,9 @@
 #include "TrackCalculation.h"
 #include "AstroDataManager.h"
 #include "TelescopeAling.h"
+#include "NucleoConnection.h"
 
-int main()
+int main_calib()
 {
 	TelescopeAling TA;
 	TA.Init();
@@ -12,7 +13,14 @@ int main()
 	return 0;
 }
 
-int main_plan()
+int main()
+{
+	NucleoConnection nucleoConnection;
+	nucleoConnection.loadTask();
+	nucleoConnection.runTest();
+}
+
+int maint()
 {
 	printf("Start\n");
 
