@@ -21,7 +21,7 @@ int main()
 	nucleoConnection.runTest();
 }
 
-int maint()
+int main_task()
 {
 	printf("Start\n");
 
@@ -52,9 +52,3 @@ int maint()
 	return 0;
 }
 
-int main() {
-
-	main_TrackCalculation();
-
-	return 0;
-}
