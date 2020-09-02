@@ -21,13 +21,17 @@
   <ItemGroup>
     <ClInclude Include="AstroDataManager.h" />
     <ClInclude Include="AstroTypes.h" />
+    <ClInclude Include="AudioFile.h" />
     <ClInclude Include="cloudicp.h" />
+    <ClInclude Include="cpuptr.h" />
     <ClInclude Include="JsonWorker.h" />
+    <ClInclude Include="NucleoConnection.h" />
     <ClInclude Include="TelescopeAling.h" />
     <ClInclude Include="TrackCalculation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cloudicp.cpp" />
+    <ClCompile Include="NucleoConnection.cpp" />
     <ClCompile Include="TelescopeMain.cpp" />
   </ItemGroup>
   <ItemGroup>
