@@ -26,8 +26,7 @@ void XYZ_WGS84(double X, double Y, double Z, double & Hw, double & Fwg, double &
 	RF_WGS84(R, sh, Hw, Fwg); // перевод из геоцентр. СК в WGS-84
 }
 
-void RF_WGS84(double R, double F, double & Hz, double & Fzg)
-{
+void RF_WGS84(double R, double F, double & Hz, double & Fzg) {
 	long double sF, cF, n, Z;
 	double rW, FW;
 
@@ -51,20 +50,17 @@ void RF_WGS84(double R, double F, double & Hz, double & Fzg)
 	Fzg *= RG;
 }
 
-void SinCos(double a, long double & sina, long double & cosa)
-{
+void SinCos(double a, long double & sina, long double & cosa) {
 	sina = sin(a);
 	cosa = cos(a);
 }
 
-double sign(double Val)
-{
+double sign(double Val) {
 	if (Val == 0.)  return 0;
 	if (Val > 0.)  return 1;
 	else return -1;
 }
 
-double Sqr(double a)
-{
+double Sqr(double a) {
 	return a*a;
 }

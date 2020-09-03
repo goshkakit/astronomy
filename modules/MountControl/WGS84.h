@@ -23,6 +23,7 @@ void WGS84_XYZ(double Hw, double Fwg, double Lwg, double & X, double & Y, double
 
 //xyzITRF -> elev, lat, lon
 void XYZ_WGS84(double X, double Y, double Z, double & Hw, double & Fwg, double & Lwg);
+
 void RF_WGS84(double R, double F, double & Hz, double & Fzg);
 void SinCos(double a, long double & sina, long double & cosa);
 double sign(double Val);

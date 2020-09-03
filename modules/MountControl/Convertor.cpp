@@ -279,6 +279,32 @@ Angs Convertor::AzElev2AlphBet(const Angs &AzElev) {
 	return AlphBet;
 }
 
+//Alph, Bet -> Az, Elev
+Angs Convertor::AlphBet2AzElev(const Angs &AlphBet) {
+	Angs tmpAlphBet = AlphBet;
+	if (tmpAlphBet.ang1 > M_PI / 2) {
+		tmpAlphBet.ang1 = tmpAlphBet.ang1 - M_PI;
+		tmpAlphBet.ang2 = tmpAlphBet.ang2 + M_PI / 2;
+	}
+	else {
+		tmpAlphBet.ang2 = M_PI / 2 - tmpAlphBet.ang2;
+	}
+	std::vector<double> xyz = AzElev2XYZ(tmpAlphBet);
+	std::vector<double> InvR = Inversion3x3(R);
+	std::vector<double> xyzAzElev = Mat3x3XStolb3x1(InvR, xyz);
+	Angs AzElev = XYZ2AzElev(xyzAzElev);
+	AzElev.Jd = AlphBet.Jd;
+	
+	if (AlphBet.ang2 < -M_PI / 2 || AlphBet.ang2 > M_PI / 2) {
+		AzElev.ang1 += M_PI;
+	}
+	else if (AlphBet.ang2 < M_PI / 2 && AlphBet.ang1 < M_PI / 2) {
+		AzElev.ang1 += 2 * M_PI;
+	}
+
+	return AzElev;
+}
+
 //Alph, Bet -> Motors
 MotPos Convertor::AlphBet2Motors(const Angs &AlphBet) {
 	MotPos Motors;

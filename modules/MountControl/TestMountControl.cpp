@@ -48,6 +48,38 @@ int Test() {
 	}
 
 	std::cout << std::endl;
+	
+	//Test Convertor::AlphBet2AzElev(...)
+	std::cout << "Test Convertor::AlphBet2AzElev(...)" << std::endl;
+	{
+		std::cout << "Test 1:" << std::endl;
+		telescope.SetAzElevPos({ 2458896.0, pi / 3, pi / 3 });
+		Angs alphbet = telescope.GetAlphBetPos();
+		Angs AzElev = telescope.AlphBet2AzElev(alphbet);
+		std::cout << "Jd = " << AzElev.Jd << ", Az = " << AzElev.ang1 * 180 / pi << ", Elev = " << AzElev.ang2 * 180 / pi << std::endl;
+		std::cout << "True values for Jd = 2458896.0, Az = 60, Elev = 60" << std::endl;
+
+		std::cout << "Test 2:" << std::endl;
+		telescope.SetAzElevPos({ 2458896.0, 5 * pi / 6, pi / 3 });
+		alphbet = telescope.GetAlphBetPos();
+		AzElev = telescope.AlphBet2AzElev(alphbet);
+		std::cout << "Jd = " << AzElev.Jd << ", Az = " << AzElev.ang1 * 180 / pi << ", Elev = " << AzElev.ang2 * 180 / pi << std::endl;
+		std::cout << "True values for Jd = 2458896.0, Az = 150, Elev = 60" << std::endl;
+
+		std::cout << "Test 3:" << std::endl;
+		telescope.SetAzElevPos({ 2458896.0, 4 * pi / 3, pi / 3 });
+		alphbet = telescope.GetAlphBetPos();
+		AzElev = telescope.AlphBet2AzElev(alphbet);
+		std::cout << "Jd = " << AzElev.Jd << ", Az = " << AzElev.ang1 * 180 / pi << ", Elev = " << AzElev.ang2 * 180 / pi << std::endl;
+		std::cout << "True values for Jd = 2458896.0, Az = 240, Elev = 60" << std::endl;
+
+		std::cout << "Test 4:" << std::endl;
+		telescope.SetAzElevPos({ 2458896.0, 5 * pi / 3, pi / 3 });
+		alphbet = telescope.GetAlphBetPos();
+		AzElev = telescope.AlphBet2AzElev(alphbet);
+		std::cout << "Jd = " << AzElev.Jd << ", Az = " << AzElev.ang1 * 180 / pi << ", Elev = " << AzElev.ang2 * 180 / pi << std::endl;
+		std::cout << "True values for Jd = 2458896.0, Az = 300, Elev = 60" << std::endl;
+	}
 
 	//Test Calibration::CalculateA(...)
 	//Calibration test(Telpos, 2458896.0, 0.0, 0.0);

@@ -25,8 +25,11 @@
     </ClCompile>
     <ClCompile Include="comPortControl.cpp" />
     <ClCompile Include="Convertor.cpp" />
+    <ClCompile Include="Integrator.cpp" />
+    <ClCompile Include="MountController.cpp" />
     <ClCompile Include="MountControlMain.cpp" />
     <ClCompile Include="Mat3x3.cpp" />
+    <ClCompile Include="NewConvertor.cpp" />
     <ClCompile Include="TestMountControl.cpp" />
     <ClCompile Include="WGS84.cpp" />
   </ItemGroup>
@@ -37,7 +40,10 @@
     </ClInclude>
     <ClInclude Include="comPortControl.h" />
     <ClInclude Include="Convertor.h" />
+    <ClInclude Include="Integrator.h" />
     <ClInclude Include="Mat3x3.h" />
+    <ClInclude Include="MountController.h" />
+    <ClInclude Include="NewConvertor.h" />
     <ClInclude Include="WGS84.h" />
   </ItemGroup>
   <ItemGroup>
