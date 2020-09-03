@@ -1,4 +1,5 @@
 # Astronomy math
+TODO neea use as lib in other projects
 
 
 # Build

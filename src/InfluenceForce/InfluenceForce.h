@@ -10,11 +10,14 @@
 #define _InfluenceForce_H_
 
 #include "DefineParam.h"
+#include <string>
 #include <vector>
 
 #ifdef GPUCOMPILE
 #include "cuda_runtime.h"
 #endif
+
+extern int NHARM;
 
 // name
 namespace Force
