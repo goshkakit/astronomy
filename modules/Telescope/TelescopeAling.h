@@ -785,8 +785,8 @@ public:
 		for (int i = 0; i < listAzEl_Tel.size(); i++)
 		{
 			SCoordinate pt = listAzEl_Tel[i];
-			pt.x += 10;
-			pt.y += 2;
+			pt.x += 5;
+			pt.y += 0;
 			listAzEl_Real.push_back(pt);
 		}
 
@@ -830,5 +830,69 @@ public:
 		printf("azel_view [az, el]");
  		azel_view = azel_view*const_.RG;
 		azel_view.print();
+	}
+
+	void aline3DPoints()
+	{
+		std::vector<SCoordinate> Ref_Tel2;
+		std::vector<SCoordinate> Ref_Real2;
+
+		// alpha , beta
+		// az elevatin
+
+		// 1
+		Ref_Tel2.push_back(SCoordinate(0, 90));
+		Ref_Real2.push_back(SCoordinate(0, 0));
+
+		Ref_Tel2.push_back(SCoordinate(0, 0));
+		Ref_Real2.push_back(SCoordinate(0, 90));
+
+		//Ref_Tel2.push_back(SCoordinate(0, 180));
+		//Ref_Real2.push_back(SCoordinate(180, 0));
+
+		// 2
+		Ref_Tel2.push_back(SCoordinate(90, 0));
+		Ref_Real2.push_back(SCoordinate(270, 0));
+
+		Ref_Tel2.push_back(SCoordinate(90, -180));
+		Ref_Real2.push_back(SCoordinate(90, 0));
+
+		Ref_Tel2.push_back(SCoordinate(180, -180));
+		Ref_Real2.push_back(SCoordinate(0, 90));
+
+		std::vector<S3DCoordinate> Ref_Tel;
+		for (int i = 0; i < Ref_Tel2.size(); i++)
+		{
+			SCoordinate pt = Ref_Tel2[i];
+			S3DCoordinate pt3 = SphericalToXYZ_Deg(pt.x, pt.y, 1.0);
+			Ref_Tel.push_back(pt3);
+		}
+		Ref_Tel.push_back(S3DCoordinate(0, 0, 0));
+
+		std::vector<S3DCoordinate> Ref_Real;
+		for (int i = 0; i < Ref_Real2.size(); i++)
+		{
+			SCoordinate pt = Ref_Real2[i];
+			S3DCoordinate pt3 = SphericalToXYZ_Deg(pt.x, pt.y, 1.0);
+			Ref_Real.push_back(pt3);
+		}
+		Ref_Tel.push_back(S3DCoordinate(0, 0, 0));
+
+		S3DMatrix Rmat;
+		estimateRT(Ref_Real, Ref_Tel, Rmat);
+
+
+		// test
+		SCoordinate azel_mount = SCoordinate(90, 0);
+		S3DCoordinate viewInMount = Rmat*SphericalToXYZ_Deg(azel_mount.x, azel_mount.y, 1.0);
+		SCoordinate ab_view;
+		ConvertXYZtoRADEC(viewInMount, ab_view);
+
+		printf("azel_mount [az, el]");
+		azel_mount.print();
+
+		printf("ab_view [alpha, beta]");
+		ab_view = ab_view*const_.RG;
+		ab_view.print();
 	}
 };

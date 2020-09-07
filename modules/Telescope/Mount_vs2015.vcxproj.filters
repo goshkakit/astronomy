@@ -29,12 +29,24 @@
     <ClInclude Include="TrackCalculation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AudioFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cpuptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NucleoConnection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cloudicp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TelescopeMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NucleoConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
