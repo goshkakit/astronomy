@@ -23,18 +23,44 @@ public:
 	}
 
 	void loadTelescope(std::string pinpf_tels)
-	{
-		Json::Value inpf, JTels;
+    {
+        {
+            rapidjson::Document d;
 
+            if (jsonWorker.read_Json(pinpf_tels, d))
+            {
+                if (d.IsObject())
+                {
+                    if (d.HasMember("Telescopes"))
+                    {
+                        const rapidjson::Value &v_Telescopes = d["Telescopes"];
 
-		inpf = jsonWorker.read_Json(pinpf_tels);
-		if (inpf.isMember("Telescopes")) {
-			JTels = inpf["Telescopes"];
-		}
-		else std::cout << "Missing parameter 'Telescopes' in " << pinpf_tels << "\n";
+                        if (v_Telescopes.IsArray())
+                        {
+                            jsonWorker.read_tels_Json(tels, v_Telescopes);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "Missing parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "Invalid JSON document: " << pinpf_tels << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Failed to read JSON document: " << pinpf_tels << std::endl;
+            }
+        }
 
-		jsonWorker.read_tels_Json(tels, JTels, pinpf_tels);
-		if (tels.size() == 0) {
+        if (tels.size() == 0) {
 			std::cout << "Empty array of telescopes in " << pinpf_tels << "\n";
 		};
 
