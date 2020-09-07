@@ -2,11 +2,13 @@
 
 #include <fstream>
 #include <iostream>
-#include "json/json.h"
 #include <vector>
 #include "common/stV_type.h"
 
 #include "VerifyEtalon/CorrespondenceData.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
 
 const double RG = 180.0 / M_PI;	// Radian-degree convertion
 const double GR = 1.0 / RG;
@@ -25,78 +27,194 @@ struct Ttelescop
 	double x, y, z;
 };
 
-Json::Value read_Json(std::string &FileName)
+bool read_Json(std::string &FileName, rapidjson::Document &document)
 {
-	Json::CharReaderBuilder builder;
-	Json::Value value;
-	JSONCPP_STRING errs;
-	builder["collectComments"] = false;
+    std::ifstream stream(FileName, std::ifstream::binary);
 
-	std::ifstream doc(FileName, std::ifstream::binary);
-	bool ok = parseFromStream(builder, doc, &value, &errs);
-	if (!ok)
-	{
-		std::cout << "Failed to parse configuration\n" << errs;
-	}
+    rapidjson::IStreamWrapper wrapper(stream);
 
-	return value;
+    document.ParseStream(wrapper);
+
+    if (document.HasParseError())
+    {
+        size_t offset = document.GetErrorOffset();
+        rapidjson::ParseErrorCode code = document.GetParseError();
+
+        std::cout << "Failed to parse JSON document: code = " << code << ", offset = " << offset << ", path = " << FileName << std::endl;
+
+        return false;
+    }
+
+    return true;
 }
 
-void read_stV_Json(TstV &stV, Json::Value JstV) {
-	stV.jd = JstV["JD"].asDouble();
-	stV.ID = JstV["id"].asInt();
-	Json::Value est = JstV["est"];
-	stV.x = est[0].asDouble();
-	stV.y = est[1].asDouble();
-	stV.z = est[2].asDouble();
-	stV.Vx = est[3].asDouble();
-	stV.Vy = est[4].asDouble();
-	stV.Vz = est[5].asDouble();
-	if (est.size() >= 6) {
-		stV.BalFactor = est[6].asDouble();
-	}
-	if (est.size() == 7) {
-		stV.SMRatio = est[7].asDouble();
-	}
+void read_stV_Json(TstV &stV, const rapidjson::Value &JstV)
+{
+    if (JstV.IsObject())
+    {
+        if (JstV.HasMember("JD"))
+        {
+            const rapidjson::Value &v_JD = JstV["JD"];
+
+            if (v_JD.IsNumber())
+            {
+                stV.jd = v_JD.GetDouble();
+            }
+        }
+
+        if (JstV.HasMember("id"))
+        {
+            const rapidjson::Value &v_JD = JstV["id"];
+
+            if (v_JD.IsNumber())
+            {
+                stV.ID = v_JD.GetInt();
+            }
+        }
+
+        if (JstV.HasMember("est"))
+        {
+            const rapidjson::Value &v_arr = JstV["est"];
+
+            if (v_arr.IsArray())
+            {
+                if (v_arr.Size() >= 6)
+                {
+                    if (v_arr[0].IsNumber()) stV.x = v_arr[0].GetDouble();
+                    if (v_arr[1].IsNumber()) stV.y = v_arr[1].GetDouble();
+                    if (v_arr[2].IsNumber()) stV.z = v_arr[2].GetDouble();
+                    if (v_arr[3].IsNumber()) stV.Vx = v_arr[3].GetDouble();
+                    if (v_arr[4].IsNumber()) stV.Vy = v_arr[4].GetDouble();
+                    if (v_arr[5].IsNumber()) stV.Vz = v_arr[5].GetDouble();
+
+                    if (v_arr.Size() > 6)
+                    {
+                        if (v_arr[6].IsNumber()) stV.BalFactor = v_arr[6].GetDouble();
+
+                        if (v_arr.Size() > 7)
+                        {
+                            if (v_arr[7].IsNumber()) stV.SMRatio = v_arr[7].GetDouble();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
-void read_tel_Json(Ttelescop &tel, Json::Value Jtel, std::string &FileName)
+void read_tel_Json(Ttelescop &tel, const rapidjson::Value &value)
 {
-	tel.lon = Jtel["site_lon"].asDouble();
-	tel.lat = Jtel["site_lat"].asDouble();
-	tel.height = Jtel["site_height"].asDouble();
+    if (value.IsObject())
+    {
+        if (value.HasMember("site_lon"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_lon"];
 
-	tel.x = Jtel["x"].asDouble();
-	tel.y = Jtel["y"].asDouble();
-	tel.z = Jtel["z"].asDouble();
+            if (v_site_lon.IsNumber())
+            {
+                tel.lon = v_site_lon.GetDouble();
+            }
+        }
 
-	//WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
+        if (value.HasMember("site_lat"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_lat"];
 
-	if (Jtel.isMember("id"))	tel.id = Jtel["id"].asInt();
-	else tel.id = -1;
-	//check_site(lon, lat, height, tel.id);
+            if (v_site_lon.IsNumber())
+            {
+                tel.lat = v_site_lon.GetDouble();
+            }
+        }
 
-	if (Jtel.isMember("Frame_rate"))	tel.rate = Jtel["Frame_rate"].asDouble();
-	else tel.rate = 5.0;
+        if (value.HasMember("site_height"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_height"];
 
-	if (Jtel.isMember("RMS"))	tel.sig = Jtel["RMS"].asDouble();
-	else tel.sig = 0.001389;
-	tel.sig = tel.sig * GR;
+            if (v_site_lon.IsNumber())
+            {
+                tel.height = v_site_lon.GetDouble();
+            }
+        }
 
-	if (Jtel.isMember("Max_dur"))	tel.max_dur = Jtel["Max_dur"].asDouble();
-	else tel.max_dur = 1e10;
+        //WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
 
-	if (Jtel.isMember("name"))	tel.name = Jtel["name"].asString();
-	else tel.name = "Unknown";
+        tel.id = -1;
+
+        if (value.HasMember("id"))
+        {
+            const rapidjson::Value &v_site_lon = value["id"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.id = v_site_lon.GetInt();
+            }
+        }
+
+        //check_site(lon, lat, height, tel.id);
+
+        tel.rate = 5.0;
+
+        if (value.HasMember("Frame_rate"))
+        {
+            const rapidjson::Value &v_site_lon = value["Frame_rate"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.rate = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.sig = 0.001389;
+
+        if (value.HasMember("RMS"))
+        {
+            const rapidjson::Value &v_site_lon = value["RMS"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.sig = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.sig = tel.sig * GR;
+
+        tel.max_dur = 1e10;
+
+        if (value.HasMember("Max_dur"))
+        {
+            const rapidjson::Value &v_site_lon = value["Max_dur"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.max_dur = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.name = "Unknown";
+
+        if (value.HasMember("name"))
+        {
+            const rapidjson::Value &v_site_lon = value["name"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.name = v_site_lon.GetString();
+            }
+        }
+    }
 }
 
-void read_tels_Json(std::vector<Ttelescop> &tels, Json::Value Jtels, std::string &FileName)
+void read_tels_Json(vector<Ttelescop> &tels, const rapidjson::Value &Jtels)
 {
-	unsigned i;
-	tels.resize(Jtels.size());
-	for (i = 0; i < Jtels.size(); ++i) {
-		read_tel_Json(tels[i], Jtels[i], FileName);
-	}
+    if (Jtels.IsArray())
+    {
+        tels.resize(Jtels.Size());
+
+        for (unsigned idx = 0, end = Jtels.Size(); idx != end; ++idx)
+        {
+            read_tel_Json(tels[idx], Jtels[idx]);
+        }
+    }
 }
 
 void main(int argc, char *argv[])
@@ -116,7 +234,7 @@ void main(int argc, char *argv[])
 	char *htsName = "data/etalon/lageos2_cpf_131022_7951.sgf";
 	char *tleName = "data/etalon/TLE20131020.txt";
 	char *optfname = "data/etalon/track_13_10_22_22_23_simple_num199.dat";
-	std:string pinpf_stV = "data/etalon/stV_lageos2.json";
+	std::string pinpf_stV = "data/etalon/stV_lageos2.json";
 	bool useSTV = false;
 
 	// 2
@@ -151,27 +269,74 @@ void main(int argc, char *argv[])
 	char *optfname = "etalon\\Lares\\track_19_02_01_08_58_simple_num00020619.dat";
 	std:string pinpf_stV = "etalon\\Lares\\stV_lares_track_19_02_01_1.json";*/
 
-	Json::Value inpf, JTels, JstV;
-	std::vector<Ttelescop> tels;
-	TstV stV;
+    std::vector<Ttelescop> tels;
 
-	inpf = read_Json(pinpf_tels);
-	if (inpf.isMember("Telescopes")) {
-		JTels = inpf["Telescopes"];
-	}
-	else std::cout << "Missing parameter 'Telescopes' in " << pinpf_tels << "\n";
+    {
+        rapidjson::Document d;
 
-	read_tels_Json(tels, JTels, pinpf_tels);
-	if (tels.size() == 0) {
+        if (read_Json(pinpf_tels, d))
+        {
+            if (d.IsObject())
+            {
+                if (d.HasMember("Telescopes"))
+                {
+                    const rapidjson::Value &v_Telescopes = d["Telescopes"];
+
+                    if (v_Telescopes.IsArray())
+                    {
+                        read_tels_Json(tels, v_Telescopes);
+                    }
+                    else
+                    {
+                        std::cout << "Invalid parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "Missing parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Invalid JSON document: " << pinpf_tels << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "Failed to read JSON document: " << pinpf_tels << std::endl;
+        }
+    }
+
+    if (tels.size() == 0) {
 		std::cout << "Empty array of telescopes in " << pinpf_tels << "\n";
 	};
 
 	std::cout << "Count of telescopes in " << tels.size() << "\n";
 
+    TstV stV;
+
 	if (useSTV)
 	{
-		JstV = read_Json(pinpf_stV);
-		read_stV_Json(stV, JstV);
+        {
+            rapidjson::Document d;
+
+            if (read_Json(pinpf_stV, d))
+            {
+                if (d.IsObject())
+                {
+                    read_stV_Json(stV, d);
+                }
+                else
+                {
+                    std::cout << "Invalid JSON document: " << pinpf_tels << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Failed to read JSON document: " << pinpf_tels << std::endl;
+            }
+        }
+
 		std::cout << stV.jd << "  " << stV.x << "  " << stV.y << "  " << stV.z << "  " << stV.Vx << "  " << stV.Vy << "  " << stV.Vz << "  " << stV.BalFactor << std::endl;
 	}
 

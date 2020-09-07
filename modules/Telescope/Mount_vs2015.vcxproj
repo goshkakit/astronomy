@@ -35,9 +35,6 @@
     <ClCompile Include="TelescopeMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\3rdparty\jsoncpp\jsoncpp_vs2015.vcxproj">
-      <Project>{ff2b5fec-eab0-4395-847b-fc42855ca9c9}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\common\common_vs2015.vcxproj">
       <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
     </ProjectReference>
@@ -103,28 +100,28 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)\3rdparty\jsoncpp\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac\;$(SolutionDir)src\SVD;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

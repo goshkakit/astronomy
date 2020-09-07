@@ -3,8 +3,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "json/json.h"
 #include "AstroTypes.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
 
 class JSONWorker
 {
@@ -15,56 +17,140 @@ private:
 public:
 	JSONWorker() {}
 
-	Json::Value read_Json(std::string &FileName)
-	{
-		Json::CharReaderBuilder builder;
-		Json::Value value;
-		JSONCPP_STRING errs;
-		builder["collectComments"] = false;
+    bool read_Json(std::string &FileName, rapidjson::Document &document)
+    {
+        std::ifstream stream(FileName, std::ifstream::binary);
 
-		std::ifstream doc(FileName, std::ifstream::binary);
-		bool ok = parseFromStream(builder, doc, &value, &errs);
-		if (!ok)
-		{
-			std::cout << "Failed to parse configuration\n" << errs;
-		}
+        rapidjson::IStreamWrapper wrapper(stream);
 
-		return value;
-	}
+        document.ParseStream(wrapper);
 
-	void read_tel_Json(TelescopObject &tel, Json::Value Jtel, std::string &FileName)
-	{
-		tel.lon = Jtel["site_lon"].asDouble();
-		tel.lat = Jtel["site_lat"].asDouble();
-		tel.height = Jtel["site_height"].asDouble();
+        if (document.HasParseError())
+        {
+            size_t offset = document.GetErrorOffset();
+            rapidjson::ParseErrorCode code = document.GetParseError();
 
-		//WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
+            std::cout << "Failed to parse JSON document: code = " << code << ", offset = " << offset << ", path = " << FileName << std::endl;
 
-		if (Jtel.isMember("id"))	tel.id = Jtel["id"].asInt();
-		else tel.id = -1;
-		//check_site(lon, lat, height, tel.id);
+            return false;
+        }
 
-		if (Jtel.isMember("Frame_rate"))	tel.rate = Jtel["Frame_rate"].asDouble();
-		else tel.rate = 5.0;
+        return true;
+    }
 
-		if (Jtel.isMember("RMS"))	tel.sig = Jtel["RMS"].asDouble();
-		else tel.sig = 0.001389;
-		tel.sig = tel.sig * GR;
+    void read_tel_Json(TelescopObject &tel, const rapidjson::Value &value)
+    {
+        if (value.IsObject())
+        {
+            if (value.HasMember("site_lon"))
+            {
+                const rapidjson::Value &v_site_lon = value["site_lon"];
 
-		if (Jtel.isMember("Max_dur"))	tel.max_dur = Jtel["Max_dur"].asDouble();
-		else tel.max_dur = 1e10;
+                if (v_site_lon.IsNumber())
+                {
+                    tel.lon = v_site_lon.GetDouble();
+                }
+            }
 
-		if (Jtel.isMember("name"))	tel.name = Jtel["name"].asString();
-		else tel.name = "Unknown";
-	}
+            if (value.HasMember("site_lat"))
+            {
+                const rapidjson::Value &v_site_lon = value["site_lat"];
 
-	void read_tels_Json(std::vector<TelescopObject> &tels, Json::Value Jtels, std::string &FileName)
-	{
-		unsigned i;
-		tels.resize(Jtels.size());
-		for (i = 0; i < Jtels.size(); ++i) {
-			read_tel_Json(tels[i], Jtels[i], FileName);
-		}
-	}
+                if (v_site_lon.IsNumber())
+                {
+                    tel.lat = v_site_lon.GetDouble();
+                }
+            }
+
+            if (value.HasMember("site_height"))
+            {
+                const rapidjson::Value &v_site_lon = value["site_height"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.height = v_site_lon.GetDouble();
+                }
+            }
+
+            //WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
+
+            tel.id = -1;
+
+            if (value.HasMember("id"))
+            {
+                const rapidjson::Value &v_site_lon = value["id"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.id = v_site_lon.GetInt();
+                }
+            }
+
+            //check_site(lon, lat, height, tel.id);
+
+            tel.rate = 5.0;
+
+            if (value.HasMember("Frame_rate"))
+            {
+                const rapidjson::Value &v_site_lon = value["Frame_rate"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.rate = v_site_lon.GetDouble();
+                }
+            }
+
+            tel.sig = 0.001389;
+
+            if (value.HasMember("RMS"))
+            {
+                const rapidjson::Value &v_site_lon = value["RMS"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.sig = v_site_lon.GetDouble();
+                }
+            }
+
+            tel.sig = tel.sig * GR;
+
+            tel.max_dur = 1e10;
+
+            if (value.HasMember("Max_dur"))
+            {
+                const rapidjson::Value &v_site_lon = value["Max_dur"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.max_dur = v_site_lon.GetDouble();
+                }
+            }
+
+            tel.name = "Unknown";
+
+            if (value.HasMember("name"))
+            {
+                const rapidjson::Value &v_site_lon = value["name"];
+
+                if (v_site_lon.IsNumber())
+                {
+                    tel.name = v_site_lon.GetString();
+                }
+            }
+        }
+    }
+
+    void read_tels_Json(std::vector<TelescopObject> &tels, const rapidjson::Value &Jtels)
+    {
+        if (Jtels.IsArray())
+        {
+            tels.resize(Jtels.Size());
+
+            for (unsigned idx = 0, end = Jtels.Size(); idx != end; ++idx)
+            {
+                read_tel_Json(tels[idx], Jtels[idx]);
+            }
+        }
+    }
 
 };

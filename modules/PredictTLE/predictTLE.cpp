@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <iostream>
-#include "json/json.h"
 #include <vector>
 
 #include "Norad\coreLib.h"
@@ -14,6 +13,9 @@
 #include "common\TLELoader.h"
 
 #include "InfluenceForce\InfluenceForce.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
 
 const double RG = 180.0 / M_PI;	// Radian-degree convertion
 const double GR = 1.0 / RG;
@@ -37,56 +39,140 @@ struct ViewParams
 	double range;
 };
 
-Json::Value read_Json(std::string &FileName)
+bool read_Json(std::string &FileName, rapidjson::Document &document)
 {
-	Json::CharReaderBuilder builder;
-	Json::Value value;
-	JSONCPP_STRING errs;
-	builder["collectComments"] = false;
+    std::ifstream stream(FileName, std::ifstream::binary);
 
-	std::ifstream doc(FileName, std::ifstream::binary);
-	bool ok = parseFromStream(builder, doc, &value, &errs);
-	if (!ok)
-	{
-		std::cout << "Failed to parse configuration\n" << errs;
-	}
+    rapidjson::IStreamWrapper wrapper(stream);
 
-	return value;
+    document.ParseStream(wrapper);
+
+    if (document.HasParseError())
+    {
+        size_t offset = document.GetErrorOffset();
+        rapidjson::ParseErrorCode code = document.GetParseError();
+
+        std::cout << "Failed to parse JSON document: code = " << code << ", offset = " << offset << ", path = " << FileName << std::endl;
+
+        return false;
+    }
+
+    return true;
 }
 
-void read_tel_Json(Ttelescop &tel, Json::Value Jtel, std::string &FileName)
+void read_tel_Json(Ttelescop &tel, const rapidjson::Value &value)
 {
-	tel.lon = Jtel["site_lon"].asDouble();
-	tel.lat = Jtel["site_lat"].asDouble();
-	tel.height = Jtel["site_height"].asDouble();
-	
-	//WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
+    if (value.IsObject()) 
+    {
+        if (value.HasMember("site_lon"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_lon"];
 
-	if (Jtel.isMember("id"))	tel.id = Jtel["id"].asInt();
-	else tel.id = -1;
-	//check_site(lon, lat, height, tel.id);
+            if (v_site_lon.IsNumber())
+            {
+                tel.lon = v_site_lon.GetDouble();
+            }
+        }
 
-	if (Jtel.isMember("Frame_rate"))	tel.rate = Jtel["Frame_rate"].asDouble();
-	else tel.rate = 5.0;
+        if (value.HasMember("site_lat"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_lat"];
 
-	if (Jtel.isMember("RMS"))	tel.sig = Jtel["RMS"].asDouble();
-	else tel.sig = 0.001389;
-	tel.sig = tel.sig * GR;
+            if (v_site_lon.IsNumber())
+            {
+                tel.lat = v_site_lon.GetDouble();
+            }
+        }
 
-	if (Jtel.isMember("Max_dur"))	tel.max_dur = Jtel["Max_dur"].asDouble();
-	else tel.max_dur = 1e10;
+        if (value.HasMember("site_height"))
+        {
+            const rapidjson::Value &v_site_lon = value["site_height"];
 
-	if (Jtel.isMember("name"))	tel.name = Jtel["name"].asString();
-	else tel.name = "Unknown";
+            if (v_site_lon.IsNumber())
+            {
+                tel.height = v_site_lon.GetDouble();
+            }
+        }
+
+        //WGS84_XYZ(height, lat, lon, tel.site.x, tel.site.y, tel.site.z);
+
+        tel.id = -1;
+
+        if (value.HasMember("id"))
+        {
+            const rapidjson::Value &v_site_lon = value["id"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.id = v_site_lon.GetInt();
+            }
+        }
+
+        //check_site(lon, lat, height, tel.id);
+
+        tel.rate = 5.0;
+
+        if (value.HasMember("Frame_rate"))
+        {
+            const rapidjson::Value &v_site_lon = value["Frame_rate"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.rate = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.sig = 0.001389;
+
+        if (value.HasMember("RMS"))
+        {
+            const rapidjson::Value &v_site_lon = value["RMS"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.sig = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.sig = tel.sig * GR;
+
+        tel.max_dur = 1e10;
+
+        if (value.HasMember("Max_dur"))
+        {
+            const rapidjson::Value &v_site_lon = value["Max_dur"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.max_dur = v_site_lon.GetDouble();
+            }
+        }
+
+        tel.name = "Unknown";
+
+        if (value.HasMember("name"))
+        {
+            const rapidjson::Value &v_site_lon = value["name"];
+
+            if (v_site_lon.IsNumber())
+            {
+                tel.name = v_site_lon.GetString();
+            }
+        }
+    }
 }
 
-void read_tels_Json(vector<Ttelescop> &tels, Json::Value Jtels, std::string &FileName)
+void read_tels_Json(vector<Ttelescop> &tels, const rapidjson::Value &Jtels)
 {
-	unsigned i;
-	tels.resize(Jtels.size());
-	for (i = 0; i < Jtels.size(); ++i) {
-		read_tel_Json(tels[i], Jtels[i], FileName);
-	}
+    if (Jtels.IsArray())
+    {
+        tels.resize(Jtels.Size());
+
+        for (unsigned idx = 0, end = Jtels.Size(); idx != end; ++idx)
+        {
+            read_tel_Json(tels[idx], Jtels[idx]);
+        }
+    }
 }
 
 Force::InfluenceForce *IForce = new Force::InfluenceForce();
@@ -165,17 +251,45 @@ void main()
 
 	double SAT_elv = 10.0;
 
-	Json::Value inpf, JTels;
-	std::vector<Ttelescop> tels;
+    std::vector<Ttelescop> tels;
 
-	inpf = read_Json(pinpf_tels);
-	if (inpf.isMember("Telescopes")) {
-		JTels = inpf["Telescopes"];
-	}
-	else std::cout << "Missing parameter 'Telescopes' in " << pinpf_tels << "\n";
+    {
+        rapidjson::Document d;
 
-	read_tels_Json(tels, JTels, pinpf_tels);
-	if (tels.size() == 0) {
+        if (read_Json(pinpf_tels, d))
+        {
+            if (d.IsObject())
+            {
+                if (d.HasMember("Telescopes"))
+                {
+                    const rapidjson::Value &v_Telescopes = d["Telescopes"];
+
+                    if (v_Telescopes.IsArray())
+                    {
+                        read_tels_Json(tels, v_Telescopes);
+                    }
+                    else
+                    {
+                        std::cout << "Invalid parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "Missing parameter 'Telescopes' in: " << pinpf_tels << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Invalid JSON document: " << pinpf_tels << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "Failed to read JSON document: " << pinpf_tels << std::endl;
+        }
+    }
+
+    if (tels.size() == 0) {
 		std::cout << "Empty array of telescopes in " << pinpf_tels << "\n";
 	};
 
