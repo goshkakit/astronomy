@@ -6,11 +6,11 @@ vc14_x64_release:
   script:
        - .\msbuild_R.ps1 
   tags: 
-  - win7-tag
+  - win10-tag
   
 vc14_x64_debug:
   stage: build
   script:
        - .\msbuild_D.ps1 
   tags: 
-  - win7-tag
+  - win10-tag
