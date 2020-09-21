@@ -76,12 +76,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\common\;$(ProjectDir)..\common\;$(ProjectDir)..\InfluenceForce\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(ProjectDir)..\InfluenceForce\;$(SolutionDir)src\common\;$(ProjectDir)..\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(SolutionDir)src\common\;$(ProjectDir)..\common\;$(ProjectDir)..\InfluenceForce\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\InfluenceForce\;$(ProjectDir)..\InfluenceForce\;$(SolutionDir)src\common\;$(ProjectDir)..\common\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
