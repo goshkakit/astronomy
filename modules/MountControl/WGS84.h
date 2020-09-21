@@ -1,7 +1,8 @@
 #pragma once
 
 //WGS84 constants
-const double pi = 3.14159265358979;										// 32385;
+//const double pi = 3.14159265358979;										// 32385;
+const double pi = 3.1415926535897931;
 const double RG = 180.0 / pi;											// Radian-degree convertion
 const double GR = 1.0 / RG;
 
@@ -25,6 +26,6 @@ void WGS84_XYZ(double Hw, double Fwg, double Lwg, double & X, double & Y, double
 void XYZ_WGS84(double X, double Y, double Z, double & Hw, double & Fwg, double & Lwg);
 
 void RF_WGS84(double R, double F, double & Hz, double & Fzg);
-void SinCos(double a, long double & sina, long double & cosa);
-double sign(double Val);
-double Sqr(double a);
+void SinCos_(double a, long double & sina, long double & cosa);
+double sign_(double Val);
+double Sqr_(double a);

@@ -1,24 +1,42 @@
 #include "MountController.h"
 
-MountController::MountController(std::unique_ptr<NewConvertor> convertor_, MountSpec mount_spec_, double* pos_ITRF_) :
+MountController::MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_) :
+	MotionCalculator(mount_spec_),
 	convertor(std::move(convertor_))
 {
-	SetMountSpec(mount_spec_);
 	SetCurrentPositionITRF(pos_ITRF_);
+	cur_pos.ang_pos.pressure = 1000;
+	cur_pos.ang_pos.temperature = 0;
+
+	R.fill(0);
+	R(0, 2) = 1;
+	R(1, 1) = -1;
+	R(2, 0) = 1;
+
+	InvR = R.inverse();
 }
 
-MountController::MountController(std::unique_ptr<NewConvertor> convertor_, MountSpec mount_spec_, double Lat, double Lon, double Elev) :
+MountController::MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev) :
+	MotionCalculator(mount_spec_),
 	convertor(std::move(convertor_))
 {
 	double pos_LatLonElev[3] = { Lat, Lon, Elev };
-	SetMountSpec(mount_spec_);
 	SetCurrentPositionLatLonElev(pos_LatLonElev);
+	cur_pos.ang_pos.pressure = 1000;
+	cur_pos.ang_pos.temperature = 0;
+
+	R.fill(0);
+	R(0, 2) = 1;
+	R(1, 1) = -1;
+	R(2, 0) = 1;
+
+	InvR = R.inverse();
 }
 
 MountController::~MountController() {
 }
 
-void MountController::SetCurrentDirectionRaDec(double Jd, Angs RaDec) {
+void MountController::SetCurrentDirectionRaDec(double Jd, const Angs& RaDec) {
 	Angs AzElev = convertor->RaDec2AzElev(Jd, RaDec, cur_pos.ang_pos);
 	
 	cur_dir.AzElev = AzElev;
@@ -27,14 +45,14 @@ void MountController::SetCurrentDirectionRaDec(double Jd, Angs RaDec) {
 	cur_dir.RaDec = RaDec;
 }
 
-void MountController::SetCurrentDirectionAzElev(double Jd, Angs AzElev) {
+void MountController::SetCurrentDirectionAzElev(double Jd, const Angs& AzElev) {
 	cur_dir.AzElev = AzElev;
 	cur_dir.Jd = Jd;
 	cur_dir.OwnAxes = AzElev2OwnAxes(Jd, AzElev, cur_pos.ang_pos, R);
 	cur_dir.RaDec = convertor->AzElev2RaDec(Jd, AzElev, cur_pos.ang_pos);
 }
 
-void MountController::SetCurentDirectionOwnAxes(double Jd, Angs OwnAxes) {
+void MountController::SetCurrentDirectionOwnAxes(double Jd, const Angs& OwnAxes) {
 	Angs AzElev = OwnAxes2AzElev(Jd, OwnAxes, cur_pos.ang_pos, InvR);
 
 	cur_dir.AzElev = AzElev;
@@ -67,42 +85,24 @@ void MountController::SetCurrentPositionITRF(double* pos) {
 	SetCurrentPositionITRF(pos[0], pos[1], pos[2]);
 }
 
-void MountController::SetMountSpec(double a_max = 2000.0, double V_max = 10000.0, double gear_ratio = 720.0, double divider = 16.0, double steps_in_circle_motor = 200.0) {
-	mount_spec = {
-		a_max,
-		V_max,
-		gear_ratio,
-		divider,
-		steps_in_circle_motor
-	};
-}
-
-void MountController::SetMountSpec(MountSpec mount_spec_) {
-	mount_spec = mount_spec_;
-}
-
-void MountController::SetCalibrationMatrix(Matrix R_) {
+void MountController::SetCalibrationMatrix(const Eigen::Matrix3d& R_) {
 	R = R_;
-	InvR = R.Inversion();
+	InvR = R_.inverse();
 }
 
-CurrentPosition MountController::GetCurrentPosition() {
+CurrentPosition MountController::GetCurrentPosition() const {
 	return cur_pos;
 }
 
-CurrentDirection MountController::GetCurrentDirection() {
+CurrentDirection MountController::GetCurrentDirection() const {
 	return cur_dir;
 }
 
-MountSpec MountController::GetMountSpec() {
-	return mount_spec;
-}
-
-Matrix MountController::GetCalibrationMatrix() {
+Eigen::Matrix3d MountController::GetCalibrationMatrix() const {
 	return R;
 }
 
-Angs MountController::OwnAxes2AzElev(double Jd, Angs OwnAxes, on_surface pos, Matrix InvR) {
+Angs MountController::OwnAxes2AzElev(double Jd, const Angs& OwnAxes, const on_surface& pos, const Eigen::Matrix3d& InvR) const {
 	Angs tmpOwnAxes = OwnAxes;
 	if (tmpOwnAxes.ang1 > M_PI / 2) {
 		tmpOwnAxes.ang1 -= M_PI;
@@ -113,9 +113,10 @@ Angs MountController::OwnAxes2AzElev(double Jd, Angs OwnAxes, on_surface pos, Ma
 	}
 
 	std::vector<double> xyz = convertor->SphereCoord2XYZ({ 1.0, tmpOwnAxes.ang1, tmpOwnAxes.ang2 });
-	std::vector<double> xyzAzElev = Mat3x3XStolb3x1(InvR, xyz);
+	Eigen::Vector3d v(xyz[0], xyz[1], xyz[2]);
+	Eigen::Vector3d xyzAzElev = InvR * v;
 
-	SphereCoord sphere = convertor->XYZ2SphereCoord(xyzAzElev);
+	SphereCoord sphere = convertor->XYZ2SphereCoord({ xyzAzElev[0], xyzAzElev[1], xyzAzElev[2] });
 	if (OwnAxes.ang2 < -M_PI / 2 || OwnAxes.ang2 > M_PI / 2) {
 		sphere.ang1 += M_PI;
 	}
@@ -126,13 +127,14 @@ Angs MountController::OwnAxes2AzElev(double Jd, Angs OwnAxes, on_surface pos, Ma
 	return { sphere.ang1, sphere.ang2 };
 }
 
-Angs MountController::AzElev2OwnAxes(double Jd, Angs AzElev, on_surface pos, Matrix R) {
-	std::vector<double> xyz = convertor->AzElevR2ITRF(AzElev.ang1, AzElev.ang2, 1.0, pos);
-	std::vector<double> xyz1 = Mat3x3XStolb3x1(R, xyz);
+Angs MountController::AzElev2OwnAxes(double Jd, const Angs& AzElev, const on_surface& pos, const Eigen::Matrix3d& R) const {
+	std::vector<double> xyz = convertor->SphereCoord2XYZ({ 1.0, AzElev.ang1, AzElev.ang2 });
+	Eigen::Vector3d v(xyz[0], xyz[1], xyz[2]);
+	Eigen::Vector3d xyz1 = R * v;
 
 	SphereCoord sphere;
 	if (xyz1[2] != 1) {
-		sphere = convertor->XYZ2SphereCoord(xyz1);
+		sphere = convertor->XYZ2SphereCoord({ xyz1[0], xyz1[1], xyz1[2] });
 		if (sphere.ang1 < 0) {
 			sphere.ang1 += M_PI;
 			sphere.ang2 -= M_PI / 2;
@@ -149,13 +151,13 @@ Angs MountController::AzElev2OwnAxes(double Jd, Angs AzElev, on_surface pos, Mat
 	return { sphere.ang1, sphere.ang2 };
 }
 
-Angs MountController::OwnAxes2RaDec(double Jd, Angs OwnAxes, on_surface pos, Matrix InvR) {
+Angs MountController::OwnAxes2RaDec(double Jd, const Angs& OwnAxes, const on_surface& pos, const Eigen::Matrix3d& InvR) const {
 	Angs AzElev = OwnAxes2AzElev(Jd, OwnAxes, pos, InvR);
 
 	return convertor->AzElev2RaDec(Jd, AzElev, pos);
 }
 
-Angs MountController::RaDec2OwnAxes(double Jd, Angs RaDec, on_surface pos, Matrix R) {
+Angs MountController::RaDec2OwnAxes(double Jd, const Angs& RaDec, const on_surface& pos, const Eigen::Matrix3d& R) const {
 	Angs AzElev = convertor->RaDec2AzElev(Jd, RaDec, pos);
 	
 	return AzElev2OwnAxes(Jd, AzElev, pos, R);

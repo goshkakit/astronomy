@@ -169,6 +169,6 @@ private:
 	bool GetOrb(const int &NoradId);
 };
 
-double Modulus(double x, double y);
+double Modulus_(double x, double y);
 std::vector<double> AzElev2XYZ(const Angs &AzElev);
 Angs XYZ2AzElev(const std::vector<double> &xyz);

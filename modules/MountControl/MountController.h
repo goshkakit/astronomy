@@ -1,5 +1,8 @@
 #pragma once
+#include "Eigen/Dense"
+
 #include "NewConvertor.h"
+#include "MotionCalculator.h"
 
 struct CurrentDirection {
 	Angs RaDec;
@@ -13,49 +16,36 @@ struct CurrentPosition {
 	on_surface ang_pos;
 };
 
-struct MountSpec {
-	double a_max = 2000.0;
-	double V_max = 10000.0;
-	double gear_ratio = 720.0;
-	double divider = 16.0;
-	double steps_in_circle_motor = 200.0;
-};
-
-class MountController {
+class MountController : public MotionCalculator {
 public:
-	MountController(std::unique_ptr<NewConvertor> convertor_, MountSpec mount_spec_, double* pos_ITRF_);
-	MountController(std::unique_ptr<NewConvertor> convertor_, MountSpec mount_spec_, double Lat, double Lon, double Elev);
+	MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_);
+	MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev);
 	~MountController();
 
-	void SetCurrentDirectionRaDec(double Jd, Angs RaDec);
-	void SetCurrentDirectionAzElev(double Jd, Angs AzElev);
-	void SetCurentDirectionOwnAxes(double Jd, Angs OwnAxes);
+	void SetCurrentDirectionRaDec(double Jd, const Angs& RaDec);
+	void SetCurrentDirectionAzElev(double Jd, const Angs& AzElev);
+	void SetCurrentDirectionOwnAxes(double Jd, const Angs& OwnAxes);
 
 	void SetCurrentPositionLatLonElev(double Lat, double Lon, double Elev);
 	void SetCurrentPositionLatLonElev(double* pos);
 	void SetCurrentPositionITRF(double x, double y, double z);
 	void SetCurrentPositionITRF(double* pos);
 
-	void SetMountSpec(double a_max, double V_max, double gear_ratio = 720.0, double divider = 16.0, double steps_in_circle_motor = 200.0);
-	void SetMountSpec(MountSpec mount_spec_);
+	void SetCalibrationMatrix(const Eigen::Matrix3d& R);
 
-	void SetCalibrationMatrix(Matrix R);
-
-	CurrentPosition GetCurrentPosition();
-	CurrentDirection GetCurrentDirection();
-	MountSpec GetMountSpec();
-	Matrix GetCalibrationMatrix();
+	CurrentPosition GetCurrentPosition() const;
+	CurrentDirection GetCurrentDirection() const;
+	Eigen::Matrix3d GetCalibrationMatrix() const;
 
 private:
 	std::unique_ptr<NewConvertor> convertor;
 	CurrentPosition cur_pos;
 	CurrentDirection cur_dir;
-	MountSpec mount_spec;
-	Matrix R;
-	Matrix InvR;
+	Eigen::Matrix3d R;
+	Eigen::Matrix3d InvR;
 
-	Angs OwnAxes2AzElev(double Jd, Angs OwnAxes, on_surface pos, Matrix InvR);
-	Angs AzElev2OwnAxes(double Jd, Angs AzElev, on_surface pos, Matrix R);
-	Angs OwnAxes2RaDec(double Jd, Angs OwnAxes, on_surface pos, Matrix InvR);
-	Angs RaDec2OwnAxes(double Jd, Angs RaDec, on_surface pos, Matrix R);
+	Angs OwnAxes2AzElev(double Jd, const Angs& OwnAxes, const on_surface& pos, const Eigen::Matrix3d& InvR) const;
+	Angs AzElev2OwnAxes(double Jd, const Angs& AzElev, const on_surface& pos, const Eigen::Matrix3d& R) const;
+	Angs OwnAxes2RaDec(double Jd, const Angs& OwnAxes, const on_surface& pos, const Eigen::Matrix3d& InvR) const;
+	Angs RaDec2OwnAxes(double Jd, const Angs& RaDec, const on_surface& pos, const Eigen::Matrix3d& R) const;
 };

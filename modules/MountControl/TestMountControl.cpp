@@ -4,8 +4,7 @@
 
 #include <iostream>
 
-//int main() {
-int Test() {
+int Test_() {
 
 	Convertor telescope;
 	double Telpos[3];

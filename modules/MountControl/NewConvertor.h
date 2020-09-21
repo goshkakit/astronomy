@@ -24,17 +24,17 @@ public:
 	NewConvertor();
 	~NewConvertor();
 
-	Angs AzElev2RaDec(double Jd, Angs AzElev, on_surface pos);
-	Angs RaDec2AzElev(double Jd, Angs RaDec, on_surface pos);
+	Angs AzElev2RaDec(double Jd, const Angs& AzElev, const on_surface& pos);
+	Angs RaDec2AzElev(double Jd, const Angs& RaDec, const on_surface& pos);
 
-	void AzElevR2ITRF(const double Az, const double Elev, const double R, const on_surface pos, double* ITRF);
-	std::vector<double> AzElevR2ITRF(double Az, double Elev, double R, on_surface pos);
+	void AzElevR2ITRF(double Az, double Elev, double R, const on_surface& pos, double* ITRF) const;
+	std::vector<double> AzElevR2ITRF(double Az, double Elev, double R, const on_surface& pos) const;
 	
-	SphereCoord XYZ2SphereCoord(std::vector<double> XYZ);
-	std::vector<double> SphereCoord2XYZ(SphereCoord sphere);
+	SphereCoord XYZ2SphereCoord(const std::vector<double>& XYZ) const;
+	std::vector<double> SphereCoord2XYZ(const SphereCoord& sphere) const;
 
-	void WGS84_XYZ(double Hw, double Fwg, double Lwg, double& X, double& Y, double& Z);
-	void XYZ_WGS84(double X, double Y, double Z, double& Hw, double& Fwg, double& Lwg);
+	void WGS84_XYZ(double Hw, double Fwg, double Lwg, double& X, double& Y, double& Z) const;
+	void XYZ_WGS84(double X, double Y, double Z, double& Hw, double& Fwg, double& Lwg) const;
 
 private:
 	//Date
@@ -64,8 +64,8 @@ private:
 	const double gEarth_m = 9.80665;										// Earth gravitational acceleration [m / s^2]
 	const double gEarth_sm = gEarth * 1e5;									// Earth gravitational acceleration [sm / s^2]
 
-	bool SetDateAndPolePos(const double& Jd);
-	void RF_WGS84(double R, double F, double& Hz, double& Fzg);
+	bool SetDateAndPolePos(double Jd);
+	void RF_WGS84(double R, double F, double& Hz, double& Fzg) const;
 };
 
 double Modulus(double x, double y);

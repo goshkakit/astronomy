@@ -9,7 +9,7 @@ NewConvertor::~NewConvertor() {
 }
 
 //Задать поправки ко времнеи и положение полюсов по Jd
-bool NewConvertor::SetDateAndPolePos(const double& Jd) {
+bool NewConvertor::SetDateAndPolePos(double Jd) {
 	//Get dAT
 	double* tab = IForce1->TAIUTCCorrect;
 	int kmax = IForce1->TAUUTC_kmax;
@@ -56,7 +56,7 @@ bool NewConvertor::SetDateAndPolePos(const double& Jd) {
 	return true;
 }
 
-Angs NewConvertor::AzElev2RaDec(double Jd, Angs AzElev, on_surface pos) {
+Angs NewConvertor::AzElev2RaDec(double Jd, const Angs& AzElev, const on_surface& pos) {
 	//Set Date and Pole position
 	SetDateAndPolePos(Jd);
 
@@ -73,7 +73,7 @@ Angs NewConvertor::AzElev2RaDec(double Jd, Angs AzElev, on_surface pos) {
 	return { ang1, ang2 };
 }
 
-Angs NewConvertor::RaDec2AzElev(double Jd, Angs RaDec, on_surface pos) {
+Angs NewConvertor::RaDec2AzElev(double Jd, const Angs& RaDec, const on_surface& pos) {
 	//Set Date and Pole position
 	SetDateAndPolePos(Jd);
 
@@ -81,15 +81,16 @@ Angs NewConvertor::RaDec2AzElev(double Jd, Angs RaDec, on_surface pos) {
 	double corRa, corDec;
 	double zd, az;
 	double tmp_Ra, tmp_Dec;
+	on_surface tmp_pos = pos;
 	gcrs2equ(jd_tt, 1, 0, RaDec.ang1 * 12 / M_PI, RaDec.ang2 * 180 / M_PI, &tmp_Ra, &tmp_Dec);
-	equ2hor(jd_UT1, deltaT, 0, xp, yp, &pos, tmp_Ra, tmp_Dec, 0, &zd, &az, &corRa, &corDec);
-	double ang2 = (90 - zd) * M_PI / 180;
+	equ2hor(jd_UT1, deltaT, 0, xp, yp, &tmp_pos, tmp_Ra, tmp_Dec, 0, &zd, &az, &corRa, &corDec);
 	double ang1 = az * M_PI / 180;
+	double ang2 = (90 - zd) * M_PI / 180;
 	
 	return { ang1, ang2 };
 }
 
-void NewConvertor::AzElevR2ITRF(const double Az, const double Elev, const double R, const on_surface pos, double* ITRF) {
+void NewConvertor::AzElevR2ITRF(double Az, double Elev, double R, const on_surface& pos, double* ITRF) const {
 	std::vector<double> xyz = AzElevR2ITRF(Az, Elev, R, pos);
 	
 	ITRF[0] = xyz[0];
@@ -97,7 +98,7 @@ void NewConvertor::AzElevR2ITRF(const double Az, const double Elev, const double
 	ITRF[2] = xyz[2];
 }
 
-std::vector<double> NewConvertor::AzElevR2ITRF(double Az, double Elev, double R, on_surface pos) {
+std::vector<double> NewConvertor::AzElevR2ITRF(double Az, double Elev, double R, const on_surface& pos) const {
 	double sindec = sin(Elev) * sin(pos.latitude * M_PI / 180) + cos(Elev) * cos(pos.latitude * M_PI / 180) * cos(Az);
 	double dec = asin(sindec);
 
@@ -107,21 +108,21 @@ std::vector<double> NewConvertor::AzElevR2ITRF(double Az, double Elev, double R,
 	return SphereCoord2XYZ({ R, ra, dec });
 }
 
-SphereCoord NewConvertor::XYZ2SphereCoord(std::vector<double> XYZ) {
+SphereCoord NewConvertor::XYZ2SphereCoord(const std::vector<double>& XYZ) const {
 	double R = sqrt(XYZ[0] * XYZ[0] + XYZ[1] * XYZ[1] + XYZ[2] * XYZ[2]);
 	double ang1 = atan(XYZ[1] / XYZ[0]);
 	double ang2 = asin(XYZ[2]);
 	return { R, ang1, ang2 };
 }
 
-std::vector<double> NewConvertor::SphereCoord2XYZ(SphereCoord sphere) {
+std::vector<double> NewConvertor::SphereCoord2XYZ(const SphereCoord& sphere) const {
 	double x = sphere.R * cos(sphere.ang2) * cos(sphere.ang1);
 	double y = sphere.R * cos(sphere.ang2) * sin(sphere.ang1);
 	double z = sphere.R * sin(sphere.ang2);
 	return { x, y, z };
 }
 
-void NewConvertor::WGS84_XYZ(double Hw, double Fwg, double Lwg, double& X, double& Y, double& Z) {
+void NewConvertor::WGS84_XYZ(double Hw, double Fwg, double Lwg, double& X, double& Y, double& Z) const {
 	double n;
 	long double cF, sF, cL, sL;
 
@@ -133,7 +134,7 @@ void NewConvertor::WGS84_XYZ(double Hw, double Fwg, double Lwg, double& X, doubl
 	Y = (n + Hw) * cF * sL;
 }
 
-void NewConvertor::XYZ_WGS84(double X, double Y, double Z, double& Hw, double& Fwg, double& Lwg) {
+void NewConvertor::XYZ_WGS84(double X, double Y, double Z, double& Hw, double& Fwg, double& Lwg) const {
 	double R1, R, sh, dol;
 	R1 = sqrt(X * X + Y * Y);
 	R = sqrt(R1 * R1 + Z * Z);
@@ -143,7 +144,7 @@ void NewConvertor::XYZ_WGS84(double X, double Y, double Z, double& Hw, double& F
 	RF_WGS84(R, sh, Hw, Fwg); // перевод из геоцентр. СК в WGS-84
 }
 
-void NewConvertor::RF_WGS84(double R, double F, double& Hz, double& Fzg) {
+void NewConvertor::RF_WGS84(double R, double F, double& Hz, double& Fzg) const {
 	long double sF, cF, n, Z;
 	double rW, FW;
 
@@ -167,8 +168,7 @@ void NewConvertor::RF_WGS84(double R, double F, double& Hz, double& Fzg) {
 	Fzg *= RG;
 }
 
-double Modulus(double x, double y)
-{
+double Modulus(double x, double y) {
 	double modu;
 	modu = x - (int)(x / y) * y;		// (int) <-> trunc() ??
 	if (modu >= 0)
