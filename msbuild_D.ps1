@@ -13,7 +13,7 @@ function buildVS
     )
     process
     {
-        $msBuildExe = 'C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe'
+        $msBuildExe = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe'
 
         if ($nuget) {
             Write-Host "Restoring NuGet packages" -foregroundcolor green
@@ -44,4 +44,4 @@ function buildVS
 }
 
 chcp 850
-buildVS -path .\astronomy_sdk_vs2015.sln -nuget $false -clean $true
+buildVS -path .\astronomy_sdk.sln -nuget $false -clean $true

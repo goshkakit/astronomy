@@ -52,8 +52,5 @@
     <ClInclude Include="long_jd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stV_type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,44 +19,44 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\common\common_vs2015.vcxproj">
-      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\InfluenceForce\InfluenceForce_vs2015.vcxproj">
-      <Project>{ee3e3846-4028-4038-b46d-56fb5942725a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Novac\Novac_vs2015.vcxproj">
-      <Project>{07b58fc0-f6d9-441f-8a0c-bed17c32032e}</Project>
-    </ProjectReference>
+    <ClCompile Include="revisitTime.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ProjectReference Include="..\..\src\common\common.vcxproj">
+      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\InfluenceForce\InfluenceForce.vcxproj">
+      <Project>{ee3e3846-4028-4038-b46d-56fb5942725a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Norad\norad.vcxproj">
+      <Project>{7f97984d-4c19-4f36-bd9a-7c9d0c17ff11}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{02E4762E-D081-4F79-BA09-703B4C543C8B}</ProjectGuid>
-    <ProjectName>testITRF</ProjectName>
+    <ProjectGuid>{ACE8D9F1-F2E3-46A1-A02B-88B1C3940C85}</ProjectGuid>
+    <ProjectName>testRevisitTime</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -81,28 +81,28 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)src\Novac;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

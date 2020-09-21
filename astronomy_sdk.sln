@@ -1,57 +1,57 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InfluenceForce", "src\InfluenceForce\InfluenceForce_vs2015.vcxproj", "{EE3E3846-4028-4038-B46D-56FB5942725A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InfluenceForce", "src\InfluenceForce\InfluenceForce.vcxproj", "{EE3E3846-4028-4038-B46D-56FB5942725A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitIntegration", "src\OrbitIntegration\OrbitIntegration_vs2015.vcxproj", "{112C2006-B8E8-4C89-90E3-C84ACF7076C1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitIntegration", "src\OrbitIntegration\OrbitIntegration.vcxproj", "{112C2006-B8E8-4C89-90E3-C84ACF7076C1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "src\common\common_vs2015.vcxproj", "{A9C29E2A-AA23-4102-8C71-DDC80DE023D1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "src\common\common.vcxproj", "{A9C29E2A-AA23-4102-8C71-DDC80DE023D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{9DC00215-9F6A-47E4-B586-7DEC94D3C60F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{28B8D2DA-97C8-4C06-9CDC-248AE94FE21B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "norad", "src\Norad\norad_vs2015.vcxproj", "{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "norad", "src\Norad\norad.vcxproj", "{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novac", "src\Novac\Novac_vs2015.vcxproj", "{07B58FC0-F6D9-441F-8A0C-BED17C32032E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novac", "src\Novac\Novac.vcxproj", "{07B58FC0-F6D9-441F-8A0C-BED17C32032E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sofa", "src\Sofa\Sofa_vs2015.vcxproj", "{EF041E0E-0097-4599-81A3-6604D22F9F19}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sofa", "src\Sofa\Sofa.vcxproj", "{EF041E0E-0097-4599-81A3-6604D22F9F19}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScrd", "src\ILRScrd\ILRScrd_vs2015.vcxproj", "{D7A3BF0A-0DE7-4DA1-83A2-30B8DFF71AED}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScrd", "src\ILRScrd\ILRScrd.vcxproj", "{D7A3BF0A-0DE7-4DA1-83A2-30B8DFF71AED}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VerifyEtalon", "src\VerifyEtalon\VerifyEtalon_vs2015.vcxproj", "{13E3939A-E575-4166-88D3-7EA8ADCCB98F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VerifyEtalon", "src\VerifyEtalon\VerifyEtalon.vcxproj", "{13E3939A-E575-4166-88D3-7EA8ADCCB98F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScpf", "src\ILRScpf\ILRScpf_vs2015.vcxproj", "{BF45DF17-E8E7-49FC-ADE8-0D3F26734204}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ILRScpf", "src\ILRScpf\ILRScpf.vcxproj", "{BF45DF17-E8E7-49FC-ADE8-0D3F26734204}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{C06B97D8-DC80-4B83-92E3-7F0D7C3C5687}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdparty", "3rdparty", "{2796EF34-36AB-4E69-B3E5-93854CF8A290}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "predictTLE", "modules\PredictTLE\predictTLE_vs2015.vcxproj", "{D58742C3-1C91-4D88-AE08-212EE6653D68}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "predictTLE", "modules\PredictTLE\predictTLE.vcxproj", "{D58742C3-1C91-4D88-AE08-212EE6653D68}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testILRScrd", "tests\testILRScrd\testILRScrd_vs2015.vcxproj", "{27881233-438B-42F1-8B29-FD1B080BD36C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testILRScrd", "tests\testILRScrd\testILRScrd.vcxproj", "{27881233-438B-42F1-8B29-FD1B080BD36C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testITRF", "tests\testITRF\testITRF_vs2015.vcxproj", "{02E4762E-D081-4F79-BA09-703B4C543C8B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testITRF", "tests\testITRF\testITRF.vcxproj", "{02E4762E-D081-4F79-BA09-703B4C543C8B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testLongJD", "tests\testLongJD\testLongJD_vs2015.vcxproj", "{0963A56B-EBBE-43BC-8136-BE7481FE6AD1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testLongJD", "tests\testLongJD\testLongJD.vcxproj", "{0963A56B-EBBE-43BC-8136-BE7481FE6AD1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testNovac", "tests\testNovac\testNovac_vs2015.vcxproj", "{FAAB9C07-2DD7-4A1D-8543-B39E9073BE06}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testNovac", "tests\testNovac\testNovac.vcxproj", "{FAAB9C07-2DD7-4A1D-8543-B39E9073BE06}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testOrbitIntegration", "tests\testOrbitIntegration\testOrbitIntegration_vs2015.vcxproj", "{6E5D9B12-F6C1-4C90-85C2-C536DDF0239D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testOrbitIntegration", "tests\testOrbitIntegration\testOrbitIntegration.vcxproj", "{6E5D9B12-F6C1-4C90-85C2-C536DDF0239D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testRevisitTime", "tests\testRevisitTime\RevisitTime_vs2015.vcxproj", "{ACE8D9F1-F2E3-46A1-A02B-88B1C3940C85}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testRevisitTime", "tests\testRevisitTime\RevisitTime.vcxproj", "{ACE8D9F1-F2E3-46A1-A02B-88B1C3940C85}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testSofa", "tests\testSofa\testSofa_vs2015.vcxproj", "{E4DE0C36-33EE-47E8-B70C-821818FF493C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testSofa", "tests\testSofa\testSofa.vcxproj", "{E4DE0C36-33EE-47E8-B70C-821818FF493C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testVerifyEtalon", "tests\testVerifyEtalon\testVerifyEtalon_vs2015.vcxproj", "{FFB84920-0E57-436B-BE59-E4BCA2A86B8F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testVerifyEtalon", "tests\testVerifyEtalon\testVerifyEtalon.vcxproj", "{FFB84920-0E57-436B-BE59-E4BCA2A86B8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mount", "modules\Telescope\Mount_vs2015.vcxproj", "{FC55CE74-F995-45BA-9EF0-2150EA632FC6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SVD", "src\SVD\SVD.vcxproj", "{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SVD", "src\SVD\SVD_vs2015.vcxproj", "{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MountControl", "modules\MountControl\MountControl.vcxproj", "{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MountControl", "modules\MountControl\MountControl_vs2015.vcxproj", "{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Telescope", "modules\Telescope\Telescope.vcxproj", "{FC55CE74-F995-45BA-9EF0-2150EA632FC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -205,14 +205,6 @@ Global
 		{FFB84920-0E57-436B-BE59-E4BCA2A86B8F}.Release|x64.Build.0 = Release|x64
 		{FFB84920-0E57-436B-BE59-E4BCA2A86B8F}.Release|x86.ActiveCfg = Release|Win32
 		{FFB84920-0E57-436B-BE59-E4BCA2A86B8F}.Release|x86.Build.0 = Release|Win32
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x64.ActiveCfg = Debug|x64
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x64.Build.0 = Debug|x64
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x86.ActiveCfg = Debug|Win32
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x86.Build.0 = Debug|Win32
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x64.ActiveCfg = Release|x64
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x64.Build.0 = Release|x64
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x86.ActiveCfg = Release|Win32
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x86.Build.0 = Release|Win32
 		{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5}.Debug|x64.ActiveCfg = Debug|x64
 		{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5}.Debug|x64.Build.0 = Debug|x64
 		{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5}.Debug|x86.ActiveCfg = Debug|Win32
@@ -229,6 +221,14 @@ Global
 		{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}.Release|x64.Build.0 = Release|x64
 		{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}.Release|x86.ActiveCfg = Release|Win32
 		{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}.Release|x86.Build.0 = Release|Win32
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x64.ActiveCfg = Debug|x64
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x64.Build.0 = Debug|x64
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Debug|x86.Build.0 = Debug|Win32
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x64.ActiveCfg = Release|x64
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x64.Build.0 = Release|x64
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x86.ActiveCfg = Release|Win32
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -252,9 +252,9 @@ Global
 		{ACE8D9F1-F2E3-46A1-A02B-88B1C3940C85} = {28B8D2DA-97C8-4C06-9CDC-248AE94FE21B}
 		{E4DE0C36-33EE-47E8-B70C-821818FF493C} = {28B8D2DA-97C8-4C06-9CDC-248AE94FE21B}
 		{FFB84920-0E57-436B-BE59-E4BCA2A86B8F} = {28B8D2DA-97C8-4C06-9CDC-248AE94FE21B}
-		{FC55CE74-F995-45BA-9EF0-2150EA632FC6} = {C06B97D8-DC80-4B83-92E3-7F0D7C3C5687}
 		{CB6C96E8-DDE1-4FFE-AC48-1CCA1AD596B5} = {9DC00215-9F6A-47E4-B586-7DEC94D3C60F}
 		{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5} = {C06B97D8-DC80-4B83-92E3-7F0D7C3C5687}
+		{FC55CE74-F995-45BA-9EF0-2150EA632FC6} = {C06B97D8-DC80-4B83-92E3-7F0D7C3C5687}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {142AED58-E759-4952-B37C-4AE0201D8337}

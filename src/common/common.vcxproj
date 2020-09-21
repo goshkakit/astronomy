@@ -19,30 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>norad</ProjectName>
-    <ProjectGuid>{7F97984D-4C19-4F36-BD9A-7C9D0C17FF11}</ProjectGuid>
+    <ProjectName>common</ProjectName>
+    <ProjectGuid>{A9C29E2A-AA23-4102-8C71-DDC80DE023D1}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -128,41 +128,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="cEci.h" />
-    <ClInclude Include="cJulian.h" />
-    <ClInclude Include="cNoradBase.h" />
-    <ClInclude Include="cNoradSDP4.h" />
-    <ClInclude Include="cNoradSGP4.h" />
-    <ClInclude Include="coord.h" />
-    <ClInclude Include="cOrbit.h" />
-    <ClInclude Include="coreLib.h" />
-    <ClInclude Include="cSite.h" />
-    <ClInclude Include="cTLE.h" />
-    <ClInclude Include="cVector.h" />
-    <ClInclude Include="exceptions.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="Norad_Test.h" />
-    <ClInclude Include="sgp4ext.h" />
-    <ClInclude Include="sgp4io.h" />
-    <ClInclude Include="sgp4unit.h" />
-    <ClInclude Include="std_add.h" />
+    <ClCompile Include="DataConverter.cpp" />
+    <ClCompile Include="gaussJordan_3d.cpp" />
+    <ClCompile Include="long_jd.cpp" />
+    <ClCompile Include="mytypes.cpp" />
+    <ClCompile Include="SimpleDatLoader.cpp" />
+    <ClCompile Include="TLELoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cEci.cpp" />
-    <ClCompile Include="cJulian.cpp" />
-    <ClCompile Include="cNoradBase.cpp" />
-    <ClCompile Include="cNoradSDP4.cpp" />
-    <ClCompile Include="cNoradSGP4.cpp" />
-    <ClCompile Include="coord.cpp" />
-    <ClCompile Include="cOrbit.cpp" />
-    <ClCompile Include="cSite.cpp" />
-    <ClCompile Include="cTLE.cpp" />
-    <ClCompile Include="cVector.cpp" />
-    <ClCompile Include="globals.cpp" />
-    <ClCompile Include="Norad_Test.cpp" />
-    <ClCompile Include="sgp4ext.cpp" />
-    <ClCompile Include="sgp4io.cpp" />
-    <ClCompile Include="sgp4unit.cpp" />
+    <ClInclude Include="DataConverter.h" />
+    <ClInclude Include="gaussJordan_3d.h" />
+    <ClInclude Include="long_jd.h" />
+    <ClInclude Include="mytypes.h" />
+    <ClInclude Include="SimpleDatLoader.h" />
+    <ClInclude Include="StructTypes.h" />
+    <ClInclude Include="TLELoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
