@@ -32,12 +32,24 @@
     <ClCompile Include="TestMountControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MountController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Integrator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewConvertor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionCalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convertor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WGS84.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Calibration.h">
@@ -47,6 +59,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="comPortControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MountController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Integrator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewConvertor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WGS84.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionCalculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

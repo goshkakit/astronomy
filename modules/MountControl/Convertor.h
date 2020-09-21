@@ -79,6 +79,7 @@ public:
 
 	//Преобразования координат
 	Angs AzElev2AlphBet(const Angs &AzElev);
+	Angs AlphBet2AzElev(const Angs &AlphBet);
 	MotPos AlphBet2Motors(const Angs &AlphBet);
 	MotPos AzElev2Motors(const Angs &AzElev);
 
@@ -114,6 +115,10 @@ private:
 	Angs curAlphBet;
 	MotPos curMotors;
 
+	//TelescopePosition
+	double tel_pos_ITRF[3];
+	on_surface tel;
+
 	//MountSpec
 	double num;
 	double a_max;
@@ -134,9 +139,13 @@ private:
 	//Pole
 	double xp, yp;
 
-	//TelescopePosition
-	double tel_pos_ITRF[3];
-	on_surface tel;
+	//Integrator
+	Force::InfluenceForce *IForce1;
+	Orbit::PredictOrbitSat POSat1;
+	DataConverter DC1;
+
+	//Initialization Integrator
+	void InitIntegrator();
 
 	//TLEparams
 	std::string TLEpath;
@@ -145,14 +154,6 @@ private:
 	cOrbit* orb;
 	double stepSec;
 	double stepMin;
-
-	//Integrator
-	Force::InfluenceForce *IForce1;
-	Orbit::PredictOrbitSat POSat1;
-	DataConverter DC1;
-
-	//Initialization Integrator
-	void InitIntegrator();
 
 	//ConvMatr
 	std::vector<double> R;
@@ -168,6 +169,6 @@ private:
 	bool GetOrb(const int &NoradId);
 };
 
-double Modulus(double x, double y);
+double Modulus_(double x, double y);
 std::vector<double> AzElev2XYZ(const Angs &AzElev);
 Angs XYZ2AzElev(const std::vector<double> &xyz);

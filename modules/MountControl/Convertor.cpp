@@ -279,6 +279,32 @@ Angs Convertor::AzElev2AlphBet(const Angs &AzElev) {
 	return AlphBet;
 }
 
+//Alph, Bet -> Az, Elev
+Angs Convertor::AlphBet2AzElev(const Angs &AlphBet) {
+	Angs tmpAlphBet = AlphBet;
+	if (tmpAlphBet.ang1 > M_PI / 2) {
+		tmpAlphBet.ang1 = tmpAlphBet.ang1 - M_PI;
+		tmpAlphBet.ang2 = tmpAlphBet.ang2 + M_PI / 2;
+	}
+	else {
+		tmpAlphBet.ang2 = M_PI / 2 - tmpAlphBet.ang2;
+	}
+	std::vector<double> xyz = AzElev2XYZ(tmpAlphBet);
+	std::vector<double> InvR = Inversion3x3(R);
+	std::vector<double> xyzAzElev = Mat3x3XStolb3x1(InvR, xyz);
+	Angs AzElev = XYZ2AzElev(xyzAzElev);
+	AzElev.Jd = AlphBet.Jd;
+	
+	if (AlphBet.ang2 < -M_PI / 2 || AlphBet.ang2 > M_PI / 2) {
+		AzElev.ang1 += M_PI;
+	}
+	else if (AlphBet.ang2 < M_PI / 2 && AlphBet.ang1 < M_PI / 2) {
+		AzElev.ang1 += 2 * M_PI;
+	}
+
+	return AzElev;
+}
+
 //Alph, Bet -> Motors
 MotPos Convertor::AlphBet2Motors(const Angs &AlphBet) {
 	MotPos Motors;
@@ -325,7 +351,7 @@ void Convertor::AzElev2RaDec() {
 	curRaDec.Jd = curAzElev.Jd;
 }
 
-double Modulus(double x, double y)
+double Modulus_(double x, double y)
 {
 	double modu;
 	modu = x - (int)(x / y) * y;		// (int) <-> trunc() ??
@@ -356,7 +382,7 @@ void Convertor::AzElevR2XYZ_ITRF(double* pos) {
 	double dec = asin(sindec);
 
 	double lha = atan2(-sin(curAzElev.ang1) * cos(curAzElev.ang2) / cos(dec), (sin(curAzElev.ang2) - sin(dec) * sin(tel.latitude * pi / 180)) / (cos(dec) * cos(tel.latitude * pi / 180)));
-	double ra = Modulus(tel.longitude * pi / 180 - lha, 2 * M_PI);
+	double ra = Modulus_(tel.longitude * pi / 180 - lha, 2 * M_PI);
 
 	double R = 1.0;
 	pos[0] = R * cos(dec) * cos(ra);
@@ -376,8 +402,8 @@ traject Convertor::CalcTraject(const Angs &inAlphBet, const Angs &outAlphBet) {
 	tr.endpos.first = curMotors.mot1 + stepsA;
 	tr.endpos.second = curMotors.mot2 + stepsB;
 
-	double signA = sign(stepsA);
-	double signB = sign(stepsB);
+	double signA = sign_(stepsA);
+	double signB = sign_(stepsB);
 	stepsA = abs(stepsA);
 	stepsB = abs(stepsB);
 
