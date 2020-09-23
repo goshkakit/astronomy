@@ -83,6 +83,9 @@
     <ClInclude Include="WGS84.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\NucleoControl\NucleoControl.vcxproj">
+      <Project>{0b5f095b-87db-4970-a436-f6cd7de3580c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\common\common.vcxproj">
       <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
     </ProjectReference>
@@ -97,6 +100,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\src\OrbitIntegration\OrbitIntegration.vcxproj">
       <Project>{112c2006-b8e8-4c89-90e3-c84acf7076c1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\SVD\SVD.vcxproj">
+      <Project>{cb6c96e8-dde1-4ffe-ac48-1cca1ad596b5}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
