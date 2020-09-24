@@ -1,8 +1,8 @@
 #include "MountController.h"
 
-MountController::MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_) :
+MountController::MountController(std::shared_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_) :
 	MotionCalculator(mount_spec_),
-	convertor(std::move(convertor_))
+	convertor(convertor_)
 {
 	SetCurrentPositionITRF(pos_ITRF_);
 	cur_pos.ang_pos.pressure = 1000;
@@ -16,9 +16,9 @@ MountController::MountController(std::unique_ptr<NewConvertor> convertor_, const
 	InvR = R.inverse();
 }
 
-MountController::MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev) :
+MountController::MountController(std::shared_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev) :
 	MotionCalculator(mount_spec_),
-	convertor(std::move(convertor_))
+	convertor(convertor_)
 {
 	double pos_LatLonElev[3] = { Lat, Lon, Elev };
 	SetCurrentPositionLatLonElev(pos_LatLonElev);

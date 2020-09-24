@@ -7,7 +7,10 @@ extern "C" {
 
 Integrator::Integrator() {
 	IForce1 = std::make_unique<Force::InfluenceForce>();
-	IForce1->Init_CPU();
+	IForce1->Init_CPU("Data/TAI-UTC.DAT",
+					  "Data/DE403.bin",
+					  "Data/finals.all",
+					  "Data/atm.config");
 	POSat1.Init_CPU();
 
 	//—читывание эфемерид движени€ планет

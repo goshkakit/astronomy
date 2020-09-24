@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Eigen/Dense"
 
 #include "NewConvertor.h"
@@ -18,8 +19,8 @@ struct CurrentPosition {
 
 class MountController : public MotionCalculator {
 public:
-	MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_);
-	MountController(std::unique_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev);
+	MountController(std::shared_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double* pos_ITRF_);
+	MountController(std::shared_ptr<NewConvertor> convertor_, const MountSpecification& mount_spec_, double Lat, double Lon, double Elev);
 	~MountController();
 
 	void SetCurrentDirectionRaDec(double Jd, const Angs& RaDec);
@@ -38,7 +39,7 @@ public:
 	Eigen::Matrix3d GetCalibrationMatrix() const;
 
 private:
-	std::unique_ptr<NewConvertor> convertor;
+	std::shared_ptr<NewConvertor> convertor;
 	CurrentPosition cur_pos;
 	CurrentDirection cur_dir;
 	Eigen::Matrix3d R;
