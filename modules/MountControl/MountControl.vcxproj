@@ -82,29 +82,6 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="WGS84.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\NucleoControl\NucleoControl.vcxproj">
-      <Project>{0b5f095b-87db-4970-a436-f6cd7de3580c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\common\common.vcxproj">
-      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\InfluenceForce\InfluenceForce.vcxproj">
-      <Project>{ee3e3846-4028-4038-b46d-56fb5942725a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Norad\norad.vcxproj">
-      <Project>{7f97984d-4c19-4f36-bd9a-7c9d0c17ff11}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Novac\Novac.vcxproj">
-      <Project>{07b58fc0-f6d9-441f-8a0c-bed17c32032e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\OrbitIntegration\OrbitIntegration.vcxproj">
-      <Project>{112c2006-b8e8-4c89-90e3-c84acf7076c1}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\SVD\SVD.vcxproj">
-      <Project>{cb6c96e8-dde1-4ffe-ac48-1cca1ad596b5}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{507F05BC-5834-49CC-BDBE-07ECA7D9D5B5}</ProjectGuid>
     <ProjectName>MountControl</ProjectName>
@@ -112,24 +89,24 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>

@@ -9,9 +9,9 @@ int TestSetCurrentDirection() {
 	Telpos[1] = 3298.4;
 	Telpos[2] = 2758.99;
 
-	std::unique_ptr<NewConvertor> convertor = std::make_unique<NewConvertor>();
+	std::shared_ptr<NewConvertor> convertor = std::make_shared<NewConvertor>();
 	MountSpecification mount_spec;
-	MountController Controller(std::move(convertor), mount_spec, Telpos);
+	MountController Controller(convertor, mount_spec, Telpos);
 
 	//Test MountController::SetCurrentDirectionRaDec(...)
 	std::cout << "Test MountController::SetCurrentDirectionRaDec(...)" << std::endl;
