@@ -41,91 +41,52 @@
 
 */
 
+namespace VecMath
+{
 
+	//  swaprows - exchanges the contents of row0 and row1 in a 2d array
 
-//  swaprows - exchanges the contents of row0 and row1 in a 2d array
+	void swaprows3d(double** arr, long row0, long row1) {
 
-void swaprows3d(double** arr, long row0, long row1) {
+		double* temp;
 
-	double* temp;
+		temp = arr[row0];
 
-	temp=arr[row0];
+		arr[row0] = arr[row1];
 
-	arr[row0]=arr[row1];
-
-	arr[row1]=temp;
-
-}
-
-
-
-//        gjelim
-
-void gjelim3d(S3DMatrix* lhs, S3DMatrix* rhs, long nrows, long ncolsrhs) {
-
-
-
-	//        augment lhs array with rhs array and store in arr2
-
-	double** arr2=new double*[nrows];
-
-	for (long row=0; row<nrows; ++row)
-
-		arr2[row]=new double[nrows+ncolsrhs];
-
-
-
-	for (long row=0; row<nrows; ++row) {
-
-		for (long col=0; col<nrows; ++col) {
-
-			arr2[row][col]=lhs->a[row][col];
-
-		}
-
-		for (long col=nrows; col<nrows+ncolsrhs; ++col) {
-
-			arr2[row][col]=rhs->a[row][col-nrows];
-
-		}
+		arr[row1] = temp;
 
 	}
 
 
 
-	//        perform forward elimination to get arr2 in row-echelon form
+	//        gjelim
 
-	for (long dindex=0; dindex<nrows; ++dindex) {
+	void gjelim3d(S3DMatrix* lhs, S3DMatrix* rhs, long nrows, long ncolsrhs) {
 
-		//        run along diagonal, swapping rows to move zeros in working position
 
-		//        (along the diagonal) downwards
 
-		if ( (dindex==(nrows-1)) && (arr2[dindex][dindex]==0)) {
+		//        augment lhs array with rhs array and store in arr2
 
-			return; //  no solution
+		double** arr2 = new double* [nrows];
 
-		} else if (arr2[dindex][dindex]==0) {
+		for (long row = 0; row < nrows; ++row)
 
-			swaprows3d(arr2, dindex, dindex+1);
+			arr2[row] = new double[nrows + ncolsrhs];
 
-		}
 
-		//        divide working row by value of working position to get a 1 on the
 
-		//        diagonal
+		for (long row = 0; row < nrows; ++row) {
 
-		if (arr2[dindex][dindex] == 0.0) {
+			for (long col = 0; col < nrows; ++col) {
 
-			return;
+				arr2[row][col] = lhs->a[row][col];
 
-		} else {
+			}
 
-			double tempval=arr2[dindex][dindex];
+			for (long col = nrows; col < nrows + ncolsrhs; ++col) {
 
-			for (long col=0; col<nrows+ncolsrhs; ++col) {
-
-				arr2[dindex][col]/=tempval;
+				arr2[row][col] = rhs->a[row][col - nrows];
 
 			}
 
@@ -133,68 +94,111 @@ void gjelim3d(S3DMatrix* lhs, S3DMatrix* rhs, long nrows, long ncolsrhs) {
 
 
 
-		//        eliminate value below working position by subtracting a multiple of
+		//        perform forward elimination to get arr2 in row-echelon form
 
-		//        the current row
+		for (long dindex = 0; dindex < nrows; ++dindex) {
 
-		for (long row=dindex+1; row<nrows; ++row) {
+			//        run along diagonal, swapping rows to move zeros in working position
 
-			double wval=arr2[row][dindex];
+			//        (along the diagonal) downwards
 
-			for (long col=0; col<nrows+ncolsrhs; ++col) {
+			if ((dindex == (nrows - 1)) && (arr2[dindex][dindex] == 0)) {
 
-				arr2[row][col]-=wval*arr2[dindex][col];
+				return; //  no solution
+
+			}
+			else if (arr2[dindex][dindex] == 0) {
+
+				swaprows3d(arr2, dindex, dindex + 1);
+
+			}
+
+			//        divide working row by value of working position to get a 1 on the
+
+			//        diagonal
+
+			if (arr2[dindex][dindex] == 0.0) {
+
+				return;
+
+			}
+			else {
+
+				double tempval = arr2[dindex][dindex];
+
+				for (long col = 0; col < nrows + ncolsrhs; ++col) {
+
+					arr2[dindex][col] /= tempval;
+
+				}
+
+			}
+
+
+
+			//        eliminate value below working position by subtracting a multiple of
+
+			//        the current row
+
+			for (long row = dindex + 1; row < nrows; ++row) {
+
+				double wval = arr2[row][dindex];
+
+				for (long col = 0; col < nrows + ncolsrhs; ++col) {
+
+					arr2[row][col] -= wval * arr2[dindex][col];
+
+				}
 
 			}
 
 		}
 
-	}
 
 
+		//        backward substitution steps
 
-	//        backward substitution steps
+		for (long dindex = nrows - 1; dindex >= 0; --dindex) {
 
-	for (long dindex=nrows-1; dindex>=0; --dindex) {
+			//        eliminate value above working position by subtracting a multiple of
 
-		//        eliminate value above working position by subtracting a multiple of
+			//        the current row
 
-		//        the current row
+			for (long row = dindex - 1; row >= 0; --row) {
 
-		for (long row=dindex-1; row>=0; --row) {
+				double wval = arr2[row][dindex];
 
-			double wval=arr2[row][dindex];
+				for (long col = 0; col < nrows + ncolsrhs; ++col) {
 
-			for (long col=0; col<nrows+ncolsrhs; ++col) {
+					arr2[row][col] -= wval * arr2[dindex][col];
 
-				arr2[row][col]-=wval*arr2[dindex][col];
+				}
 
 			}
 
 		}
 
-	}
 
 
+		//        assign result to replace rhs
 
-	//        assign result to replace rhs
+		for (long row = 0; row < nrows; ++row) {
 
-	for (long row=0; row<nrows; ++row) {
+			for (long col = 0; col < ncolsrhs; ++col) {
 
-		for (long col=0; col<ncolsrhs; ++col) {
+				rhs->a[row][col] = arr2[row][col + nrows];
 
-			rhs->a[row][col]=arr2[row][col+nrows];
+			}
 
 		}
 
+
+
+		for (long row = 0; row < nrows; ++row)
+
+			delete[] arr2[row];
+
+		delete[] arr2;
+
 	}
-
-
-
-	for (long row=0; row<nrows; ++row)
-
-		delete[] arr2[row];
-
-	delete[] arr2;
-
 }

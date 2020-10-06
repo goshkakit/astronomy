@@ -149,11 +149,6 @@
     <ClCompile Include="PredictOrbitSat.cpp" />
     <ClCompile Include="SatCloseApproach.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\common\common_vs2015.vcxproj">
-      <Project>{a9c29e2a-aa23-4102-8c71-ddc80de023d1}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
