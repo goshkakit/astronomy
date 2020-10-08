@@ -6,6 +6,8 @@
 #include "AstroTypes.h"
 #include <conio.h>
 
+using namespace VecMath;
+
 class TrackCalculation
 {
 private:

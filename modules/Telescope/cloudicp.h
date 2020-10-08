@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "common/mytypes.h"
+using namespace VecMath;
 
 template <typename T>
 class ptr_Cpu

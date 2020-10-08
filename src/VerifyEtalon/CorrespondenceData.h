@@ -12,6 +12,8 @@
 #ifndef _CorrespondenceData_H_
 #define _CorrespondenceData_H_
 
+using namespace VecMath;
+
 class CorrespondenceData
 {
 private:

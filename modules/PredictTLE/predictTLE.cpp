@@ -17,6 +17,8 @@
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
 
+using namespace VecMath;
+
 const double RG = 180.0 / M_PI;	// Radian-degree convertion
 const double GR = 1.0 / RG;
 
