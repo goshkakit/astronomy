@@ -31,6 +31,15 @@
     <ProjectReference Include="..\..\src\Norad\norad.vcxproj">
       <Project>{7f97984d-4c19-4f36-bd9a-7c9d0c17ff11}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Novac\Novac.vcxproj">
+      <Project>{07b58fc0-f6d9-441f-8a0c-bed17c32032e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\OrbitIntegration\OrbitIntegration.vcxproj">
+      <Project>{112c2006-b8e8-4c89-90e3-c84acf7076c1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MountControl\MountControl.vcxproj">
+      <Project>{507f05bc-5834-49cc-bdbe-07eca7d9d5b5}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D58742C3-1C91-4D88-AE08-212EE6653D68}</ProjectGuid>
@@ -81,28 +90,28 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(SolutionDir)modules\MountControl\;$(SolutionDir)3rdparty\eigen;$(SolutionDir)src\InfluenceForce;$(SolutionDir)src\common;$(SolutionDir)src\OrbitIntegration;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(SolutionDir)modules\MountControl\;$(SolutionDir)3rdparty\eigen;$(SolutionDir)src\InfluenceForce;$(SolutionDir)src\common;$(SolutionDir)src\OrbitIntegration;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(SolutionDir)modules\MountControl\;$(SolutionDir)3rdparty\eigen;$(SolutionDir)src\InfluenceForce;$(SolutionDir)src\common;$(SolutionDir)src\OrbitIntegration;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(SolutionDir)3rdparty\rapidjson\include;$(SolutionDir)modules\MountControl\;$(SolutionDir)3rdparty\eigen;$(SolutionDir)src\InfluenceForce;$(SolutionDir)src\common;$(SolutionDir)src\OrbitIntegration;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -27,7 +27,7 @@ public:
 
 	TLELoader();
 	~TLELoader();
-	void LoadData( const char *fname, int numbLine );
+	void LoadData( const char *fname, int numbLine, int* SatIDList = NULL, int SatIDList_size = 0);
 	void clear();
 
 	cOrbit* GetFromID( int id );

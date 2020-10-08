@@ -18,7 +18,7 @@ TLELoader::~TLELoader()
 //==============================================================================//
 //
 //==============================================================================//
-void TLELoader::LoadData( const char *fname, int numbLine )
+void TLELoader::LoadData( const char *fname, int numbLine, int *SatIDList, int SatIDList_size)
 {
 	if( loaddata == true )
 		clear();
@@ -50,9 +50,35 @@ void TLELoader::LoadData( const char *fname, int numbLine )
 
 		cTle tleSGP4(str1, str2, str3);
 
-		// vector
-		cOrbit *dataOrbit = new cOrbit( tleSGP4 );
-		NORADList.push_back( dataOrbit );
+		if (SatIDList_size > 0)
+		{
+			cOrbit* dataOrbit = new cOrbit(tleSGP4);
+			int satid = atoi(dataOrbit->SatId().c_str());
+			bool exist = false;
+			for (int is = 0; is < SatIDList_size; is++)
+			{
+				if (SatIDList[is] == satid)
+				{
+					exist = true;
+					break;
+				}
+			}
+			if (exist)
+			{
+				// vector
+				NORADList.push_back(dataOrbit);
+			}
+			else
+			{
+				delete dataOrbit;
+			}
+		}
+		else
+		{
+			// vector
+			cOrbit* dataOrbit = new cOrbit(tleSGP4);
+			NORADList.push_back(dataOrbit);
+		}
 	}
 
 	input.close();

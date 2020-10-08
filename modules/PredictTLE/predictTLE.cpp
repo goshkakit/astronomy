@@ -17,10 +17,156 @@
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
 
+#include "MountController.h"
+
 using namespace VecMath;
 
 const double RG = 180.0 / M_PI;	// Radian-degree convertion
 const double GR = 1.0 / RG;
+
+int ETALON_SAT[104] = {16908,
+					36287,
+					37384,
+					37948,
+					41434,
+					40938,
+					38250,
+					40749,
+					40748,
+					36508,
+					19751,
+					20026,
+					37846,
+					37847,
+					38857,
+					38858,
+					40128,
+					40129,
+					40544,
+					40545,
+					40889,
+					40890,
+					41859,
+					41175,
+					41174,
+					41550,
+					41549,
+					41860,
+					41861,
+					41862,
+					41579,
+					37138,
+					37372,
+					37867,
+					37868,
+					39155,
+					40001,
+					40315,
+					41554,
+					37781,
+					39635,
+					40269,
+					40547,
+					41241,
+					41384,
+					33105,
+					41240,
+					39227,
+					8820,
+					22195,
+					38077,
+					27944,
+					37158,
+					42738,
+					42917,
+					42965,
+					37755,
+					39086,
+					41335,
+					7646,
+					22824,
+					39068,
+					39452,
+					39451,
+					39453,
+					42829,
+					36605,
+					31698,
+					34661,
+					32711,
+					32384,
+					32260,
+					29601,
+					29486,
+					28874,
+					28474,
+					28361,
+					28190,
+					28129,
+					27704,
+					27663,
+					26690,
+					26605,
+					26407,
+					26360,
+					25933,
+					25030,
+					24876,
+					24320,
+					23953,
+					23833,
+					23027,
+					22877,
+					22779,
+					22700,
+					22657,
+					22581,
+					22446,
+					22275,
+					22231,
+					22108,
+					22014,
+					21930,
+					21890 };
+
+int GPS_SAT[36] = { 34661,
+						32711,
+						32384,
+						32260,
+						29601,
+						29486,
+						28874,
+						28474,
+						28361,
+						28190,
+						28129,
+						27704,
+						27663,
+						26690,
+						26605,
+						26407,
+						26360,
+						25933,
+						25030,
+						24876,
+						24320,
+						23953,
+						23833,
+						23027,
+						22877,
+						22779,
+						22700,
+						22657,
+						22581,
+						22446,
+						22275,
+						22231,
+						22108,
+						22014,
+						21930,
+						21890 };
+
+
 
 
 struct Ttelescop
@@ -178,6 +324,77 @@ void read_tels_Json(vector<Ttelescop> &tels, const rapidjson::Value &Jtels)
 }
 
 Force::InfluenceForce *IForce = new Force::InfluenceForce();
+std::shared_ptr<NewConvertor> convertor;
+
+void ConvertXYZtoRADEC(double* resultPosition, double* inTelescopePosition, double* Ra, double* Dec)
+{
+	// входные данные задаются в ICRF
+	// вектор направления в системе ICRF
+	double x = resultPosition[0] - inTelescopePosition[0];
+	double y = resultPosition[1] - inTelescopePosition[1];
+	double z = resultPosition[2] - inTelescopePosition[2];
+
+	double r = atan2(y, x);
+	double d = atan2(z, sqrt(x * x + y * y));
+
+	double pi = 3.1415926535;
+
+	if (r < 0)
+		r = 2.0 * pi + r;
+
+	*Ra = r;
+	*Dec = d;
+}
+
+void ITRFToICRF(double JD_UTC, double* posITRF, double* posICRF)
+{
+	DataConverter Dconv;
+	// MDB
+	JD_UTC = JD_UTC + 0.125;
+	double dataMDB = Dconv.JDtoYYYYMMDD(JD_UTC);
+	double timeMDB = Dconv.SECtoHHMMSS(dataMDB, JD_UTC);
+
+	// установка времени
+	double int1, ajd1, delt1;
+	IForce->set_time(dataMDB, timeMDB, &ajd1, &delt1, &int1);
+
+	// матрица перевода в земную систему
+	double Arot[9];
+	IForce->iers_update_matrix(int1, Arot, ajd1, delt1);
+	// матрица перехода из земной в нормальную систему
+	double invArot[9];
+	IForce->transpose(Arot, invArot);
+	IForce->matVecMul(invArot, posITRF, posICRF);
+}
+
+// получение положения телескопа в момент измерения в системе ICRF
+void ConvertTEMEtoICRF(double JD_UTC, double* inPTEME, double* outPICRF)
+{
+	// установка времени
+	DataConverter Dconv;
+	// MDB
+	JD_UTC = JD_UTC + 0.125;
+	double dataMDB = Dconv.JDtoYYYYMMDD(JD_UTC);
+	double timeMDB = Dconv.SECtoHHMMSS(dataMDB, JD_UTC);
+
+	double int1, ajd1, delt1;
+	IForce->set_time(dataMDB, timeMDB, &ajd1, &delt1, &int1);
+
+	// матрица перехода из ICRF в TEME
+	double A_Teme[9];
+	IForce->GetTemeMatrix(int1, A_Teme, ajd1, delt1);
+	// обратная матрица перехода из TEME в ICRF
+	double invA_Teme[9];
+	IForce->transpose(A_Teme, invA_Teme);
+
+	// перевод вектора состояния в ICRF 
+	IForce->matVecMul(invA_Teme, inPTEME, outPICRF);
+}
+
+void getAzElSatellite()
+{
+
+}
 
 ViewParams ViewTEMESatFromTelescope( double JD_UTC, double* tel_pos, double *sat_pos )
 {
@@ -245,6 +462,209 @@ ViewParams ViewTEMESatFromTelescope( double JD_UTC, double* tel_pos, double *sat
 	return vp;
 }
 
+void main()
+{
+	convertor = std::make_shared<NewConvertor>();
+
+	double tel_lon = 37.4340;
+	double tel_lat = 55.8581;
+	double tel_h = 0.225;
+	double RMEarth = 6371.0088;
+
+	double SAT_MinEl = 30.0;
+	double SAT_MaxEl = 70.0;
+
+	double x, y, z;
+	convertor->WGS84_XYZ(tel_h, tel_lat, tel_lon, x, y, z);
+
+	// telescope xyz
+	double Tel_itrf[3];
+	Tel_itrf[0] = x;
+	Tel_itrf[1] = y;
+	Tel_itrf[2] = z;
+
+	// norad telescope position
+	cSite siteView(tel_lat, tel_lon, tel_h);
+
+	double xt, yt, zt;
+	xt = (RMEarth + tel_h) * cos(tel_lat* GR) * cos(tel_lon * GR);
+	yt = (RMEarth + tel_h) * cos(tel_lat * GR) * sin(tel_lon * GR);
+	zt = (RMEarth + tel_h) * sin(tel_lat * GR);
+
+	printf("TEL WGS84: %f %f %f\n", x, y, z);
+	printf("TEL Spherical: %f %f %f\n", xt, yt, zt);
+
+	// TLE
+	std::string tle_input = "tle/TLE20201003.txt";
+	// load TLE
+	TLELoader tleLoader;
+	//tleLoader.LoadData(tle_input.c_str(), 2, GPS_SAT, 36);
+	tleLoader.LoadData(tle_input.c_str(), 2, ETALON_SAT, 104);
+	printf("TLE count: %d\n", tleLoader.NORADList.size());
+
+	// init rotation
+	IForce->Init_CPU();
+
+	// date time convertor
+	DataConverter DC;
+
+	double DateView = 20201008;
+	double TimeView1 = 160000;
+	double TimeView2 = 173000;
+	//double TimeView1 = 100000;
+	//double TimeView2 = 110000;
+	double D = DC.YYYYMMDDtoJD(DateView) - 0.5;	// юлианская дата начала суток
+	double T1 = DC.HHMMSSToSec(TimeView1);
+	double T2 = DC.HHMMSSToSec(TimeView2);
+	double JD_StartView = D + T1 / 86400.0; // полная юлианская дата по UTC
+	double JD_EndView = D + T2 / 86400.0;
+	double DT = (JD_EndView - JD_StartView) * 86400.0;
+	double stepSec = 180;
+	int Npos = DT / stepSec;
+	std::vector< S3DCoordinate > Plan;
+	std::vector< int > PlanIds;
+	for (int i = 0; i < Npos; i++)
+	{
+		Plan.push_back(S3DCoordinate(-1, 0, 0));
+		PlanIds.push_back(0);
+	}
+	
+	for (int i = 0; i < tleLoader.NORADList.size(); i++)
+	{
+		cOrbit* orbit = tleLoader.NORADList[i];
+		double JDtle = orbit->Epoch().Date();
+
+		if (orbit->Apogee() > 20000)
+		{
+			continue;
+		}
+		
+		//double jds = (int)JDtle;
+		//double jd_delta = 2.0;
+		//double jde = (int)JDtle + jd_delta;
+		double jds = JD_StartView;
+		double jde = JD_EndView;
+
+		//double dayS = DC.JDtoYYYYMMDD(jds + 0.125);
+		//double dayE = DC.JDtoYYYYMMDD(jde);
+		//printf("Day time of start: %f : %f\n", dayS, DC.SECtoHHMMSS(dayS, jds + 0.125) );
+
+		bool SatVisible = false;
+		double stepMin = stepSec / 60.0;
+		double JD_start = 0;
+
+		double mpe_start = (jds - JDtle) * 24.0 * 60.0;
+		double mpe_stop = (jde - JDtle) * 24.0 * 60.0;
+
+		// Calculate position, velocity,  mpe = "minutes past epoch
+		int timeIndex = 0;
+		int countPointAdd = 0;
+
+		for (double mpe = mpe_start; mpe <= mpe_stop; mpe += stepMin)
+		{
+			double JD_current = JDtle + mpe / 24.0 / 60.0;
+
+			// Get the position of the satellite at time "mpe"
+			cEciTime eci = orbit->GetPosition(mpe);
+
+			// Now get the "look angle" from the site to the satellite. Note that the ECI object "eciSDP4" contains a time associated
+			// with the coordinates it contains; this is the time at which the look angle is valid.
+			cTopo topoLook = siteView.GetLookAngle(eci);
+			double tle_el = topoLook.ElevationDeg();
+			double tle_az = topoLook.AzimuthDeg();
+
+			// verify view angel
+			// перевод в ICRF координат телескопа
+			double Tel_icrf[3];
+			ITRFToICRF(JD_current, Tel_itrf, Tel_icrf);
+
+			// положение спутника по TLE в момент измерения
+			double Ptle[3]; // прогноз положения в километрах
+			Ptle[0] = eci.Position().m_x;
+			Ptle[1] = eci.Position().m_y;
+			Ptle[2] = eci.Position().m_z;
+			double PICRF[3];
+
+			ConvertTEMEtoICRF(JD_current, Ptle, PICRF);
+
+			// вычисление просчитанных измерений
+			double Ra_rad; // rad
+			double Dec_rad; // rad
+			ConvertXYZtoRADEC(PICRF, Tel_icrf, &Ra_rad, &Dec_rad);
+
+			Angs RaDec;
+			RaDec.ang1 = Ra_rad;
+			RaDec.ang2 = Dec_rad;
+
+			on_surface tel_pos;
+			tel_pos.height = 225.0;
+			tel_pos.latitude = 55.8581;
+			tel_pos.longitude = 37.4340;
+			tel_pos.temperature = 15;
+			tel_pos.pressure = 1000;
+			Angs sat_view = convertor->RaDec2AzElev(JD_current, RaDec, tel_pos);
+
+			double sat_az = sat_view.ang1 * RG;
+			double sat_el = sat_view.ang2 * RG;
+
+			if (sat_el >= SAT_MinEl && sat_el < SAT_MaxEl)
+			{
+				if (Plan[timeIndex].x < 0 && countPointAdd < 7 )
+				{
+					S3DCoordinate pt;
+					pt.x = JD_current;
+					pt.y = sat_az;
+					pt.z = sat_el;
+					Plan[timeIndex] = pt;
+					PlanIds[timeIndex] = atoi(orbit->SatId().c_str());
+					countPointAdd++;
+				}
+			}
+
+			if (tle_el >= SAT_MinEl && !SatVisible)
+			{
+				JD_start = JD_current;
+				SatVisible = true;
+				double dayS = DC.JDtoYYYYMMDD(JD_start + 0.125);
+				printf("%s %.0f:%.03f\t", orbit->SatId().c_str(), dayS, DC.SECtoHHMMSS(dayS, JD_start + 0.125));
+				printf("EL: %3.5f [%3.5f] Az: %5.5f [%5.5f] ", tle_el, sat_el,  tle_az, sat_az);
+			}
+			if (tle_el < SAT_MinEl && SatVisible)
+			{
+				SatVisible = false;
+				double duration = (JD_current - JD_start) * 86400.0 / 60.0;
+				printf("EL: %3.5f [%3.5f] Az: %5.5f [%5.5f] %.0f min\n", tle_el, sat_el, tle_az, sat_az, duration);
+			}
+
+			timeIndex++;
+		}
+		if (SatVisible)
+		{
+			printf("\n");
+		}
+	}
+
+	printf("PLAN:\n");
+	FILE* fre = fopen("plan.txt", "w");
+	for (int i = 0; i < Plan.size(); i++)
+	{
+		if (Plan[i].x > 0)
+		{
+			double Dtime = DC.JDtoYYYYMMDD(Plan[i].x + 0.125);
+			double Ptime = DC.SECtoHHMMSS(Dtime, Plan[i].x + 0.125);
+
+			fprintf(fre, "%d %.0f %.03f\t %.10lf %lf  %lf\n", PlanIds[i], Dtime, Ptime, Plan[i].x, Plan[i].y, Plan[i].z );
+			printf("%d %.0f %.03f\t %.10lf  %lf  %lf\n", PlanIds[i], Dtime, Ptime, Plan[i].x, Plan[i].y, Plan[i].z);
+		}
+		else
+		{
+			printf("...\n");
+		}
+	}
+	fclose(fre);
+}
+
+/*
 void main()
 {
 	string DBRoot = "C:\\Users\\Nikolay\\AppData\\Local\\ODSW";
@@ -374,6 +794,8 @@ void main()
 				// with the coordinates it contains; this is the time at which
 				// the look angle is valid.
 				cTopo topoLook = siteView.GetLookAngle(eci);
+				double current_el = topoLook.ElevationDeg();
+				double current_az = topoLook.ElevationDeg();
 
 				double sat_pos[3];
 				sat_pos[0] = eci.Position().m_x;
@@ -382,7 +804,7 @@ void main()
 				ViewParams vp = ViewTEMESatFromTelescope(currenJd, tel_pos_wgs72, sat_pos);
 				
 
-				double current_el = topoLook.ElevationDeg();
+
 				//current_el = vp.el;
 
 				//printf("el %f R %f\n", vp.el, vp.range);
@@ -407,3 +829,5 @@ void main()
 		}
 	}
 }
+
+*/
