@@ -509,17 +509,19 @@ void main()
 	DataConverter DC;
 
 	double DateView = 20201008;
-	double TimeView1 = 160000;
-	double TimeView2 = 173000;
-	//double TimeView1 = 100000;
-	//double TimeView2 = 110000;
+	//double TimeView1 = 160000;
+	//double TimeView2 = 173000;
+	double TimeView1 = 143000;
+	double TimeView2 = 160000;
 	double D = DC.YYYYMMDDtoJD(DateView) - 0.5;	// юлианская дата начала суток
 	double T1 = DC.HHMMSSToSec(TimeView1);
 	double T2 = DC.HHMMSSToSec(TimeView2);
 	double JD_StartView = D + T1 / 86400.0; // полная юлианская дата по UTC
 	double JD_EndView = D + T2 / 86400.0;
 	double DT = (JD_EndView - JD_StartView) * 86400.0;
-	double stepSec = 180;
+	double stepSec = 120;
+	int maxCountPoint = 8;
+
 	int Npos = DT / stepSec;
 	std::vector< S3DCoordinate > Plan;
 	std::vector< int > PlanIds;
@@ -609,7 +611,7 @@ void main()
 
 			if (sat_el >= SAT_MinEl && sat_el < SAT_MaxEl)
 			{
-				if (Plan[timeIndex].x < 0 && countPointAdd < 7 )
+				if (Plan[timeIndex].x < 0 || countPointAdd < maxCountPoint)
 				{
 					S3DCoordinate pt;
 					pt.x = JD_current;
