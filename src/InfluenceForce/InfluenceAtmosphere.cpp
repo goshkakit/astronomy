@@ -69,6 +69,31 @@ namespace Force
 		return splittedStrings;
 	}
 
+	int InfluenceForce::InitAtmMaps(double st_date, double en_date){
+		int m_num = en_date - st_date + 1;
+
+		int st_datei = st_date;
+		int en_datei = en_date;
+
+		r_s = 6498136;
+		r_e = 7878136;
+		step = 20000;
+		this->layer_num_set(r_s, r_e, step);
+
+		int degree = this->degreeG;
+		this->map_param_set(degree);
+		this->triangleLoader("Triangles_" + to_string(degree) + "F.txt");
+
+		for (int i = 0; i < m_num; i++) {
+			single_am_loader(st_datei + i, degree);
+			this->maps_atm.push_back(map_buff);
+		}
+		this->cur_map = &maps_atm[0];
+
+		//infileV.open("../maps_gr/fl_6m.txt", std::ios_base::app);
+		return 0;
+	}
+
 	void InfluenceForce::InitAtm()
 	{
 		char *fname = "data/atm.config";
@@ -166,7 +191,7 @@ namespace Force
 	//==============================================================================//
 	// Функция расчет плотности верхних слоев атмосферы согласно ГОСТу.
 	//==============================================================================//
-	double Roa2004_2(double time, double *x, double ajd0, double delt0, double F107, double F81, double aKp)
+	double InfluenceForce::Roa2004_2(double time, double *x, double ajd0, double delt0, double F107, double F81, double aKp)
 	{
 		double f0t[7] = {  75.0, 100.0, 125.0, 150.0, 175.0, 200.0, 200.0 };
 		double Re = 6378.136;
@@ -402,12 +427,13 @@ namespace Force
 		double cosFi1, sinFi1, app, s_app, c_app, xs, ys, zs, rs, cosFi, cos05, ak0, ak1, d, ad, ak2, ak3, ak4;
 		double h0, akst1, akst2, ast0, t;
 		int iq, iq6 ,ish_a, ish_b, ish_c, ish_d, ish_e, ish_l;
-
+		
 		t = ajd0+(delt0+time)/86.4;
+		
 		Rmod = sqrt( x[0]*x[0] + x[1]*x[1] + x[2]*x[2] );
 		sinF = x[2]/Rmod;
 		h = mmax( Rmod*1.0E+3-Re*(1.0-alpha*sinF*sinF), 0.0);
-		
+		//cout << time << " " << h << endl;
 		double roa2004 = 0;
 
 		if (h >= 1500.0) 
@@ -444,6 +470,7 @@ namespace Force
 			ish_d=0;
 			ish_e=0;
 			ish_l=0;
+			//выставление высотной границы по индексам
 			if (h > h_tick[iq6+1]) ish_a=7;
 			if (h > h_tick[iq6+2]) ish_b=7;
 			if (h > h_tick[iq6+3]) ish_c=7;
@@ -585,11 +612,35 @@ namespace Force
 		double jd_current = ajd0 + (delt0 + t) / 86.40;
 		double data_current = Ajd_dt(jd_current);
 		int datai_current = data_current;
+		/*
+		if (datai_current > this->curDate) {
+			if (this->dayC == 1)
+				this->stTime = t;
+			this->curDate = datai_current;
+			this->dayC += 1;
+			this->dC = true;
+		}
 
+		if (dayC == 1) {
+			this->dayTime = t * 1000;
+		}
+		else {
+			this->dayTime = 1000 * (t - this->stTime - (dayC - 2) * 86.4);
+			if (this->dayTime < 0)
+				this->dayTime = 0;
+		}
+		if (dayTime == 0 && dC == true) {
+			this->cur_map = &this->maps_atm[dayC - 1];
+			this->dC = false;
+		}
+
+		//cout << "Secs: " << t << " Data: " << datai_current << " Height: " << 100 * (sqrt(x[0] * x[0] + x[1] * x[1] + x[2] * x[2]) - 6.378136) << "km" << endl;
+		//cout << "Day: " << dayC << " Day Time: " << dayTime << "\n" << endl;
+		*/
 		double F107 = 100;
 		double F81 = 100;
 		double aKp = 3;
-
+		
 		// find index
 		for (int i = 0; i < ListAtmIndex.size(); i++)
 		{
@@ -602,11 +653,58 @@ namespace Force
 		}
 
 		double rc = Roa2004_2(t, x, ajd0, delt0, F107, F81, aKp );
+
+		//cout << "P_c: " << rc  << " P_ex: " << extrapolatorA(x, dayTime) << endl;
+
 		double coeff =  rc*sigma_up*v*1.0E+6;
 
 		f[0] = -x[3]*coeff;
 		f[1] = -x[4]*coeff;
 		f[2] = -x[5]*coeff;
+
+		//infileV << x[0] << " " << x[1] << " " << x[2] << " " << rc << "\n";
+
+		this->cc++;
 	}
 	//==============================================================================//
+
+	void InfluenceForce::Atm_extr(double* x, double t, double* f, double sigma_up, double ajd0, double delt0) {
+		double v;
+		v = sqrt(x[3] * x[3] + x[4] * x[4] + x[5] * x[5]);
+
+		double jd_current = ajd0 + (delt0 + t) / 86.40;
+		double data_current = Ajd_dt(jd_current);
+		int datai_current = data_current;
+		
+		if (datai_current > this->curDate) {
+			if (this->dayC == 1)
+				this->stTime = t;
+			this->curDate = datai_current;
+			this->dayC += 1;
+			this->dC = true;
+		}
+
+		if (dayC == 1) {
+			this->dayTime = t * 1000;
+		}
+		else {
+			this->dayTime = 1000 * (t - this->stTime - (dayC - 2) * 86.4);
+			if (this->dayTime < 0)
+				this->dayTime = 0;
+		}
+		if (dayTime == 0 && dC == true) {
+			this->cur_map = &this->maps_atm[dayC - 1];
+			this->dC = false;
+		}
+
+		double p = extrapolatorA(x, dayTime);
+		double coeff = p * sigma_up * v * 1.0E+6;
+		//cout << "Secs: " << t << " Data: " << datai_current << " Height: " << 1000 * (sqrt(x[0] * x[0] + x[1] * x[1] + x[2] * x[2]) - 6.378136) << "km" << endl;
+		//cout << "Day: " << dayC << " Day Time: " << dayTime << " P: "<< p << "\n" << endl;
+		f[0] = -x[3] * coeff;
+		f[1] = -x[4] * coeff;
+		f[2] = -x[5] * coeff;
+		//infileV << x[0] << " " << x[1] << " " << x[2] << " " << p << "\n";
+		this->cc++;
+	}
 };

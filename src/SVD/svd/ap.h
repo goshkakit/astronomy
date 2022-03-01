@@ -646,7 +646,7 @@ int round(double x);
 int trunc(double x);
 int ifloor(double x);
 int iceil(double x);
-double pi();
+//double pi();
 double sqr(double x);
 int maxint(int m1, int m2);
 int minint(int m1, int m2);

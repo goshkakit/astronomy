@@ -59,7 +59,7 @@ void CorrespondenceData::RunCorrespondenceDataRLS(  )
 	double Az_st = 240.0205;		// направление - азимут grad
 
 	double Hkm = H/1000.0;
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 	double torad = pi/180.0;
 	double lgr = lg*torad;
 	double ltr = lt*torad;

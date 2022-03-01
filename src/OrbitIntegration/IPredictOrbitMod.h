@@ -45,6 +45,9 @@ interface IPredictOrbitMod
 	virtual int _stdcall IntegrationList() PURE;
 	virtual int _stdcall GetNewPosition( SatParamToPredict &sptr ) PURE;
 	virtual int _stdcall GetNewPositionForJD(SatParamToPredictJD &sptr) PURE;
+	virtual int _stdcall GravMap(int degree, int polynomDegree, int startRad, int maxRad, int step) PURE;
+	virtual int _stdcall AtmMap(int degree, double time, int date, int startRad, int maxRad, int step) PURE;
+	virtual int _stdcall countFtest(double* x) PURE;
 };
 
 //==============================================================================//

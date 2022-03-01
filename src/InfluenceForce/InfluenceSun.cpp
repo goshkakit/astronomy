@@ -20,7 +20,7 @@ namespace Force
 		double sh;
 		double Re = 6.37813660;
 		double Rs = 695.5;
-		double pi = 3.141592653589793;
+		//uble pi = 3.141592653589793;
 
 		double r_s[3];
 		double r_e[3];

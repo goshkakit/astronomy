@@ -12,6 +12,8 @@ struct SatParamToPredict
 	double outX[6];
 	double data_end;
 	double time_end;
+
+	double atm_load_time;
 };
 
 // JD - full Julian date
@@ -23,6 +25,7 @@ struct SatParamToPredictJD
 	double atm; //0.3E-2;
 	double outX[6];
 	double JD_end;
+	double atm_load_time;
 };
 
 // Example use

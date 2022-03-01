@@ -18,7 +18,7 @@ namespace Orbit
 	//==============================================================================//
 	void PredictOrbitSat::RightFxyzv( double t, double *xt, double *fx )
 	{
-		// учет только гравитации, гармоник, давления солнца
+		// учет только гравитации, гармоник, давления солнца (sun off)
 		// похожая реализация есть для GPU
 		//IF->rh_fun_grav( t, xt, fx );
 
@@ -169,6 +169,7 @@ namespace Orbit
 		//bool InvertStart = false;
 
 		double hh = Iparam.hh;
+		
 		int NY = Iparam.NY;	
 		int NP = Iparam.NP;
 		int IP9 = Iparam.IP9;
@@ -356,7 +357,7 @@ namespace Orbit
 			//===============================================================//
 			for(int ii = 0; ii < NY; ii++ ) 
 				FP7[ii] = 0.0;
-
+			
 			//  Main cycle of extrapolation 
 			// FP0 + hh( a1*FP1 + a2*FP2 + a3*FP3 + a4*FP4 + a5*FP5  + a6*FP6 )
 			for (int kk = kkbeg; kk <= 4; ++kk) 

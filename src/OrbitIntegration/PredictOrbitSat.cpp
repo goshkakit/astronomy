@@ -80,8 +80,8 @@ namespace Orbit
 		// default tolerance for variations (or no tolerance at all
 		// ode_tol = 1.d50 
 		// default tolerance for position and velocities 1.0E-11
-		for( int it = 0; it < Nxyz; it++ )
-			Tolerance[it] = 1.0E-11;
+		for (int it = 0; it < Nxyz; it++)
+			Tolerance[it] = 1.0E-5; //1.0e-5
 	};
 	//==============================================================================//
 	// вычисление нового положения спутника

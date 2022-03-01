@@ -125,6 +125,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -135,10 +136,13 @@
     <ClInclude Include="cutilNP.h" />
     <ClInclude Include="DefineParam.h" />
     <ClInclude Include="InfluenceForce.h" />
+    <ClInclude Include="ParallelTriangulation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdditionalFunction.cpp" />
     <ClCompile Include="cutilNP.cpp" />
+    <ClCompile Include="Extrapolation.cpp" />
+    <ClCompile Include="ExtrapolationAtmosphere.cpp" />
     <ClCompile Include="InfluenceAtmosphere.cpp" />
     <ClCompile Include="InfluenceEarthRotation.cpp" />
     <ClCompile Include="InfluenceEGM96.cpp" />
@@ -150,6 +154,8 @@
     <ClCompile Include="InfluenceTime.cpp" />
     <ClCompile Include="Influence_Test.cpp" />
     <ClCompile Include="InfluiencePrecessionEarth.cpp" />
+    <ClCompile Include="ParallelTriangulation.cpp" />
+    <ClCompile Include="Triangulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -191,7 +191,7 @@ double CorrespondenceData::dE_Elev( double pMillibar, double tKelvin, double Rkm
 //==============================================================================//
 void CorrespondenceData::refractcorrect( double optRa, double optDec, double *Telicrf, double *outRa, double *outDec, double SatDist, double rDist )
 {
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 	double az = GetZenitAngle( optRa, optDec, Telicrf );
 
 	//////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ void CorrespondenceData::refractcorrect( double optRa, double optDec, double *Te
 //==============================================================================//
 void CorrespondenceData::TestCorrectRefract()
 {
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 
 	printf("Test Correct Refraction, Dkm = 1000, Normal P and T\n");
 	for( int it = 0; it < 19; it++ )

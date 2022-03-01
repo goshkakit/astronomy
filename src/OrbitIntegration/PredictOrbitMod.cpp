@@ -1,7 +1,6 @@
 #include "PredictOrbitMod.h"
 #include <math.h>
 #include <stdio.h>
-#include <time.h>
 
 #ifdef WIN32
 //==============================================================================//
@@ -24,6 +23,7 @@ void FreePredictOrbitMod( IPredictOrbitMod* is )
 }
 #endif
 
+
 //=========================================================================//
 // init all
 //=========================================================================//
@@ -33,9 +33,19 @@ int PredictOrbitMod::Init()
 	IForce = new Force::InfluenceForce;
 	IForce->Init_CPU();
 	POSat.Init_CPU( );
-
+	//in.open("../maps_gr/rrun.txt", std::ios_base::app);
+	//ine.open("../maps_gr/rrune.txt", std::ios_base::app);
 	return 0;
 }
+
+//=========================================================================//
+// load atmosphere maps for all dates
+//=========================================================================//
+
+int PredictOrbitMod::InitAtmMaps(double st_date, double en_date) {
+	return 0;
+}
+
 //=========================================================================//
 // delete all
 //=========================================================================//
@@ -45,8 +55,38 @@ int PredictOrbitMod::DeInit()
 	IForce->DeInit_CPU();
 	delete IForce;
 	POSat.DeInit_CPU();
+	//in.close();
+	//ine.close();
 	return 0;
 }
+//=========================================================================//
+// Map Builder
+//=========================================================================//
+int PredictOrbitMod::GravMap(int degree, int polynomDegree, int startRad, int maxRad, int step) {
+	IForce->map(degree, polynomDegree, startRad, maxRad, step);
+	//IForce->mapAtm(degree, polynomDegree, startRad, maxRad, step);
+	return 0;
+}
+
+int PredictOrbitMod::AtmMap(int degree, double time, int data, int startRad, int maxRad, int step) {
+	//IForce->map(degree, polynomDegree, startRad, maxRad, step);
+	IForce->mapAtm(degree, time, data, startRad, maxRad, step);
+	return 0;
+}
+
+int PredictOrbitMod::countFtest(double* x) {
+	int n = 75;
+	double f_c[3];
+	double f_e[3];
+	IForce->GetF_Harm_egm96(x, n, f_c);
+	cout << "Calculated values: " << f_c[0] << " " << f_c[1] << " " << f_c[2] << endl;
+	//in << x[0] << " " << x[1] << " " << x[2] << " " << f_c[0] << " " << f_c[1] << " " << f_c[2] << "\n";
+	IForce->GetHarmForce(x, f_e);
+	cout << "Extrapolated values: " << f_e[0] << " " << f_e[1] << " " << f_e[2] << endl;
+	//ine << x[0] << " " << x[1] << " " << x[2] << " " << f_e[0] << " " << f_e[1] << " " << f_e[2] << "\n";
+	return 0;
+}
+
 //=========================================================================//
 // одиночный прогноз
 //=========================================================================//
@@ -55,7 +95,7 @@ int PredictOrbitMod::GetNewPosition( SatParamToPredict &sptr )
 	printf("___________________________________________________________________\n");
 	printf("__________________________ RUN PREDICT ____________________________\n");
 	printf("___________________________________________________________________\n");
-
+	
 	double date_end = sptr.data_end;
 	double time_end = sptr.time_end;
 	double date = sptr.data_start;
@@ -76,7 +116,14 @@ int PredictOrbitMod::GetNewPosition( SatParamToPredict &sptr )
 	const double Ssun = sptr.sun;
 	IForce->SetSigmaAtm( Satm );
 	IForce->SetSigmaSun( Ssun );
+	
+	auto s = std::chrono::high_resolution_clock::now();
+	IForce->InitAtmMaps(date, date_end);
+	auto e = std::chrono::high_resolution_clock::now();
 
+	std::chrono::duration<double> time_load = e - s;
+	sptr.atm_load_time = time_load.count();
+	
 	// вычисление прогноза по начальному приближению
 	POSat.CalcNewPosition( t, XS, t_e, IForce );
 

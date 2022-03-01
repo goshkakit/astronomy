@@ -256,7 +256,7 @@ namespace Force
 	{
 		int h, m, tm_i;
 		double s, dutc, tm_frac;
-
+		
 		*ajd = dt_ajd(dt) - 0.5;
 		tm_frac = tm - floor(tm);
 		tm_i = floor(tm);

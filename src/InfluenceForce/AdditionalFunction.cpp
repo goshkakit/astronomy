@@ -141,7 +141,7 @@ namespace Force
 		double r = atan2(y, x);
 		double d = atan2(z, sqrt(x*x + y*y));
 
-		double pi = 3.1415926535;
+		//double pi = 3.1415926535;
 
 		if (r < 0)
 			r = 2.0*pi + r;

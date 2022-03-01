@@ -97,6 +97,7 @@ namespace Force
 	{
 		
 	}
+
 	//==============================================================================//
 	// задание массивов с константами
 	// загрузка эфемерид планет
@@ -178,6 +179,12 @@ namespace Force
 	void InfluenceForce::DeInit_CPU()
 	{
 		printf( "Influence delete CPU\n" );
+		infileV.close();
+		
+		cout << "Num of points " << cc << endl;
+		//cout << "Mean step: " << 1e6*accH / cc << endl;
+		//cout << "Mean triangle side: " << accL / (cc * 2) << endl;
+		//cout << "Step/tr step: " << 2 * 1e6 * accH / accL << endl;
 		
 		DE403DeleteMemory();
 		DeInitTAU_UTCcorrect();
@@ -245,11 +252,13 @@ namespace Force
 
 		// влияние гармоник
 		//GetF_Harm_egm96( x_g, 36, f_hrm );
-		GetF_Harm_egm96( x_g, NHARM, f_hrm );
+		//GetF_Harm_egm96( x_g, NHARM, f_hrm );
+		GetHarmForce(x_g, f_hrm);
 
 		// влияние атмосферы
 		double sigma_up = SIGMA_ATM;// 0.3E-2;
 		Atm_drag( x_g, t, f_atm, sigma_up, S_ajd0, S_delt0 );
+		//Atm_extr(x_g, t, f_atm, sigma_up, S_ajd0, S_delt0);
 		//f_atm[0] = 0.0;
 		//f_atm[1] = 0.0;
 		//f_atm[2] = 0.0;
@@ -361,11 +370,12 @@ namespace Force
 		state_to_itrf( t, x, x_g, A_rot );
 
 		// влияние гармоник
-		GetF_Harm_egm96( x_g, NHARM, f_hrm );
+		//GetF_Harm_egm96( x_g, NHARM, f_hrm );
+		GetHarmForce(x_g, f_hrm);
 
 		// солнечное давление
-		double sp_q = 0.5E-05;
-		sp_cannonballForce( x, sp_q, f_sp );
+		//double sp_q = 0.5E-05;
+		//sp_cannonballForce( x, sp_q, f_sp );
 
 		// перенос вектора воздействия гармоник и атмосферы
 		double invA[9];
@@ -376,9 +386,9 @@ namespace Force
 		//printf( "%.10e %.10e %.10e\n", f_ah[0], f_ah[1], f_ah[2] );
 		
 		// суммирование воздействий
-		f[3] = f[3] + f_ah[0] + f_gr[0] + f_sp[0];
-		f[4] = f[4] + f_ah[1] + f_gr[1] + f_sp[1];
-		f[5] = f[5] + f_ah[2] + f_gr[2] + f_sp[2];
+		f[3] = f[3] + f_ah[0] + f_gr[0];//+ f_sp[0];
+		f[4] = f[4] + f_ah[1] + f_gr[1];//+ f_sp[1];
+		f[5] = f[5] + f_ah[2] + f_gr[2];//+ f_sp[2];
 
 		// суммирование воздействий
 		//f[3] = f_gr[0];

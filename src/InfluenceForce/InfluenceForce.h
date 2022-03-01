@@ -13,6 +13,24 @@
 #include <string>
 #include <vector>
 
+#include <stdio.h>
+#include <time.h>
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <fstream>
+#include <random>
+#include <ctime>
+#include <chrono>
+#include "omp.h"
+#include "Extrapolation.hpp"
+#include "ParallelTriangulation.hpp"
+
+using namespace std;
+#define pi 3.141592653589793238462643383279502884L
+
+//const long double r0 = 6378100;
+
 #ifdef GPUCOMPILE
 #include "cuda_runtime.h"
 #endif
@@ -38,6 +56,75 @@ namespace Force
 
 		int ip1, ip2;
 	};
+
+//==============================================================================//
+// ”зел сетки при триангул€ции
+//==============================================================================//
+	struct VerticeWithCompared
+	{
+	public:
+		double x, y, z, r, theta, fi, U, accR, accTh, accFi;
+		int index;
+		VerticeWithCompared* compared;
+		VerticeWithCompared() {};
+		void toSph();
+		bool operator < (const VerticeWithCompared& rht) const;
+		void writeToFile(ofstream& file);
+		void writeToFileA(ofstream& file);
+	};
+
+//==============================================================================//
+// “реугольник при триангул€ции
+//==============================================================================//
+	struct Triangle
+	{
+	public: vector<int> childInd = { -1, -1, -1, -1 };
+		  Triangle();
+		  Triangle(int index, VerticeWithCompared* V1, VerticeWithCompared* V2, VerticeWithCompared* V3, int fatherIndex = -1);
+		  Triangle(int index, int V1, int V2, int V3, int fatherIndex = -1);
+		  int index;
+		  int fatherInd;
+		  vector<int> V;
+		  bool operator == (const Triangle& tr) const;
+		  void writeToFile(ofstream& file);
+	}; 
+	//==============================================================================//
+	// ”зел сетки
+	//==============================================================================//
+	struct Vertice
+	{
+	public:
+		int index;
+		double r, theta, fi, x, y, z, accR, accTh, accFi;
+		void readFromFile(ifstream& file);
+		void ReadFromStr(const char* str);
+	};
+
+	//==============================================================================//
+	// “реугольник
+	//==============================================================================//
+	struct Tr
+	{
+	public:
+		int index, fatherInd;
+		vector<int> childInd = { -1, -1, -1, -1 };
+		vector<int> V = { -1, -1, -1 };
+		void readFromFile(ifstream& file);
+		void ReadFromStr(const char* str);
+	};
+
+	//==============================================================================//
+	// ”зел сетки атмосферы
+	//==============================================================================//
+	struct VerticeA
+	{
+	public:
+		int index;
+		double r, theta, fi, x, y, z, p;
+		void readFromFile(ifstream& file);
+		void ReadFromStr(const char* str);
+	};
+
 	class InfluenceForce
 	{
 	private:
@@ -88,24 +175,96 @@ namespace Force
 		//================================================//
 		//InfluenceEGM96.cpp
 		double *h_egm96;
+		int cc=0;
+		ofstream infileV;
 
 		// гармоники земли
-		void GetF_Harm_egm96( double *x_b, int n_harm, double *f_harm );
-		// —ила из-за гармоник
-		void GetHarmForce( double *x, double *Fharm );
+		//void GetF_Harm_egm96(double* x_b, int n_harm, double* f_harm);
 		// init egm
 		void InitHarmInCPU();
 		//================================================//
 
+		//Triangulation
+		//================================================//
+		double r;
+		void setRad(double r);
+		//static double distCounter(VerticeWithCompared V1, VerticeWithCompared V2);
+		void zero_triangles();
+		void zeroMeshCreator(double r);
+		int vIndex;
+		int globalIndex;
+		int localVIndex;
+		void mesher(double r, int degree);
+		vector<VerticeWithCompared> vert_arr_tr;
+		vector<Triangle> tr_arr_tr;
+		vector<vector<VerticeWithCompared>> parVertArr;
+		VerticeWithCompared verticeCreator(VerticeWithCompared V1, VerticeWithCompared V2);
+		bool vertDetector(VerticeWithCompared V);
+		void trianglesCreator(int degree);
+		//================================================//
+
+		//Extrapolation
+		//================================================//
+		int stepRad, maxStep, startRad, maxRad, trIdx, vertAm, trAm, curTr, sTr=0;
+		//double alpha = 1.0;
+		int degreeG = 5;
+		//double prX[3];
+		//double curX[3] = { 0,0,0 };
+		void stepSet(int step);
+		void radSet(int stR, int maxR);
+		void verticeLoader(string filename);
+		void triangleLoader(string filename);
+		vector<vector<Vertice>> vert_arr;
+		vector<Tr> tr_arr;
+		double sphDist(double theta, double fi, int idx, int rIdx);
+		void loader(int pol, int deg, int maxR, int step, int stR = r0);
+		int zeroSearcher(int rIdx, double x, double y, double z);
+		int searcher(int fthrIdx, int rIdx, double x, double y, double z);
+		int parSearcher(int fthrIdx, int rIdx, double x, double y, double z);
+		bool isInTr(int rIdx, int idx, double x, double y, double z);
+		vector<double> layerCounter(double x, double y, double z, double theta, double fi, int trIdx, int rIdx);
+		double funcFX(double l, double x, double y, Vertice A, Vertice B, Vertice C, Vertice D, Vertice E, Vertice F);
+		double funcFY(double l, double x, double y, Vertice A, Vertice B, Vertice C, Vertice D, Vertice E, Vertice F);
+		double funcFZ(double l, double x, double y, Vertice A, Vertice B, Vertice C, Vertice D, Vertice E, Vertice F);
+		vector<double> projectOnLayer(double x, double y, double z, int rIdx);
+		vector<double> layerCounterF(double x, double y, double z, int trIdx, int rIdx);
+		vector<double> counter(double x, double y, double z, double r, double theta, double fi, int tr, int rIdx);
+		//================================================//
+
 		//================================================//
 		// InfluenceAtmosphere.cpp
-		// атмосфера земли
-		void Atm_drag( double *x, double t, double *f, double sigma_up, double ajd0, double delt0 );
+		
 		// √ќ—“ атмосферы
-		//double Roa2004_2( double time, double *x, double ajd0, double delt0 );
+		double Roa2004_2(double time, double* x, double ajd0, double delt0, double F107, double F81, double aKp);
 		void InitAtm();
 		void InitAtm(std::string path_atm_conf);
 		std::vector<atmIndex> ListAtmIndex;
+
+		// Ёкстрапол€ци€ атмосферы
+		
+		double stTime;
+		double dayTime;
+		int curDate = 0;
+		int dayC = 0;
+		bool dC = false;
+		double r_s, r_e, step;
+		int layer_num;
+		void map_param_set(int deg);
+		void layer_num_set(double r_s, double r_e, double step);
+		vector<vector<VerticeA>> map_buff;
+		vector<vector<VerticeA>>* cur_map;
+		void single_am_loader(int data, int deg);
+		vector<vector<vector<VerticeA>>> maps_atm;
+		bool isInTrA(int rIdx, int idx, double x, double y, double z);
+		int zeroSearcherA(int rIdx, double x, double y, double z);
+		int searcherA(int fthrIdx, int rIdx, double x, double y, double z);
+		double layerCounterA(double theta, double fi, int trIdx, int rIdx);
+		double funcFA(double l, double x, double y, VerticeA A, VerticeA B, VerticeA C, VerticeA D, VerticeA E, VerticeA F);
+		double layerCounterFA(double x, double y, double z, int trIdx, int rIdx);
+		double counterA(double x, double y, double z, double r, double theta, double fi, int tr, int rIdx);
+		vector<double> timeMove(double x, double y, double z, double time);
+		double extrapolatorA(double* vec, double time);
+
 		//================================================//
 
 		//================================================//
@@ -202,6 +361,26 @@ namespace Force
 		double current_px_ = 0; //sec.of arc
 		double current_py_ = 0; //sec.of arc
 		double current_dUt1_ = 0; //sec. of time
+
+		// атмосфера земли
+		void Atm_drag(double* x, double t, double* f, double sigma_up, double ajd0, double delt0);
+		// экстрапол€ци€ атмосферы
+		void Atm_extr(double* x, double t, double* f, double sigma_up, double ajd0, double delt0);
+
+		// гармоники земли
+		void GetF_Harm_egm96(double* x_b, int n_harm, double* f_harm);
+		// —ила из-за гармоник
+		void GetHarmForce(double* x, double* Fharm);
+
+		static double distCounter(VerticeWithCompared V1, VerticeWithCompared V2);
+		static double distCounter(Vertice V1, Vertice V2);
+		double distCounter(VerticeA V1, VerticeA V2);
+		void map(int degree, int polynomDegree, int startRad, int maxRad, int step);
+		void mapAtm(int degree, double t, int data, int startRad, int maxRad, int step);
+
+		vector<double> extrapolator(double x, double y, double z);
+
+		int InitAtmMaps(double st_date, double en_date);
 
 		// коэффициенты
 		int ST;

@@ -132,7 +132,7 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 	// отстование по времени
 	double Toffset = 0;
 
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 	// установка времени
 	double int1, ajd1, delt1;
 	double date1 = OpticArray[it].dataMDB;
@@ -382,7 +382,7 @@ void CorrespondenceData::CorrespondenceCPF( int it, bool Tcorr, double *Tpos, bo
 //==============================================================================//
 void CorrespondenceData::CalcError( double Ra, double Dec, double Ra1, double Dec1, double optRa, double optDec, double *Telicrf )
 {
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 	double az = GetZenitAngle( optRa, optDec, Telicrf );
 
 	Ra = Ra*cos(Dec);
@@ -430,7 +430,7 @@ void CorrespondenceData::CalcError( double Ra, double Dec, double Ra1, double De
 //==============================================================================//
 double CorrespondenceData::GetZenitAngle( double inRa, double inDec, double *tel_icrf)
 {
-	double pi = 3.1415926535;
+	//double pi = 3.1415926535;
 	double tog = 180.0/pi;
 	// измеренные значения координат телескопов, они искажены
 	// double inRa, double inDec

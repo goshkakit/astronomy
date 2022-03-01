@@ -23,14 +23,19 @@ public:
 	PredictOrbitMod()
 	{ 
 		printf("PredictOrbitMod()\n");
-		Init();
+		//Init();
 	};
 	~PredictOrbitMod()
 	{ 
 		printf("~PredictOrbitMod()\n");
 	};
-
+	std::ofstream in;
+	std::ofstream ine;
 	virtual int _stdcall Init();
+	virtual int _stdcall InitAtmMaps(double st_date, double en_date);
+	virtual int _stdcall GravMap(int degree, int polynomDegree, int startRad, int maxRad, int step);
+	virtual int _stdcall AtmMap(int degree, double time, int data, int startRad, int maxRad, int step);
+	virtual int _stdcall countFtest(double* x);
 	virtual int _stdcall DeInit();
 	virtual int _stdcall RunTest();
 	virtual int _stdcall TestAllForce();

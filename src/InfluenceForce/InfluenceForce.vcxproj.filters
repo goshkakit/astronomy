@@ -20,6 +20,9 @@
     <ClInclude Include="InfluenceForce.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParallelTriangulation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdditionalFunction.cpp">
@@ -59,6 +62,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InfluiencePrecessionEarth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Extrapolation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParallelTriangulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrapolationAtmosphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
